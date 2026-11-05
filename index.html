@@ -887,7 +887,7 @@ const SERVICE_AREA=['Naples','Bonita Springs','Estero','Fort Myers','Cape Coral'
 
 const services=[
   ['Baseboards & trim','Clean, tight joints and seamless transitions room to room.'],
-  ['Doors & casings','Interior door installation and casing for doors and windows.'],
+  ['Doors & casings','Interior doors, sliding and impact-rated exterior doors, and casing.'],
   ['Crown molding','Crown and ceiling trim cut and fitted to every corner.'],
   ['Arches & flex molding','Curved casing fitted to arched openings.'],
   ['Accent walls & paneling','Wall paneling, slat walls and statement walls.'],
@@ -913,6 +913,11 @@ const projects=[
    cover:4,feature:4,
    photos:[['01-before-stairs','Before: deck and stair railing'],['02-before-railing','Before: damaged railing section'],['03-after-railing','After: new railing section installed'],['04-after-view','After: new railing seen from the deck'],['05-after-exterior','After: the finished deck from outside']]
      .map(([f,t])=>({url:'images/sanibel-deck-railing-'+f+'.jpg',title:t}))},
+  {id:'sanibel-impact-doors',title:'Impact sliding door replacement',city:'Sanibel Island',state:'FL',service:'Door installation',
+   text:'Replacement of the old standard sliding glass doors on two levels of a Sanibel Island home with new PGT WinGuard impact-rated sliding doors. Photos show the old doors, the removal and the new impact doors installed.',
+   cover:6,feature:7,
+   photos:[['01-before-upper-doors','Before: old sliding doors on the upper deck'],['02-before-deck-doors','Before: old sliding doors on the lower deck'],['03-removing-old-door','Removing the old sliding door'],['04-old-panels-removed','Old door panels removed'],['05-opening-ready','Opening prepared for the new door'],['06-installing-impact-door','Installing the new impact sliding door'],['07-after-upper-impact-door','After: new impact sliding door on the upper deck'],['08-after-deck-impact-doors','After: new impact sliding doors on the lower deck']]
+     .map(([f,t])=>({url:'images/sanibel-impact-doors-'+f+'.jpg',title:t}))},
   {id:'southaven-hospital',title:'Hospital interior finish carpentry',city:'Southaven',state:'MS',service:'Commercial finish carpentry',
    text:'Interior finish carpentry at a hospital in the Memphis area: decorative ceiling beams, picture-frame wall molding, shiplap walls, a wood slat accent wall and door casings.',
    cover:4,feature:1,
@@ -1037,7 +1042,7 @@ if(reviews.length){
 }
 
 /* ---------- Instagram ---------- */
-const igPicks=[[5,6],[3,4],[4,1],[3,1],[2,4],[3,6]];
+const igPicks=[[6,6],[4,4],[3,7],[4,1],[5,1],[3,6]];
 document.querySelector('#igGrid').innerHTML=igPicks.map(([p,i])=>{const ph=projects[p].photos[i];return `<a class="ig-tile" href="${IG}" target="_blank" rel="noopener" aria-label="${esc(ph.title||projects[p].title)}, view more on Instagram"><img src="${ph.url}" alt="" loading="lazy">${WM('sm')}<span><svg class="icon"><use href="#i-ig"/></svg></span></a>`}).join('');
 
 /* ---------- hero slideshow ---------- */
