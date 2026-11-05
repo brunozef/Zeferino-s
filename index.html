@@ -388,6 +388,13 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 .review-summary a{color:var(--brass-deep);font-weight:500}
 .review cite{font:500 12.5px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--stone);font-style:normal;margin-top:auto}
 
+/* Official logos */
+.brand-logo{height:72px;width:auto;display:block}
+.hero-logo{width:min(400px,80vw);height:auto;margin:0 0 40px -6px;filter:drop-shadow(0 6px 24px rgba(0,0,0,.45))}
+.closing-logo{width:min(440px,84vw);height:auto;margin:0 auto 40px;display:block}
+.foot-top .foot-logo{width:min(380px,80vw);height:auto;display:block;mix-blend-mode:normal}
+@media(max-width:640px){.brand-logo{height:52px}.hero-logo{margin-bottom:28px}}
+
 .tab{display:none}
 .tab.active{display:block}
 
@@ -502,8 +509,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 <header class="site">
   <div class="wrap">
     <a class="brand" href="#home" aria-label="Zeferino's Inc. home">
-      <img class="brand-mark" src="images/logo-z.png" alt="">
-      <span class="brand-text"><img class="brand-wordmark" src="images/logo-zeferinos.png" alt="Zeferino's"><small>PRECISION FINISH &amp; REMODELING</small></span>
+      <img class="brand-logo" src="images/logo-horizontal-640.webp" alt="Zeferino's Precision Finish &amp; Remodeling" width="640" height="208">
     </a>
     <nav class="main" aria-label="Main">
       <a href="#services">Services</a>
@@ -537,8 +543,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
     <div class="slide-cap"><span id="slideCap"></span><div class="slide-dots" id="slideDots"></div></div>
     <div class="wrap">
       <div class="hero-copy">
-        <img class="emblem" src="images/logo-z.png" alt="">
-        <ul class="slogan" aria-label="Build, renovate, transform"><li>Build</li><li>Renovate</li><li>Transform</li></ul>
+        <img class="hero-logo" src="images/logo-stacked.webp" alt="Zeferino's Precision Finish &amp; Remodeling. Build. Renovate. Transform." width="900" height="525" fetchpriority="high">
         <h1>Precision in every detail.</h1>
         <p class="lead">Finish carpentry, trim, doors, stairs, handrails and flooring, installed for homeowners, builders and contractors across Southwest Florida.</p>
         <div class="cta-row">
@@ -670,7 +675,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 
   <section class="band dark closing">
     <div class="wrap">
-      <div class="lockup"><img class="z" src="images/logo-z-transparent.png" alt=""><img class="w" src="images/logo-zeferinos-transparent.png" alt="Zeferino's"></div>
+      <img class="closing-logo" src="images/logo-stacked.webp" alt="Zeferino's Precision Finish &amp; Remodeling" width="900" height="525" loading="lazy">
       <div class="kicker" style="justify-content:center">Let's talk</div>
       <h2>Tell us about your project.</h2>
       <p class="lead">Send the scope and a few photos, and we'll get back to you with a free estimate.</p>
@@ -831,8 +836,8 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 <footer class="site">
   <div class="wrap">
     <div class="foot-top">
-      <div class="foot-brand"><img class="z" src="images/logo-z.png" alt=""><img src="images/logo-zeferinos.png" alt="Zeferino's"></div>
-      <div><p>Precision in every detail.</p><ul class="slogan" style="justify-content:flex-end;margin-top:12px"><li>Build</li><li>Renovate</li><li>Transform</li></ul></div>
+      <img class="foot-logo" src="images/logo-horizontal.webp" alt="Zeferino's Precision Finish &amp; Remodeling" width="1000" height="324" loading="lazy">
+      <div><p>Precision in every detail.</p></div>
     </div>
     <div class="foot-grid">
       <div class="foot-about">
