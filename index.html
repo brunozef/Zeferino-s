@@ -65,6 +65,14 @@
     <p>Residential exterior wood handrail installation, with attention to precise alignment and clean finishing.</p>
     <div class="cta-row"><button class="btn outline" onclick="navigate('projects')">View the Sanibel Project →</button></div>
   </div>
+</article><article class="home-real-project" style="margin-top:22px">
+  <div class="real-project-cover" style="cursor:pointer" onclick="navigate('projects');showVinylPhoto(7)"><img src="images/sanibel-vinyl-08-installed-living-water-view.jpg" alt="Finished vinyl plank flooring in a Sanibel living area" loading="lazy"></div>
+  <div class="real-project-intro">
+    <div class="eyebrow">Completed Project · Sanibel Island, FL</div>
+    <h3>Vinyl Plank<br>Flooring Installation</h3>
+    <p>Sound-membrane preparation and vinyl plank flooring installation throughout a Sanibel Island residence.</p>
+    <div class="cta-row"><button class="btn outline" onclick="navigate('projects')">View the Flooring Project →</button></div>
+  </div>
 </article></div></section>
 <section class="section alt" style="text-align:center"><div class="eyebrow">Let's Build Something Exceptional</div><h2 class="serif">Your vision. Our craftsmanship.</h2><p class="sectiondesc" style="margin:25px auto">Tell us about your project, and let's discuss the details that will make it extraordinary.</p><button class="btn" onclick="navigate('contact')">Request a Free Estimate →</button></section></div>
 <div id="services" class="tab"><section class="smallhero"><div class="eyebrow">What We Do</div><h1 class="serif">Our Services</h1><p>Precision installation for premium residential interiors, from classic architectural trim to custom decorative finishes.</p></section><section class="section"><div class="services" id="allservices"></div></section></div>
@@ -81,6 +89,16 @@
       <div class="real-project-cover" id="sanibelMainImage"><div class="photo-note">Loading the Sanibel project photos…</div></div>
       <div class="gallery-grid" id="sanibelGallery" aria-label="Sanibel exterior handrail work photos"></div>
       <p class="gallery-status" id="sanibelStatus" aria-live="polite"></p>
+    </article>
+    <article class="real-project" style="margin-top:22px">
+      <div class="real-project-intro">
+        <div class="eyebrow">Flooring Installation · Sanibel Island, FL</div>
+        <h2>Vinyl Plank Flooring Installation</h2>
+        <p>Professional vinyl plank flooring installation at a separate residential property on Sanibel Island, Florida. Photos show sound-membrane preparation and the finished flooring in the living area, bedroom, kitchen and hallway.</p>
+        <div class="gallery-count">11 project photos · 6 preparation · 5 installed · Click an image to enlarge</div>
+      </div>
+      <div class="real-project-cover" onclick="showVinylPhoto(7)"><img src="images/sanibel-vinyl-08-installed-living-water-view.jpg" alt="Finished vinyl plank flooring in a Sanibel living area with water view"></div>
+      <div class="gallery-grid" aria-label="Sanibel vinyl plank flooring photos"><button class="gallery-thumb" type="button" aria-label="Open vinyl flooring photo 1 of 11: Prep living room" onclick="showVinylPhoto(0)"><img loading="lazy" src="images/sanibel-vinyl-01-prep-living-room.jpg" alt="Sanibel vinyl plank flooring: prep living room"><span>1 / 11</span></button><button class="gallery-thumb" type="button" aria-label="Open vinyl flooring photo 2 of 11: Prep bedroom entry" onclick="showVinylPhoto(1)"><img loading="lazy" src="images/sanibel-vinyl-02-prep-bedroom-entry.jpg" alt="Sanibel vinyl plank flooring: prep bedroom entry"><span>2 / 11</span></button><button class="gallery-thumb" type="button" aria-label="Open vinyl flooring photo 3 of 11: Prep bedroom" onclick="showVinylPhoto(2)"><img loading="lazy" src="images/sanibel-vinyl-03-prep-bedroom.jpg" alt="Sanibel vinyl plank flooring: prep bedroom"><span>3 / 11</span></button><button class="gallery-thumb" type="button" aria-label="Open vinyl flooring photo 4 of 11: Prep wide living area" onclick="showVinylPhoto(3)"><img loading="lazy" src="images/sanibel-vinyl-04-prep-wide-living.jpg" alt="Sanibel vinyl plank flooring: prep wide living area"><span>4 / 11</span></button><button class="gallery-thumb" type="button" aria-label="Open vinyl flooring photo 5 of 11: Prep kitchen" onclick="showVinylPhoto(4)"><img loading="lazy" src="images/sanibel-vinyl-05-prep-living-water-view.jpg" alt="Sanibel vinyl plank flooring: prep kitchen"><span>5 / 11</span></button><button class="gallery-thumb" type="button" aria-label="Open vinyl flooring photo 6 of 11: Prep living area with water view" onclick="showVinylPhoto(5)"><img loading="lazy" src="images/sanibel-vinyl-06-prep-kitchen.jpg" alt="Sanibel vinyl plank flooring: prep living area with water view"><span>6 / 11</span></button><button class="gallery-thumb" type="button" aria-label="Open vinyl flooring photo 7 of 11: Installed living room" onclick="showVinylPhoto(6)"><img loading="lazy" src="images/sanibel-vinyl-07-installed-living-room.jpg" alt="Sanibel vinyl plank flooring: installed living room"><span>7 / 11</span></button><button class="gallery-thumb" type="button" aria-label="Open vinyl flooring photo 8 of 11: Installed living area with water view" onclick="showVinylPhoto(7)"><img loading="lazy" src="images/sanibel-vinyl-08-installed-living-water-view.jpg" alt="Sanibel vinyl plank flooring: installed living area with water view"><span>8 / 11</span></button><button class="gallery-thumb" type="button" aria-label="Open vinyl flooring photo 9 of 11: Installed bedroom" onclick="showVinylPhoto(8)"><img loading="lazy" src="images/sanibel-vinyl-09-installed-bedroom.jpg" alt="Sanibel vinyl plank flooring: installed bedroom"><span>9 / 11</span></button><button class="gallery-thumb" type="button" aria-label="Open vinyl flooring photo 10 of 11: Installed hallway" onclick="showVinylPhoto(9)"><img loading="lazy" src="images/sanibel-vinyl-10-installed-hallway.jpg" alt="Sanibel vinyl plank flooring: installed hallway"><span>10 / 11</span></button><button class="gallery-thumb" type="button" aria-label="Open vinyl flooring photo 11 of 11: Installed kitchen" onclick="showVinylPhoto(10)"><img loading="lazy" src="images/sanibel-vinyl-11-installed-kitchen.jpg" alt="Sanibel vinyl plank flooring: installed kitchen"><span>11 / 11</span></button></div>
     </article>
   </section>
 </div>
@@ -123,7 +141,7 @@ function createProjectImage(url,alt,loading='lazy'){
   return img;
 }
 function showSanibelPhoto(i){
-  activeSanibelPhoto=i;
+  activeGallery='sanibel';activeSanibelPhoto=i;
   const p=sanibelPhotos[i];
   const modal=document.querySelector('#sanibelLightbox');
   const img=document.querySelector('#sanibelLightboxImg');
@@ -139,6 +157,7 @@ function closeSanibelPhoto(){
   document.body.style.overflow='';
 }
 function moveSanibelPhoto(delta){
+  if(activeGallery==='vinyl'){showVinylPhoto((activeVinylPhoto+delta+vinylPhotos.length)%vinylPhotos.length);return}
   if(sanibelPhotos.length)showSanibelPhoto((activeSanibelPhoto+delta+sanibelPhotos.length)%sanibelPhotos.length);
 }
 document.addEventListener('keydown',e=>{
@@ -196,6 +215,16 @@ link.textContent='View original project files';status.appendChild(link);
     document.querySelector('#sanibelMainImage').innerHTML='<div class="photo-note">Project photos are temporarily unavailable.</div>';
     sanibelSetMessage('The project gallery could not load right now. Check the public GitHub folder and try again.');
   }
+}
+const vinylPhotos=[{"url": "images/sanibel-vinyl-01-prep-living-room.jpg", "title": "Prep living room", "stage": "Preparation"}, {"url": "images/sanibel-vinyl-02-prep-bedroom-entry.jpg", "title": "Prep bedroom entry", "stage": "Preparation"}, {"url": "images/sanibel-vinyl-03-prep-bedroom.jpg", "title": "Prep bedroom", "stage": "Preparation"}, {"url": "images/sanibel-vinyl-04-prep-wide-living.jpg", "title": "Prep wide living area", "stage": "Preparation"}, {"url": "images/sanibel-vinyl-05-prep-living-water-view.jpg", "title": "Prep kitchen", "stage": "Preparation"}, {"url": "images/sanibel-vinyl-06-prep-kitchen.jpg", "title": "Prep living area with water view", "stage": "Preparation"}, {"url": "images/sanibel-vinyl-07-installed-living-room.jpg", "title": "Installed living room", "stage": "Installed"}, {"url": "images/sanibel-vinyl-08-installed-living-water-view.jpg", "title": "Installed living area with water view", "stage": "Installed"}, {"url": "images/sanibel-vinyl-09-installed-bedroom.jpg", "title": "Installed bedroom", "stage": "Installed"}, {"url": "images/sanibel-vinyl-10-installed-hallway.jpg", "title": "Installed hallway", "stage": "Installed"}, {"url": "images/sanibel-vinyl-11-installed-kitchen.jpg", "title": "Installed kitchen", "stage": "Installed"}];let activeGallery='sanibel',activeVinylPhoto=0;
+function showVinylPhoto(i){
+  activeGallery='vinyl';activeVinylPhoto=i;
+  const p=vinylPhotos[i],modal=document.querySelector('#sanibelLightbox'),img=document.querySelector('#sanibelLightboxImg');
+  img.src=p.url;img.alt=`Sanibel vinyl plank flooring: ${p.title.toLowerCase()}`;
+  document.querySelector('#sanibelLightboxCaption').textContent=`Vinyl Plank Flooring · Sanibel Island, FL · ${p.stage} · ${i+1} of ${vinylPhotos.length}`;
+  modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+  document.querySelector('.lightbox-close').focus();
 }
 loadSanibelGallery();
 function navigate(id){if(!document.getElementById(id))id='home';document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('active',e.id===id));document.querySelector('.mobilemenu').classList.remove('open');history.replaceState(null,'','#'+id);window.scrollTo({top:0,behavior:'instant'});document.title=(id==='home'?'Zeferino\'s Inc.':id[0].toUpperCase()+id.slice(1)+' | Zeferino\'s Inc.');}window.addEventListener('hashchange',()=>navigate(location.hash.slice(1)));if(location.hash)navigate(location.hash.slice(1));
