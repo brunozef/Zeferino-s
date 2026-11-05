@@ -16,25 +16,188 @@
 .brand .monogram{display:none}
 @media(max-width:540px){.brand-mark{height:39px;width:39px}.brand-wordmark{width:136px}.hero-emblem img{width:50px;height:50px}}
 </style>
+
+<style>
+/* Real-work gallery: Sanibel exterior handrail */
+.real-project{border:1px solid var(--line);background:#191815;overflow:hidden}
+.real-project-intro{padding:clamp(22px,4vw,44px)}
+.real-project-intro h2{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:clamp(32px,4vw,53px);margin:14px 0}
+.real-project-intro p{max-width:800px;font-size:13px;line-height:1.9;color:#c8c0b5}
+.real-project-cover{position:relative;min-height:240px;background:#24211b;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.real-project-cover img{width:100%;height:100%;max-height:640px;min-height:240px;object-fit:cover;cursor:zoom-in}
+.real-project-cover .photo-note{padding:25px;color:#c9c0b4;text-align:center;font-size:13px}
+.real-project-cover .photo-note a,.gallery-status a{color:var(--gold);text-decoration:underline}
+.gallery-count{font-size:11px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase}
+.gallery-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;padding:14px}
+.gallery-thumb{border:1px solid rgba(198,177,143,.28);padding:0;overflow:hidden;background:#2a2722;aspect-ratio:4/3;position:relative}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .2s ease}
+.gallery-thumb:hover img,.gallery-thumb:focus-visible img{transform:scale(1.04)}
+.gallery-thumb:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.gallery-thumb span{position:absolute;bottom:8px;right:8px;color:white;background:rgba(0,0,0,.55);font-size:10px;padding:4px 6px}
+.gallery-status{font-size:12px;line-height:1.8;color:#c3b9ad;padding:0 22px 25px}
+.home-real-project{display:grid;grid-template-columns:1.15fr 1fr;background:#191815;border:1px solid var(--line)}
+.home-real-project .real-project-cover{min-height:320px}
+.home-real-project .real-project-cover img{height:100%;position:absolute;inset:0}
+.home-real-project .real-project-intro{display:flex;flex-direction:column;justify-content:center}
+.home-real-project .real-project-intro h3{font-family:'Playfair Display',Georgia,serif;font-size:clamp(27px,3vw,39px);font-weight:400;line-height:1.2;margin:12px 0}
+.photo-lightbox{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.97);display:none;align-items:center;justify-content:center;padding:70px 20px 60px}
+.photo-lightbox.open{display:flex}
+.photo-lightbox figure{margin:0;text-align:center;max-height:100%;width:min(1100px,100%);display:flex;align-items:center;flex-direction:column;justify-content:center;gap:14px}
+.photo-lightbox img{max-width:100%;max-height:calc(100vh - 185px);width:auto;height:auto;object-fit:contain}
+.photo-lightbox figcaption{font-size:12px;color:#ddd0bd}
+.lightbox-close,.lightbox-prev,.lightbox-next{position:absolute;color:white;background:#24211d;border:1px solid var(--gold);padding:12px 17px;z-index:2;line-height:1}
+.lightbox-close{top:18px;right:22px;font-size:20px}
+.lightbox-prev{left:16px;top:50%}.lightbox-next{right:16px;top:50%}
+@media(max-width:750px){.home-real-project{grid-template-columns:1fr}.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.photo-lightbox{padding:65px 8px 50px}.lightbox-prev{left:5px}.lightbox-next{right:5px}}
+</style>
+
 </head><body>
 <header class="nav"><a class="brand" href="#home" onclick="navigate('home')"><img class="brand-mark" src="images/logo-z.png" alt="Zeferino’s original Z monogram"><span class="brandtext"><img class="brand-wordmark" src="images/logo-zeferinos.png" alt="Zeferino’s"><small>PRECISION FINISH &amp; REMODELING</small></span></a><nav class="navlinks"><a href="#home" onclick="navigate('home')">Home</a><a href="#services" onclick="navigate('services')">Services</a><a href="#projects" onclick="navigate('projects')">Projects</a><a href="#builders" onclick="navigate('builders')">For Builders</a><a href="#studio" onclick="navigate('studio')">Design Studio</a><button class="navbtn" onclick="navigate('contact')">Free Estimate</button></nav><button class="menu" onclick="document.querySelector('.mobilemenu').classList.toggle('open')" aria-label="Open menu">☰</button><nav class="mobilemenu"><a href="#home" onclick="navigate('home')">Home</a><a href="#services" onclick="navigate('services')">Services</a><a href="#projects" onclick="navigate('projects')">Projects</a><a href="#builders" onclick="navigate('builders')">For Builders</a><a href="#studio" onclick="navigate('studio')">AI Design Studio</a><a href="#contact" onclick="navigate('contact')">Free Estimate</a></nav></header>
 <main>
 <div id="home" class="tab active"><section class="hero"><div class="hero-content"><div class="hero-emblem"><img src="images/logo-z.png" alt="Zeferino’s Z"></div><div class="eyebrow">BUILD • RENOVATE • TRANSFORM</div><h1 class="serif">Precision in<br><span>Every Detail.</span></h1><p>Exceptional finish carpentry, custom trim, doors, and architectural woodwork. Refined spaces begin with expertly crafted details.</p><div class="buttons"><button class="btn" onclick="navigate('contact')">Request a Free Estimate →</button><button class="btn outline" onclick="navigate('projects')">Explore Our Work</button></div></div><div class="herobottom"><span>Naples · Estero · Fort Myers · Southwest Florida</span><span>Scroll to explore ↓</span></div></section>
 <section class="section"><div class="sectionhead"><div><div class="eyebrow">The Art of Finishing</div><h2 class="serif">Craftsmanship that<br>defines a space.</h2></div><p class="sectiondesc">Thoughtful architectural details transform ordinary rooms into spaces that feel complete. Every cut, edge, and installation matters.</p></div><div class="services" id="homeservices"></div><div class="cta-row"><button class="btn outline" onclick="navigate('services')">View All Services →</button></div></section>
 <div class="feature"><div class="photobg"></div><div class="featuretext"><div class="eyebrow">A New Way to Imagine</div><h2 class="serif">See the possibility<br>before the project.</h2><p>Upload a photo of your own room, choose your favorite finish carpentry details, and explore how a design transformation could look.</p><div><button class="btn" onclick="navigate('studio')">Explore Design Studio →</button></div></div></div>
-<section class="section"><div class="sectionhead"><div><div class="eyebrow">Inspiration Gallery</div><h2 class="serif">Beautiful details.<br>Lasting impressions.</h2></div><p class="sectiondesc">Explore the kinds of premium finishes that inspire our approach to craftsmanship.</p></div><div class="projects" id="homeprojects"></div><p class="portfolio-disclaimer">Inspiration imagery. Photos of our completed projects are coming soon.</p></section>
+<section class="section"><div class="sectionhead"><div><div class="eyebrow">Inspiration Gallery</div><h2 class="serif">Beautiful details.<br>Lasting impressions.</h2></div><p class="sectiondesc">Explore the kinds of premium finishes that inspire our approach to craftsmanship.</p></div><div id="homeprojects"><article class="home-real-project">
+  <div class="real-project-cover" id="homeSanibelImage"><div class="photo-note">Loading the Sanibel project photos…</div></div>
+  <div class="real-project-intro">
+    <div class="eyebrow">Completed Project · Sanibel Island, FL</div>
+    <h3>Exterior Wood<br>Handrail Installation</h3>
+    <p>Residential exterior wood handrail installation, with attention to precise alignment and clean finishing.</p>
+    <div class="cta-row"><button class="btn outline" onclick="navigate('projects')">View the Sanibel Project →</button></div>
+  </div>
+</article></div></section>
 <section class="section alt" style="text-align:center"><div class="eyebrow">Let's Build Something Exceptional</div><h2 class="serif">Your vision. Our craftsmanship.</h2><p class="sectiondesc" style="margin:25px auto">Tell us about your project, and let's discuss the details that will make it extraordinary.</p><button class="btn" onclick="navigate('contact')">Request a Free Estimate →</button></section></div>
 <div id="services" class="tab"><section class="smallhero"><div class="eyebrow">What We Do</div><h1 class="serif">Our Services</h1><p>Precision installation for premium residential interiors, from classic architectural trim to custom decorative finishes.</p></section><section class="section"><div class="services" id="allservices"></div></section></div>
-<div id="projects" class="tab"><section class="smallhero"><div class="eyebrow">Visual Inspiration</div><h1 class="serif">The Details Matter.</h1><p>Explore design directions for refined trim, custom architectural details, and beautifully finished interiors.</p></section><section class="section"><div class="projects" id="allprojects"></div><p class="portfolio-disclaimer">Inspiration imagery. Photos of our completed projects are coming soon.</p></section></div>
+<div id="projects" class="tab">
+  <section class="smallhero"><div class="eyebrow">Our Completed Projects</div><h1 class="serif">Built with Precision.</h1><p>Explore real finish carpentry projects completed by Zeferino’s Inc. across Southwest Florida.</p></section>
+  <section class="section" id="allprojects">
+    <article class="real-project">
+      <div class="real-project-intro">
+        <div class="eyebrow">Exterior Finish Carpentry · Sanibel Island, FL</div>
+        <h2>Exterior Wood Handrail Installation</h2>
+        <p>Professional installation of an exterior wood handrail at a residential property in Sanibel Island, Florida, with attention to precise alignment and clean finishing.</p>
+        <div class="gallery-count" id="sanibelCount" aria-live="polite">Loading project photographs…</div>
+      </div>
+      <div class="real-project-cover" id="sanibelMainImage"><div class="photo-note">Loading the Sanibel project photos…</div></div>
+      <div class="gallery-grid" id="sanibelGallery" aria-label="Sanibel exterior handrail work photos"></div>
+      <p class="gallery-status" id="sanibelStatus" aria-live="polite"></p>
+    </article>
+  </section>
+</div>
 <div id="about" class="tab"><section class="smallhero"><div class="eyebrow">Our Philosophy</div><h1 class="serif">Built on Precision.</h1><p>Zeferino’s Inc. | Precision Finish & Remodeling serves Southwest Florida with specialized finish carpentry and installation services.</p></section><section class="section"><div class="info-grid"><div class="info"><div class="eyebrow">01 / Craft</div><h3>Attention to Detail</h3><p>We focus on the fine points of trim alignment, transitions, and architectural finishing.</p></div><div class="info"><div class="eyebrow">02 / Approach</div><h3>Quality Installation</h3><p>Professional workmanship with an emphasis on precision and clean, elegant results.</p></div><div class="info"><div class="eyebrow">03 / Reach</div><h3>Southwest Florida</h3><p>Serving Naples, Bonita Springs, Estero, Fort Myers, Cape Coral, Sanibel, and surrounding communities.</p></div></div></section></div>
 <div id="builders" class="tab"><section class="smallhero"><div class="eyebrow">For Builders & General Contractors</div><h1 class="serif">A Partner in the Details.</h1><p>Labor-only finish carpentry installation for builders, general contractors, millwork providers and residential projects across Southwest Florida.</p><div class="cta-row"><button class="btn" onclick="navigate('contact')">Request Subcontractor Information →</button></div></section><section class="section"><div class="info-grid"><div class="info"><div class="eyebrow">01 / Scope</div><h3>Finish Carpentry</h3><p>Baseboards, door and window casing, crown molding, and trim installation.</p></div><div class="info"><div class="eyebrow">02 / Capability</div><h3>Architectural Features</h3><p>Custom accents, decorative woodwork, wall paneling, and project-specific finish details.</p></div><div class="info"><div class="eyebrow">03 / Terms</div><h3>Labor Only</h3><p>Zeferino's provides installation labor. Project materials are supplied by the client or contractor.</p></div></div></section></div>
 <div id="studio" class="tab"><section class="smallhero"><div class="eyebrow">Zeferino's AI Design Studio • Interactive Preview</div><h1 class="serif">Reimagine Your Space.</h1><p>Upload your room, explore finish options, and start a conversation about bringing your vision to life.</p></section><section class="section" style="padding-top:35px"><div class="studio"><div class="studio-layout"><div class="preview" id="preview"><div class="preview-empty" id="previewEmpty"><span style="font-size:44px;color:#bca17b">▧</span><b>Your room, your vision.</b>Upload a photograph to see it here.</div><img id="uploaded" alt="Client uploaded room" style="display:none"><span class="compare-label" id="previewLabel">YOUR ORIGINAL ROOM</span><div class="detailbar" id="previewDescription" style="display:none"></div></div><div class="designer-control"><div class="eyebrow">01 / Upload Your Space</div><h3>Start with a photo.</h3><label class="upload">＋ Choose Room Photo <input type="file" id="roomfile" accept="image/*" onchange="handleFile(event)"></label><div class="eyebrow">02 / Choose Details</div><div class="tools" id="studioTools"></div><div class="eyebrow">03 / Select Design Style</div><select id="style"><option>Modern Luxury</option><option>Coastal Elegance</option><option>Modern Farmhouse</option><option>Contemporary</option><option>Classic Traditional</option></select><div class="beforeafter"><button onclick="setView('original')">Original Photo</button><button onclick="setView('concept')">Design Selection</button></div><button class="btn" onclick="conceptClick()">Preview My Choices →</button><p class="notice">This preview displays your uploaded photo and selected finishes. Live AI image editing is not yet connected. It does not alter the room or represent an architectural design.</p><button class="btn outline" onclick="navigate('contact')">Request an Estimate →</button></div></div></div></section></div>
 <div id="contact" class="tab"><section class="smallhero"><div class="eyebrow">Let's Talk About Your Project</div><h1 class="serif">Request an Estimate.</h1><p>Share a few details about your project. We'd love to learn more about the look you're hoping to achieve.</p></section><section class="section"><div class="contactcols"><div><div class="eyebrow">Get in Touch</div><h2 class="serif">Let's create<br>something beautiful.</h2><div class="contactinfo"><p><span style="color:#bca17b">PHONE</span><br><a href="tel:+12393241224">(239) 324-1224</a></p><p><span style="color:#bca17b">EMAIL</span><br><a href="mailto:zeferinosprecisionfinish@gmail.com">zeferinosprecisionfinish@gmail.com</a></p><p><span style="color:#bca17b">INSTAGRAM</span><br><a href="https://www.instagram.com/zeferinosprecisionfinish/" target="_blank" rel="noopener">@zeferinosprecisionfinish</a></p><p><span style="color:#bca17b">SERVICE AREA</span><br>Southwest Florida</p></div></div><form class="form" onsubmit="sendLead(event)"><label>Full Name<input id="leadName" required placeholder="Your full name"></label><label>Phone<input id="leadPhone" required placeholder="(239) 000-0000"></label><label class="full">Email<input id="leadEmail" type="email" required placeholder="you@example.com"></label><label>Project City<input id="leadCity" required placeholder="Naples, FL"></label><label>Service Needed<select id="leadService"><option>Finish Carpentry & Trim</option><option>Doors & Casings</option><option>Accent Walls / Paneling</option><option>Crown Molding</option><option>Stairs & Handrails</option><option>Builder / Subcontractor</option><option>Other</option></select></label><label class="full">Tell Us About Your Project<textarea id="leadDetails" rows="5" placeholder="Describe the work you need..."></textarea></label><div class="full"><button class="btn" type="submit">Send Request →</button></div><div class="full legal">When you click the button, your email app will open with your request ready to send.</div></form></div></section></div>
-</main><footer class="foot"><div><img class="footer-wordmark" src="images/logo-zeferinos.png" alt="Zeferino’s"><p>Precision Finish &amp; Remodeling<br>BUILD • RENOVATE • TRANSFORM</p></div><div>Serving Southwest Florida<br>Premium Finish Carpentry · Labor-Only Installation</div><div><a href="tel:+12393241224">(239) 324-1224</a><br>© 2026 Zeferino's Inc. All rights reserved.</div></footer><div class="toast" id="toast"></div>
+</main><footer class="foot"><div><img class="footer-wordmark" src="images/logo-zeferinos.png" alt="Zeferino’s"><p>Precision Finish &amp; Remodeling<br>BUILD • RENOVATE • TRANSFORM</p></div><div>Serving Southwest Florida<br>Premium Finish Carpentry · Labor-Only Installation</div><div><a href="tel:+12393241224">(239) 324-1224</a><br>© 2026 Zeferino's Inc. All rights reserved.</div></footer><div class="toast" id="toast"></div><div class="photo-lightbox" id="sanibelLightbox" role="dialog" aria-modal="true" aria-label="Sanibel project photo viewer" aria-hidden="true" onclick="if(event.target===this)closeSanibelPhoto()">
+  <button class="lightbox-close" type="button" aria-label="Close photo" onclick="closeSanibelPhoto()">×</button>
+  <button class="lightbox-prev" type="button" aria-label="Previous photo" onclick="moveSanibelPhoto(-1)">&#10094;</button>
+  <figure><img id="sanibelLightboxImg" alt="Sanibel exterior handrail"><figcaption id="sanibelLightboxCaption"></figcaption></figure>
+  <button class="lightbox-next" type="button" aria-label="Next photo" onclick="moveSanibelPhoto(1)">&#10095;</button>
+</div>
 <script>
 const services=[['Baseboards & Trim','Precision details for seamless transitions.','https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=900&q=80'],['Doors & Casings','Refined framing for your interior openings.','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=900&q=80'],['Crown Molding','Timeless elegance at every ceiling line.','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=900&q=80'],['Accent & Slat Walls','Statement walls with architectural character.','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900&q=80'],['Decorative Beams','Warmth, texture, and structural expression.','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=900&q=80'],['Stairs & Handrails','Carefully finished details for everyday living.','https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=900&q=80']];
-const projects=[['Architectural Living','Feature wall inspiration','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1100&q=80'],['Warm Contemporary','Natural material inspiration','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1100&q=80'],['Refined Interiors','Interior detail inspiration','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1100&q=80'],['Classic Finishes','Trim finish inspiration','https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1100&q=80']];
-function paintCards(){let svc=(s,i)=>`<article class="service" onclick="navigate('contact')"><img loading="lazy" src="${s[2]}" alt="${s[0]} inspiration"><div class="content"><div class="count">0${i+1} / FINISH CARPENTRY</div><h3 class="serif">${s[0]}</h3><p>${s[1]}</p></div></article>`;document.querySelector('#homeservices').innerHTML=services.slice(0,3).map(svc).join('');document.querySelector('#allservices').innerHTML=services.map(svc).join('');let pro=p=>`<div class="project no-link"><img loading="lazy" src="${p[2]}" alt="${p[0]}"><div><small>${p[1]}</small>${p[0]}</div></div>`;document.querySelector('#homeprojects').innerHTML=projects.slice(0,2).map(pro).join('');document.querySelector('#allprojects').innerHTML=projects.map(pro).join('')};paintCards();
+function paintCards(){
+  const svc=(s,i)=>`<article class="service" onclick="navigate('contact')"><img loading="lazy" src="${s[2]}" alt="${s[0]} inspiration"><div class="content"><div class="count">0${i+1} / FINISH CARPENTRY</div><h3 class="serif">${s[0]}</h3><p>${s[1]}</p></div></article>`;
+  document.querySelector('#homeservices').innerHTML=services.slice(0,3).map(svc).join('');
+  document.querySelector('#allservices').innerHTML=services.map(svc).join('');
+}
+paintCards();
+
+// Load the public repository's actual photographs. Images already uploaded
+// under images/sanibel-exterior-handrail/ can be added without editing this file again.
+// HEIC files are intentionally ignored, since they are not universally web-compatible.
+const sanibelRepo='https://github.com/brunozef/Zeferino-s/tree/main/images/sanibel-exterior-handrail';
+let sanibelPhotos=[],activeSanibelPhoto=0;
+const sanibelFolder='images/sanibel-exterior-handrail/';
+function sanibelImageUrl(name){return sanibelFolder+encodeURIComponent(name)}
+function sanibelSetMessage(message){
+  document.querySelector('#sanibelCount').textContent=message;
+  document.querySelector('#sanibelStatus').innerHTML='';
+  const link=document.createElement('a');
+  link.href=sanibelRepo;link.target='_blank';link.rel='noopener noreferrer';
+  link.textContent='View the project files on GitHub';
+  document.querySelector('#sanibelStatus').append(link);
+}
+function createProjectImage(url,alt,loading='lazy'){
+  const img=document.createElement('img');img.src=url;img.alt=alt;img.loading=loading;
+  return img;
+}
+function showSanibelPhoto(i){
+  activeSanibelPhoto=i;
+  const p=sanibelPhotos[i];
+  const modal=document.querySelector('#sanibelLightbox');
+  const img=document.querySelector('#sanibelLightboxImg');
+  img.src=p.url;img.alt=`Exterior wood handrail installation in Sanibel, photo ${i+1}`;
+  document.querySelector('#sanibelLightboxCaption').textContent=`Exterior Handrail Installation · Sanibel Island, FL · ${i+1} of ${sanibelPhotos.length}`;
+  modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+  document.querySelector('.lightbox-close').focus();
+}
+function closeSanibelPhoto(){
+  const modal=document.querySelector('#sanibelLightbox');
+  modal.classList.remove('open');modal.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+function moveSanibelPhoto(delta){
+  if(sanibelPhotos.length)showSanibelPhoto((activeSanibelPhoto+delta+sanibelPhotos.length)%sanibelPhotos.length);
+}
+document.addEventListener('keydown',e=>{
+  if(!document.querySelector('#sanibelLightbox').classList.contains('open'))return;
+  if(e.key==='Escape')closeSanibelPhoto();
+  else if(e.key==='ArrowLeft')moveSanibelPhoto(-1);
+  else if(e.key==='ArrowRight')moveSanibelPhoto(1);
+});
+async function loadSanibelGallery(){
+  try{
+    // This public GitHub API endpoint lists the directory, including newly added photos.
+    const response=await fetch('https://api.github.com/repos/brunozef/Zeferino-s/contents/images/sanibel-exterior-handrail?ref=main',
+      {headers:{'Accept':'application/vnd.github+json'}});
+    if(!response.ok)throw new Error(`GitHub directory lookup: ${response.status}`);
+    const files=await response.json();
+    if(!Array.isArray(files))throw new Error('Directory not found');
+    sanibelPhotos=files.filter(f=>f.type==='file' && /\.(jpe?g|png|webp|avif)$/i.test(f.name))
+      .sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}))
+      .map(f=>({name:f.name,url:sanibelImageUrl(f.name)}));
+    if(!sanibelPhotos.length){
+      const msg='No browser-compatible project photos yet. Convert HEIC images to JPG and upload them to this folder.';
+      document.querySelector('#homeSanibelImage').innerHTML='<div class="photo-note">Sanibel project photos coming soon.</div>';
+      document.querySelector('#sanibelMainImage').innerHTML='<div class="photo-note">Sanibel project photos coming soon.</div>';
+      sanibelSetMessage(msg);
+      return;
+    }
+    document.querySelector('#sanibelCount').textContent=`${sanibelPhotos.length} project photo${sanibelPhotos.length===1?'':'s'} · Click an image to enlarge`;
+    const home=document.querySelector('#homeSanibelImage');
+    home.replaceChildren(createProjectImage(sanibelPhotos[0].url,'Completed exterior wood handrail installation in Sanibel, Florida','eager'));
+    home.style.cursor='pointer';home.onclick=()=>{navigate('projects');showSanibelPhoto(0)};
+    const hero=document.querySelector('#sanibelMainImage');
+    hero.replaceChildren(createProjectImage(sanibelPhotos[0].url,'Exterior wood handrail project in Sanibel, Florida','eager'));
+    hero.style.cursor='zoom-in';hero.onclick=()=>showSanibelPhoto(0);
+    const grid=document.querySelector('#sanibelGallery');
+    grid.replaceChildren();
+    sanibelPhotos.forEach((photo,i)=>{
+      const button=document.createElement('button');button.className='gallery-thumb';
+      button.type='button';button.setAttribute('aria-label',`Open Sanibel project photo ${i+1} of ${sanibelPhotos.length}`);
+      button.appendChild(createProjectImage(photo.url,`Sanibel exterior wood handrail photo ${i+1}`));
+      const label=document.createElement('span');label.textContent=`${i+1} / ${sanibelPhotos.length}`;
+      button.appendChild(label);button.onclick=()=>showSanibelPhoto(i);grid.appendChild(button);
+    });
+    const heicCount=files.filter(f=>f.type==='file' && /\.heic$/i.test(f.name)).length;
+    const status=document.querySelector('#sanibelStatus');
+    status.replaceChildren();
+    if(heicCount){
+      const msg=document.createElement('span');msg.textContent=`${heicCount} HEIC photo${heicCount===1?'':'s'} not displayed. Convert to JPG to add ${heicCount===1?'it':'them'} to the gallery. `;
+      status.appendChild(msg);
+    }
+    const link=document.createElement('a');link.href=sanibelRepo;link.target='_blank';link.rel='noopener noreferrer';
+    link.textContent='View original project files';status.appendChild(link);
+  }catch(err){
+    console.warn('Sanibel gallery:',err);
+    document.querySelector('#homeSanibelImage').innerHTML='<div class="photo-note">Project photos are temporarily unavailable.</div>';
+    document.querySelector('#sanibelMainImage').innerHTML='<div class="photo-note">Project photos are temporarily unavailable.</div>';
+    sanibelSetMessage('The project gallery could not load right now. Check the public GitHub folder and try again.');
+  }
+}
+loadSanibelGallery();
 function navigate(id){if(!document.getElementById(id))id='home';document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('active',e.id===id));document.querySelector('.mobilemenu').classList.remove('open');history.replaceState(null,'','#'+id);window.scrollTo({top:0,behavior:'instant'});document.title=(id==='home'?'Zeferino\'s Inc.':id[0].toUpperCase()+id.slice(1)+' | Zeferino\'s Inc.');}window.addEventListener('hashchange',()=>navigate(location.hash.slice(1)));if(location.hash)navigate(location.hash.slice(1));
 let selected=new Set(['Baseboards']),photoLoaded=false,view='original';const options=['Baseboards','Door Casings','Crown Molding','Accent Wall','Wood Slat Wall','Decorative Beams','Interior Doors','Wall Paneling'];function drawTools(){document.querySelector('#studioTools').innerHTML=options.map(o=>`<button class="tool ${selected.has(o)?'active':''}" onclick="toggleTool('${o}')">${selected.has(o)?'✓ ':'＋ '}${o}</button>`).join('')}drawTools();function toggleTool(o){selected.has(o)?selected.delete(o):selected.add(o);drawTools();if(view==='concept')setView('concept')};function handleFile(e){let file=e.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){showToast('Please choose an image.');return}if(file.size>12*1024*1024){showToast('Please choose an image smaller than 12 MB.');return}let fr=new FileReader();fr.onload=()=>{document.querySelector('#uploaded').src=fr.result;document.querySelector('#uploaded').style.display='block';document.querySelector('#previewEmpty').style.display='none';photoLoaded=true;setView('original')};fr.readAsDataURL(file)};function setView(which){view=which;let desc=document.querySelector('#previewDescription');document.querySelector('#previewLabel').textContent=which==='original'?'YOUR ORIGINAL ROOM':'SELECTED DESIGN IDEAS';if(which==='concept'){desc.style.display='block';desc.textContent='Requested changes: '+([...selected].join(', ')||'None')+' · '+document.querySelector('#style').value+' · No AI image edit applied';}else desc.style.display='none'}function conceptClick(){if(!photoLoaded){showToast('Upload a room photo first.');return}if(!selected.size){showToast('Select at least one finish.');return}setView('concept');showToast('Design preferences selected. AI image rendering is not connected in this prototype.')};function showToast(t){let e=document.querySelector('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),3800)}function sendLead(e){e.preventDefault();let name=document.querySelector('#leadName').value,phone=document.querySelector('#leadPhone').value,email=document.querySelector('#leadEmail').value,city=document.querySelector('#leadCity').value,service=document.querySelector('#leadService').value,details=document.querySelector('#leadDetails').value;let subject=encodeURIComponent('Estimate Request - '+service+' - '+city);let body=encodeURIComponent('Name: '+name+'\nPhone: '+phone+'\nEmail: '+email+'\nCity: '+city+'\nService: '+service+'\n\nProject details:\n'+details);location.href='mailto:zeferinosprecisionfinish@gmail.com?subject='+subject+'&body='+body;showToast('Your email app should open. Please send the prepared message there.')} 
 </script></body></html>
