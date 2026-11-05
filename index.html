@@ -189,7 +189,7 @@ async function loadSanibelGallery(){
       status.appendChild(msg);
     }
     const link=document.createElement('a');link.href=sanibelRepo;link.target='_blank';link.rel='noopener noreferrer';
-    link.textContent='View original project files';status.appendChild(link);
+link.textContent='View original project files';status.appendChild(link);
   }catch(err){
     console.warn('Sanibel gallery:',err);
     document.querySelector('#homeSanibelImage').innerHTML='<div class="photo-note">Project photos are temporarily unavailable.</div>';
