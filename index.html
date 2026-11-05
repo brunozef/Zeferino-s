@@ -134,9 +134,9 @@ nav.main .btn:hover{background:var(--brass);color:var(--coal)}
 
 /* Full-bleed statement */
 .statement{position:relative;min-height:78vh;display:flex;align-items:flex-end;color:#fff;overflow:hidden}
-.statement img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 55%}
-.statement::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,15,14,.05) 30%,rgba(16,15,14,.72))}
-.statement .wrap{position:relative;z-index:1;width:100%;padding-bottom:88px}
+.statement>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 55%}
+.statement::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(16,15,14,.05) 30%,rgba(16,15,14,.72))}
+.statement .wrap{position:relative;z-index:3;width:100%;padding-bottom:88px}
 .statement blockquote{margin:0;font-family:var(--serif);font-size:clamp(32px,4.2vw,60px);line-height:1.12;max-width:17ch}
 .statement cite{display:block;margin-top:26px;font:400 13px var(--sans);letter-spacing:.16em;text-transform:uppercase;font-style:normal;color:var(--brass-light)}
 
@@ -148,8 +148,8 @@ nav.main .btn:hover{background:var(--brass);color:var(--coal)}
 .feature:nth-child(even){grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr)}
 .feature:nth-child(even) .feature-img{order:2}
 .feature-img{overflow:hidden;aspect-ratio:5/4;background:#e4dfd6}
-.feature-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
-.feature:hover .feature-img img{transform:scale(1.035)}
+.feature-img>img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.feature:hover .feature-img>img{transform:scale(1.035)}
 .feature .where{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--brass-deep);margin-bottom:12px}
 .feature h3{font-size:clamp(28px,2.6vw,38px);line-height:1.15;margin-bottom:20px}
 .feature p{color:var(--stone);margin-bottom:34px}
@@ -173,10 +173,10 @@ nav.main .btn:hover{background:var(--brass);color:var(--coal)}
 /* Instagram */
 .ig-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
 .ig-tile{position:relative;display:block;aspect-ratio:1;overflow:hidden;background:#e4dfd6}
-.ig-tile img{width:100%;height:100%;object-fit:cover;transition:transform .8s}
-.ig-tile span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;background:rgba(22,21,20,.4);opacity:0;transition:opacity .3s}
-.ig-tile:hover img{transform:scale(1.05)}
-.ig-tile:hover span,.ig-tile:focus-visible span{opacity:1}
+.ig-tile>img{width:100%;height:100%;object-fit:cover;transition:transform .8s}
+.ig-tile>span:last-child{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;background:rgba(22,21,20,.4);opacity:0;transition:opacity .3s}
+.ig-tile:hover>img{transform:scale(1.05)}
+.ig-tile:hover>span:last-child,.ig-tile:focus-visible>span:last-child{opacity:1}
 .ig-tile .icon{width:26px;height:26px}
 .ig-foot{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-top:40px;flex-wrap:wrap}
 .ig-foot p{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--stone)}
@@ -206,12 +206,12 @@ nav.main .btn:hover{background:var(--brass);color:var(--coal)}
 .project-top dt{color:var(--stone);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;padding-top:2px}
 .project-top dd{margin:0;font-family:var(--serif);font-size:18px}
 .project-cover{aspect-ratio:5/4;width:100%;padding:0;border:0;cursor:zoom-in;background:#e4dfd6;overflow:hidden}
-.project-cover img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
-.project-cover:hover img{transform:scale(1.03)}
+.project-cover>img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.project-cover:hover>img{transform:scale(1.03)}
 .thumbs{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
 .thumbs button{aspect-ratio:1;padding:0;border:0;cursor:zoom-in;overflow:hidden;background:#e4dfd6}
-.thumbs img{width:100%;height:100%;object-fit:cover;transition:opacity .2s}
-.thumbs button:hover img{opacity:.75}
+.thumbs button>img{width:100%;height:100%;object-fit:cover;transition:opacity .2s}
+.thumbs button:hover>img{opacity:.75}
 
 .points{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--hair)}
 .points div{padding:40px 32px 8px 0}
@@ -279,6 +279,84 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 @media(max-width:960px){.pillars{grid-template-columns:1fr}.pillars div,.pillars div+div{padding:32px 0;border-left:0}.pillars div+div{border-top:1px solid var(--hair-dark)}.page-head .watermark{width:220px;right:-30px;opacity:.07}}
 @media(max-width:640px){.emblem{width:66px;margin-bottom:26px}.slogan{font-size:11px;letter-spacing:.24em}.slogan li+li::before{margin:0 10px 2px 7px}.brandband .mono{width:110px}.brandband .watermark{display:none}.brand-words span{display:block}.brand-words span+span::before{display:none}.foot-top .slogan{font-size:10px}}
 
+/* Watermark on every photograph: Z + Zeferino's lockup */
+.wm{position:absolute;right:14px;bottom:12px;display:flex;align-items:center;gap:7px;pointer-events:none;z-index:2;opacity:.9;filter:drop-shadow(0 1px 2px rgba(0,0,0,.55)) drop-shadow(0 0 6px rgba(0,0,0,.25))}
+.wm .wz{width:30px;height:auto}
+.wm .ww{width:96px;height:auto}
+.wm.sm .wz{width:18px}.wm.sm .ww{display:none}.wm.sm{right:6px;bottom:5px}
+.wm.lg .wz{width:44px}.wm.lg .ww{width:142px}.wm.lg{right:28px;bottom:24px}
+.ph{position:relative;overflow:hidden}
+
+/* Hero with background photographs */
+.hero.photo{min-height:calc(100vh - 130px);min-height:calc(100svh - 130px);display:flex;flex-direction:column;justify-content:flex-end;padding:0;background:#100f0e}
+.slides{position:absolute;inset:0}
+.slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.8s ease;transform:scale(1.04)}
+.slides img.on{opacity:1;animation:drift 9s linear forwards}
+@keyframes drift{from{transform:scale(1.04)}to{transform:scale(1.12)}}
+.hero.photo::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(16,15,14,.92) 0%,rgba(16,15,14,.72) 38%,rgba(16,15,14,.18) 75%),linear-gradient(0deg,rgba(16,15,14,.9) 0%,rgba(16,15,14,0) 38%)}
+.hero.photo .wrap{position:relative;z-index:3;width:100%}
+.hero.photo .hero-copy{max-width:640px;padding:120px 0 72px}
+.slide-cap{position:absolute;z-index:3;right:40px;bottom:150px;text-align:right;font-family:var(--serif);font-style:italic;font-size:16px;color:#e4dccf;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.slide-dots{display:flex;gap:10px;margin-top:6px;justify-content:flex-end}
+.slide-dots button{width:26px;height:2px;border:0;padding:0;background:rgba(236,230,220,.35);cursor:pointer}
+.slide-dots button.on{background:var(--brass)}
+.hero.photo .hero-foot{position:relative;z-index:3}.hero.photo>.wm{top:30px;bottom:auto;right:40px}
+
+/* Lift on hover, like a listing card */
+.card{display:flex;flex-direction:column;text-decoration:none;background:#fff;transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s}
+.card:hover,.card:focus-visible{transform:translateY(-8px);box-shadow:0 26px 44px -22px rgba(22,21,20,.45)}
+.card .ph{aspect-ratio:4/3;background:#e4dfd6}
+.card .ph>img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.card:hover .ph>img{transform:scale(1.05)}
+.card .card-body{padding:24px 26px 28px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card .where{font-family:var(--serif);font-style:italic;color:var(--brass-deep);font-size:17px}
+.card h3{font-size:25px}
+.card .meta{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-top:auto;padding-top:14px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.feature-img{position:relative;transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s}
+.feature:hover .feature-img{transform:translateY(-8px);box-shadow:0 30px 50px -24px rgba(22,21,20,.5)}
+.ig-tile{transition:transform .4s cubic-bezier(.2,.7,.2,1),box-shadow .4s}
+.ig-tile:hover{transform:translateY(-6px);box-shadow:0 18px 30px -16px rgba(22,21,20,.45);z-index:1}
+
+/* Locations */
+.loc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.loc{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;text-decoration:none;color:#fff;background:#24211d;transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s}
+.loc>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.loc::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(16,15,14,.86) 0%,rgba(16,15,14,.1) 55%)}
+.loc:hover{transform:translateY(-8px);box-shadow:0 28px 48px -22px rgba(22,21,20,.55)}
+.loc:hover>img{transform:scale(1.06)}
+.loc .txt{position:absolute;left:28px;right:28px;bottom:26px;z-index:2}
+.loc h3{font-size:34px;color:#fff}
+.loc .count{font:500 12px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--brass-light);margin-top:8px;display:flex;align-items:center;gap:12px}
+.loc .count::after{content:"";width:26px;height:1px;background:currentColor;transition:width .3s}
+.loc:hover .count::after{width:46px}
+.loc .wm{top:16px;bottom:auto;right:16px}
+.also{margin-top:56px;padding-top:32px;border-top:1px solid var(--hair);display:flex;flex-wrap:wrap;gap:14px 36px;align-items:baseline}
+.also span{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--stone)}
+.also a{font-family:var(--serif);font-size:21px;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s,color .2s}
+.also a:hover{color:var(--brass-deep);border-color:currentColor}
+
+/* Filters */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:48px}
+.chips button{border:1px solid var(--hair);background:transparent;padding:11px 20px;font:500 12.5px var(--sans);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;color:var(--stone);transition:all .2s}
+.chips button:hover{border-color:var(--brass-deep);color:var(--brass-deep)}
+.chips button[aria-pressed="true"]{background:var(--coal);border-color:var(--coal);color:#ece6dc}
+.chips small{margin-left:8px;opacity:.7}
+
+/* Project detail */
+.project-cover{position:relative}
+.lb-frame{position:relative;display:inline-block;max-width:100%}
+.lb-frame .wm{right:16px;bottom:14px}
+
+/* Stacked lockup */
+.lockup{display:flex;flex-direction:column;align-items:center;gap:18px;margin-bottom:34px}
+.lockup .z{width:92px;filter:drop-shadow(0 0 18px rgba(186,140,70,.22))}
+.lockup .w{width:230px}
+@media(max-width:1120px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:960px){.loc-grid{grid-template-columns:repeat(2,1fr)}.slide-cap{display:none}}
+@media(max-width:640px){.cards,.loc-grid{grid-template-columns:1fr}.loc{aspect-ratio:4/3}.hero.photo .hero-copy{padding:88px 0 48px}.hero.photo::before{background:linear-gradient(0deg,rgba(16,15,14,.95) 0%,rgba(16,15,14,.7) 55%,rgba(16,15,14,.35) 100%)}.wm .ww{width:80px}.wm .wz{width:24px}.wm.lg .wz{width:32px}.wm.lg .ww{width:104px}.wm.lg{right:16px;bottom:14px}.lockup .w{width:190px}}
+@media (prefers-reduced-motion:reduce){.slides img.on{animation:none}}
+
 .tab{display:none}
 .tab.active{display:block}
 
@@ -286,7 +364,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 .lightbox{position:fixed;inset:0;z-index:200;background:rgba(14,13,12,.97);display:none;align-items:center;justify-content:center;padding:76px 84px 68px}
 .lightbox.open{display:flex}
 .lightbox figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:18px;max-height:100%}
-.lightbox img{max-width:100%;max-height:calc(100vh - 180px);object-fit:contain}
+#lbImg{max-width:100%;max-height:calc(100vh - 180px);object-fit:contain}
 .lightbox figcaption{color:#cfc7ba;font-family:var(--serif);font-style:italic;font-size:16px;text-align:center}
 .lb-btn{position:absolute;background:transparent;color:#ece6dc;border:1px solid rgba(236,230,220,.3);width:50px;height:50px;cursor:pointer;font-size:22px;line-height:1;transition:all .2s}
 .lb-btn:hover{border-color:var(--brass);color:var(--brass)}
@@ -420,33 +498,41 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 
 <!-- HOME -->
 <div id="home" class="tab active">
-  <section class="hero dark">
+  <section class="hero dark photo" aria-label="Zeferino's Inc.">
+    <div class="slides" id="slides"></div>
+    <div class="wm lg"><img class="wz" src="images/logo-z-transparent.png" alt=""><img class="ww" src="images/logo-zeferinos-transparent.png" alt=""></div>
+    <div class="slide-cap"><span id="slideCap"></span><div class="slide-dots" id="slideDots"></div></div>
     <div class="wrap">
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <img class="emblem" src="images/logo-z.png" alt="">
-          <ul class="slogan" aria-label="Build, renovate, transform"><li>Build</li><li>Renovate</li><li>Transform</li></ul>
-          <h1>Precision in every detail.</h1>
-          <p class="lead">Finish carpentry, trim, doors, stairs, handrails and flooring, installed for homeowners, builders and contractors across Southwest Florida.</p>
-          <div class="cta-row">
-            <a class="btn" href="#contact">Request a free estimate</a>
-            <a class="btn line" href="tel:+12393241224"><svg class="icon"><use href="#i-phone"/></svg>(239) 324-1224</a>
-          </div>
+      <div class="hero-copy">
+        <img class="emblem" src="images/logo-z.png" alt="">
+        <ul class="slogan" aria-label="Build, renovate, transform"><li>Build</li><li>Renovate</li><li>Transform</li></ul>
+        <h1>Precision in every detail.</h1>
+        <p class="lead">Finish carpentry, trim, doors, stairs, handrails and flooring, installed for homeowners, builders and contractors across Southwest Florida.</p>
+        <div class="cta-row">
+          <a class="btn" href="#contact">Request a free estimate</a>
+          <a class="btn line" href="#projects">View our work</a>
         </div>
-        <figure class="casing">
-          <img src="images/sanibel-exterior-handrail/4EA3DBFF-8CCE-4055-ACD4-BB834CF81EDC_1_105_c.jpeg" alt="Exterior wood handrail installed by Zeferino's on a home in Sanibel Island" fetchpriority="high">
-          <figcaption>Exterior handrail, Sanibel Island</figcaption>
-        </figure>
       </div>
       <div class="hero-foot">
         <div><strong>Homeowners &amp; builders</strong><span>Residential projects and subcontract work</span></div>
         <div><strong>Labor-only installation</strong><span>For builders, contractors and millwork suppliers</span></div>
-        <div><strong>Free estimates</strong><span>By phone, email or our estimate form</span></div>
+        <div><strong>Free estimates</strong><span>Call <a href="tel:+12393241224" style="text-decoration:none;color:#d8d0c3">(239) 324-1224</a></span></div>
       </div>
     </div>
   </section>
 
   <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <div><div class="kicker">Find our work near you</div><h2>Projects by location</h2></div>
+        <p class="lead">Choose a city to see the projects we've completed there. New projects are added as we finish them.</p>
+      </div>
+      <div class="loc-grid" id="locGrid"></div>
+      <div class="also" id="alsoServing"></div>
+    </div>
+  </section>
+
+  <section class="band linen">
     <div class="wrap intro">
       <div>
         <div class="kicker">What we install</div>
@@ -478,6 +564,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
       <blockquote>The finish is what you live with every day.</blockquote>
       <cite>Vinyl plank flooring, Sanibel Island</cite>
     </div>
+    <div class="wm lg"><img class="wz" src="images/logo-z-transparent.png" alt=""><img class="ww" src="images/logo-zeferinos-transparent.png" alt=""></div>
   </section>
 
   <section class="band linen">
@@ -537,7 +624,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 
   <section class="band dark closing">
     <div class="wrap">
-      <img class="emblem" src="images/logo-z.png" alt="">
+      <div class="lockup"><img class="z" src="images/logo-z-transparent.png" alt=""><img class="w" src="images/logo-zeferinos-transparent.png" alt="Zeferino's"></div>
       <div class="kicker" style="justify-content:center">Let's talk</div>
       <h2>Tell us about your project.</h2>
       <p class="lead">Send the scope and a few photos, and we'll get back to you with a free estimate.</p>
@@ -589,18 +676,22 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
     <div class="wrap">
       <div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; Projects</div>
       <h1>Completed projects</h1>
-      <p class="lead">Finish carpentry and flooring projects completed by Zeferino's Inc. Select any photograph to enlarge it.</p>
+      <p class="lead">Finish carpentry and flooring projects completed by Zeferino's Inc. Filter by city, then open any project to see every photograph.</p>
     </div>
   </section>
-  <div class="wrap" id="projectList"></div>
-  <section class="band dark closing">
+  <section class="band linen">
     <div class="wrap">
-      <h2>Planning something similar?</h2>
-      <p class="lead">Send us the scope and a few photos for a free estimate.</p>
-      <div class="cta-row"><a class="btn" href="#contact">Request a free estimate</a></div>
+      <div class="chips" id="chips" role="group" aria-label="Filter projects by city"></div>
+      <div class="cards" id="projectGrid"></div>
     </div>
   </section>
 </div>
+
+<!-- CITY (rendered from the project list) -->
+<div id="city" class="tab"></div>
+
+<!-- PROJECT DETAIL (rendered from the project list) -->
+<div id="project" class="tab"></div>
 
 <!-- BUILDERS -->
 <div id="builders" class="tab">
@@ -727,12 +818,22 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Project photo viewer" aria-hidden="true">
   <button class="lb-btn lb-close" type="button" aria-label="Close photo" onclick="closePhoto()">×</button>
   <button class="lb-btn lb-prev" type="button" aria-label="Previous photo" onclick="movePhoto(-1)">‹</button>
-  <figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
+  <figure><div class="lb-frame"><img id="lbImg" alt=""><div class="wm lg"><img class="wz" src="images/logo-z-transparent.png" alt=""><img class="ww" src="images/logo-zeferinos-transparent.png" alt=""></div></div><figcaption id="lbCap"></figcaption></figure>
   <button class="lb-btn lb-next" type="button" aria-label="Next photo" onclick="movePhoto(1)">›</button>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
+/* ==========================================================================
+   HOW TO ADD A NEW PROJECT
+   1. Put the photos in a folder inside images/ (one folder per project).
+   2. Copy one block in the "projects" list below and fill in the title,
+      city, service, text and the photo file names.
+   A new city is created automatically: it appears in "Projects by location",
+   in the city filter and gets its own page. Every photo gets the
+   Zeferino's watermark automatically.
+   ========================================================================== */
 const IG='https://www.instagram.com/zeferinosprecisionfinish/';
+const SERVICE_AREA=['Naples','Bonita Springs','Estero','Fort Myers','Cape Coral','Sanibel Island'];
 
 const services=[
   ['Baseboards & trim','Clean, tight joints and seamless transitions room to room.'],
@@ -747,83 +848,160 @@ const services=[
 
 const H='images/sanibel-exterior-handrail/';
 const projects=[
-  {id:'sanibel-handrail',title:'Exterior wood handrail',city:'Sanibel Island, FL',service:'Exterior finish carpentry',
+  {id:'sanibel-handrail',title:'Exterior wood handrail',city:'Sanibel Island',state:'FL',service:'Exterior finish carpentry',
    text:'Installation of an exterior wood handrail on the stairs and porch of a residential property, with attention to precise alignment, secure installation and clean finishing.',
    cover:0,
    photos:['4EA3DBFF-8CCE-4055-ACD4-BB834CF81EDC','6342C326-B229-47BE-9545-8562816ABA6C','732B7692-87C6-42E9-A679-8B90C5EA64F4','C3C7060E-694A-445E-A18D-D41A167435DA','9F43FB68-CFC7-4308-9ECE-886829AC72D7','9B67283C-C193-4368-9B80-06FD240A8675','4A6715AE-7844-4985-BA0A-C1273ADAF72C','26DB59AF-25AC-4096-A038-03B0751374B5','46C60CD9-CA19-4242-96A9-6BFBAD2EC5AD','974BC3AB-8362-40AA-9B57-31410517765A','BCFB0049-DC83-4F3E-B7DB-36A4330BFBC5','D94BD2A5-2852-4F19-945F-BBD602754D6F','DC545279-C570-4097-AC85-0BA12940A3F0']
      .map(f=>({url:H+f+'_1_105_c.jpeg',title:''}))},
-  {id:'sanibel-flooring',title:'Vinyl plank flooring',city:'Sanibel Island, FL',service:'Flooring installation',
+  {id:'sanibel-flooring',title:'Vinyl plank flooring',city:'Sanibel Island',state:'FL',service:'Flooring installation',
    text:'Vinyl plank flooring throughout a residence, from sound-membrane preparation to the finished floor in the living area, bedroom, kitchen and hallway.',
-   cover:7,feature:8,
+   cover:8,feature:8,
    photos:[['01-prep-living-room','Preparation: living room'],['02-prep-bedroom-entry','Preparation: bedroom entry'],['03-prep-bedroom','Preparation: bedroom'],['04-prep-wide-living','Preparation: living area'],['05-prep-living-water-view','Preparation: living area with water view'],['06-prep-kitchen','Preparation: kitchen'],['07-installed-living-room','Installed: living room'],['08-installed-living-water-view','Installed: living area with water view'],['09-installed-bedroom','Installed: bedroom'],['10-installed-hallway','Installed: hallway'],['11-installed-kitchen','Installed: kitchen']]
      .map(([f,t])=>({url:'images/sanibel-vinyl-'+f+'.jpg',title:t}))},
-  {id:'cape-coral',title:'Vinyl plank flooring and stairs',city:'Cape Coral, FL',service:'Flooring and stairs',
+  {id:'cape-coral',title:'Vinyl plank flooring and stairs',city:'Cape Coral',state:'FL',service:'Flooring and stairs',
    text:'Vinyl plank flooring throughout a residence plus finished stairs with dark wood treads and white risers, shown before, during and after the work.',
    cover:1,
    photos:[['01-stairs-before','Stairs before the work'],['02-stairs-finished','Finished stairs with dark wood treads and white risers'],['03-living-area','Open living area with vinyl plank flooring'],['04-bedroom-view','Flooring leading into the bedroom'],['05-hallway','Hallway with vinyl plank flooring'],['06-bedroom','Bedroom with vinyl plank flooring'],['07-bedroom-corner','Flooring and trim in a bedroom corner'],['08-stairs-top-view','Finished stairs seen from the hallway'],['09-video-glass-door-window','Planks laid beside a glass door and window'],['10-video-large-window','Flooring in a room with a large window'],['11-video-living-kitchen','Flooring in the open living and kitchen area'],['12-video-hallway-install','Installation in progress in the hallway']]
      .map(([f,t])=>({url:'images/cape-coral-'+f+'.jpg',title:t}))},
-  {id:'tampa',title:'Flex molding on arched openings',city:'Tampa, FL',service:'Architectural trim',
+  {id:'tampa',title:'Flex molding on arched openings',city:'Tampa',state:'FL',service:'Architectural trim',
    text:'Flex molding casing installed around the arched openings of a residence, matched to the curve of each arch.',
-   cover:6,feature:0,
+   cover:0,feature:0,
    photos:[['01-arch-column','Arched opening with column view'],['02-arch-kitchen','Arched opening to the kitchen'],['03-arch-closet','Arched opening in a hallway'],['04-arch-room','Arched opening into a room'],['05-closet-door','Louvered closet door with trim beside the arch'],['06-arch-bathroom','Arched opening to the bathroom'],['07-arch-dining','Arched opening to the dining area']]
      .map(([f,t])=>({url:'images/tampa-flex-molding-'+f+'.jpg',title:t}))}
 ];
 
-const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+/* Background photographs for the opening section: the strongest shots. */
+const heroSlides=[
+  {url:'images/tampa-flex-molding-01-arch-column.jpg',cap:'Flex molding on an arched opening, Tampa',pos:'center 35%'},
+  {url:'images/cape-coral-02-stairs-finished.jpg',cap:'Finished stairs, Cape Coral',pos:'center 55%'},
+  {url:H+'4EA3DBFF-8CCE-4055-ACD4-BB834CF81EDC_1_105_c.jpeg',cap:'Exterior wood handrail, Sanibel Island',pos:'center 45%'}
+];
+
+/* ---------- helpers ---------- */
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const WM=(size='')=>`<span class="wm ${size}"><img class="wz" src="images/logo-z-transparent.png" alt=""><img class="ww" src="images/logo-zeferinos-transparent.png" alt=""></span>`;
+const cities=[...new Set(projects.map(p=>p.city))].map(c=>({name:c,slug:slug(c),items:projects.filter(p=>p.city===c)}));
+const coverOf=p=>p.photos[p.cover||0];
+const plural=(n,w)=>`${n} ${w}${n===1?'':'s'}`;
+
+/* ---------- services ---------- */
 const svcHTML=s=>`<li><h3>${esc(s[0])}</h3><p>${esc(s[1])}</p></li>`;
 document.querySelector('#homeServices').innerHTML=services.map(svcHTML).join('');
 document.querySelector('#allServices').innerHTML=services.map(svcHTML).join('');
 document.querySelector('#footServices').innerHTML=services.slice(0,6).map(s=>`<li><a href="#services">${esc(s[0])}</a></li>`).join('');
 document.querySelector('#leadService').innerHTML=[...services.map(s=>s[0]),'Builder / Subcontractor','Other'].map(o=>`<option>${esc(o)}</option>`).join('');
 
-const cardHTML=p=>{const c=p.photos[p.feature??p.cover];return `<a class="feature" href="#project-${p.id}"><div class="feature-img"><img src="${c.url}" alt="${esc(p.title)} in ${esc(p.city)}" loading="lazy"></div><div><div class="where">${esc(p.city)}</div><h3>${esc(p.title)}</h3><p>${esc(p.text.split('.')[0])}.</p><span class="more">View the project</span></div></a>`};
-document.querySelector('#homeProjects').innerHTML=projects.map(cardHTML).join('');
-document.querySelector('#serviceProjects').innerHTML=projects.map(cardHTML).join('');
+/* ---------- cards ---------- */
+const cardHTML=p=>{const c=coverOf(p);return `<a class="card" href="#project-${p.id}"><div class="ph"><img src="${c.url}" alt="${esc(p.title)} in ${esc(p.city)}" loading="lazy">${WM()}</div><div class="card-body"><div class="where">${esc(p.city)}, ${p.state}</div><h3>${esc(p.title)}</h3><div class="meta">${esc(p.service)} &nbsp;/&nbsp; ${plural(p.photos.length,'photo')}</div></div></a>`};
+const featureHTML=p=>{const c=p.photos[p.feature??p.cover];return `<a class="feature" href="#project-${p.id}"><div class="feature-img"><img src="${c.url}" alt="${esc(p.title)} in ${esc(p.city)}" loading="lazy">${WM()}</div><div><div class="where">${esc(p.city)}, ${p.state}</div><h3>${esc(p.title)}</h3><p>${esc(p.text.split('.')[0])}.</p><span class="more">View the project</span></div></a>`};
+document.querySelector('#homeProjects').innerHTML=projects.map(featureHTML).join('');
+document.querySelector('#serviceProjects').innerHTML=`<div class="cards">${projects.map(cardHTML).join('')}</div>`;
 
-document.querySelector('#projectList').innerHTML=projects.map((p,pi)=>{
-  const c=p.photos[p.cover];
-  return `<article class="project" id="p-${p.id}">
+/* ---------- locations ---------- */
+document.querySelector('#locGrid').innerHTML=cities.map(c=>{const ph=coverOf(c.items[0]);return `<a class="loc" href="#city-${c.slug}"><img src="${ph.url}" alt="" loading="lazy">${WM()}<div class="txt"><h3>${esc(c.name)}</h3><div class="count">${plural(c.items.length,'project')}</div></div></a>`}).join('');
+const also=SERVICE_AREA.filter(a=>!cities.some(c=>c.name===a));
+document.querySelector('#alsoServing').innerHTML=also.length?`<span>Also serving</span>${also.map(a=>`<a href="#contact" onclick="presetCity('${esc(a)}')">${esc(a)}</a>`).join('')}`:'';
+
+/* ---------- projects page with city filter ---------- */
+let activeCity='all';
+function drawProjects(){
+  document.querySelector('#chips').innerHTML=[{name:'All locations',slug:'all',items:projects},...cities].map(c=>`<button type="button" aria-pressed="${activeCity===c.slug}" onclick="filterCity('${c.slug}')">${esc(c.name)}<small>${c.items.length}</small></button>`).join('');
+  const list=activeCity==='all'?projects:projects.filter(p=>slug(p.city)===activeCity);
+  document.querySelector('#projectGrid').innerHTML=list.map(cardHTML).join('');
+}
+function filterCity(sl){activeCity=sl;drawProjects()}
+drawProjects();
+
+/* ---------- city page ---------- */
+function renderCity(sl){
+  const c=cities.find(x=>x.slug===sl); if(!c)return false;
+  document.querySelector('#city').innerHTML=`
+  <section class="page-head dark"><img class="watermark" src="images/logo-z.png" alt="">
+    <div class="wrap"><div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; <a href="#projects">Projects</a> &nbsp;/&nbsp; ${esc(c.name)}</div>
+    <h1>${esc(c.name)}, FL</h1><p class="lead">${plural(c.items.length,'completed project')} by Zeferino's Inc. in ${esc(c.name)}.</p></div></section>
+  <section class="band linen"><div class="wrap"><div class="cards">${c.items.map(cardHTML).join('')}</div>
+    <div class="band-foot"><p>Planning a project in ${esc(c.name)}?</p><a class="btn ink" href="#contact" onclick="presetCity('${esc(c.name)}')">Request a free estimate</a></div></div></section>
+  <section class="band"><div class="wrap"><div class="section-head" style="margin-bottom:48px"><div><div class="kicker">Other locations</div><h2>More of our work</h2></div></div>
+    <div class="also" style="margin-top:0;border-top:0;padding-top:0">${cities.filter(x=>x.slug!==sl).map(x=>`<a href="#city-${x.slug}">${esc(x.name)}</a>`).join('')}<a href="#projects">All projects</a></div></div></section>`;
+  return true;
+}
+
+/* ---------- project detail page ---------- */
+let current=null;
+function renderProject(id){
+  const pi=projects.findIndex(p=>p.id===id); if(pi<0)return false;
+  const p=projects[pi],c=coverOf(p),cs=slug(p.city);current=pi;
+  const more=projects.filter(x=>x.id!==id).sort((a,b)=>(b.city===p.city)-(a.city===p.city)).slice(0,3);
+  document.querySelector('#project').innerHTML=`
+  <section class="page-head dark"><img class="watermark" src="images/logo-z.png" alt="">
+    <div class="wrap"><div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; <a href="#projects">Projects</a> &nbsp;/&nbsp; <a href="#city-${cs}">${esc(p.city)}</a></div>
+    <h1>${esc(p.title)}</h1><p class="lead">${esc(p.city)}, ${p.state}</p></div></section>
+  <div class="wrap"><article class="project">
     <div class="project-top">
-      <div><div class="kicker">${esc(p.service)}</div><h2>${esc(p.title)}</h2><p class="lead">${esc(p.text)}</p>
-        <dl><dt>Location</dt><dd>${esc(p.city)}</dd><dt>Service</dt><dd>${esc(p.service)}</dd><dt>Photos</dt><dd>${p.photos.length}</dd></dl></div>
-      <button class="project-cover" type="button" onclick="openPhoto(${pi},${p.cover})" aria-label="Enlarge cover photo of ${esc(p.title)}"><img src="${c.url}" alt="${esc(c.title||p.title)}" loading="lazy"></button>
+      <div><div class="kicker">${esc(p.service)}</div><p class="lead">${esc(p.text)}</p>
+        <dl><dt>Location</dt><dd><a href="#city-${cs}" style="text-decoration:none">${esc(p.city)}, ${p.state}</a></dd><dt>Service</dt><dd>${esc(p.service)}</dd><dt>Photos</dt><dd>${p.photos.length}</dd></dl>
+        <a class="btn ink" href="#contact" style="margin-top:36px">Request a similar project</a></div>
+      <button class="project-cover ph" type="button" onclick="openPhoto(${pi},${p.cover||0})" aria-label="Enlarge cover photo"><img src="${c.url}" alt="${esc(c.title||p.title)}">${WM('lg')}</button>
     </div>
-    <div class="thumbs">${p.photos.map((ph,i)=>`<button type="button" onclick="openPhoto(${pi},${i})" aria-label="Open photo ${i+1} of ${p.photos.length}${ph.title?': '+esc(ph.title):''}"><img src="${ph.url}" alt="" loading="lazy"></button>`).join('')}</div>
-  </article>`}).join('');
+    <div class="thumbs">${p.photos.map((ph,i)=>`<button class="ph" type="button" onclick="openPhoto(${pi},${i})" aria-label="Open photo ${i+1} of ${p.photos.length}${ph.title?': '+esc(ph.title):''}"><img src="${ph.url}" alt="" loading="lazy">${WM('sm')}</button>`).join('')}</div>
+  </article></div>
+  <section class="band linen"><div class="wrap"><div class="section-head" style="margin-bottom:56px"><div><div class="kicker">Keep exploring</div><h2>More projects</h2></div><a class="more" href="#projects">All projects</a></div>
+    <div class="cards">${more.map(cardHTML).join('')}</div></div></section>`;
+  return true;
+}
 
+/* ---------- Instagram ---------- */
 const igPicks=[[3,6],[2,1],[1,7],[0,1],[1,10],[2,7]];
-document.querySelector('#igGrid').innerHTML=igPicks.map(([p,i])=>{const ph=projects[p].photos[i];return `<a class="ig-tile" href="${IG}" target="_blank" rel="noopener" aria-label="${esc(ph.title||projects[p].title)}, view more on Instagram"><img src="${ph.url}" alt="" loading="lazy"><span><svg class="icon"><use href="#i-ig"/></svg></span></a>`}).join('');
+document.querySelector('#igGrid').innerHTML=igPicks.map(([p,i])=>{const ph=projects[p].photos[i];return `<a class="ig-tile" href="${IG}" target="_blank" rel="noopener" aria-label="${esc(ph.title||projects[p].title)}, view more on Instagram"><img src="${ph.url}" alt="" loading="lazy">${WM('sm')}<span><svg class="icon"><use href="#i-ig"/></svg></span></a>`}).join('');
 
-/* Lightbox */
+/* ---------- hero slideshow ---------- */
+const slidesEl=document.querySelector('#slides');
+slidesEl.innerHTML=heroSlides.map((h,i)=>`<img src="${h.url}" alt="" style="object-position:${h.pos}" ${i?'loading="lazy"':'fetchpriority="high"'}>`).join('');
+document.querySelector('#slideDots').innerHTML=heroSlides.map((h,i)=>`<button type="button" aria-label="Show photo ${i+1}: ${esc(h.cap)}" onclick="showSlide(${i},true)"></button>`).join('');
+let slide=0,slideTimer=null;
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function showSlide(i,user){
+  slide=i;
+  slidesEl.querySelectorAll('img').forEach((im,k)=>{im.classList.remove('on');if(k===i){void im.offsetWidth;im.classList.add('on')}});
+  document.querySelectorAll('#slideDots button').forEach((b,k)=>b.classList.toggle('on',k===i));
+  document.querySelector('#slideCap').textContent=heroSlides[i].cap;
+  if(user)restartSlides();
+}
+function restartSlides(){clearInterval(slideTimer);if(!reduce)slideTimer=setInterval(()=>showSlide((slide+1)%heroSlides.length),7000)}
+showSlide(0);restartSlides();
+
+/* ---------- lightbox ---------- */
 let lbP=0,lbI=0,lastFocus=null;
 function openPhoto(p,i){lbP=p;lbI=i;lastFocus=document.activeElement;renderPhoto();const m=document.querySelector('#lightbox');m.classList.add('open');m.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';m.querySelector('.lb-close').focus()}
-function renderPhoto(){const p=projects[lbP],ph=p.photos[lbI];const img=document.querySelector('#lbImg');img.src=ph.url;img.alt=ph.title||(p.title+', photo '+(lbI+1));document.querySelector('#lbCap').textContent=`${p.title}, ${p.city}${ph.title?'. '+ph.title:''}. Photo ${lbI+1} of ${p.photos.length}`}
+function renderPhoto(){const p=projects[lbP],ph=p.photos[lbI];const img=document.querySelector('#lbImg');img.src=ph.url;img.alt=ph.title||(p.title+', photo '+(lbI+1));document.querySelector('#lbCap').textContent=`${p.title}, ${p.city}, ${p.state}${ph.title?'. '+ph.title:''}. Photo ${lbI+1} of ${p.photos.length}`}
 function movePhoto(d){const n=projects[lbP].photos.length;lbI=(lbI+d+n)%n;renderPhoto()}
 function closePhoto(){const m=document.querySelector('#lightbox');m.classList.remove('open');m.setAttribute('aria-hidden','true');document.body.style.overflow='';if(lastFocus)lastFocus.focus()}
 document.querySelector('#lightbox').addEventListener('click',e=>{if(e.target.id==='lightbox')closePhoto()});
 document.addEventListener('keydown',e=>{if(!document.querySelector('#lightbox').classList.contains('open'))return;if(e.key==='Escape')closePhoto();else if(e.key==='ArrowLeft')movePhoto(-1);else if(e.key==='ArrowRight')movePhoto(1)});
 
-/* Navigation */
+/* ---------- navigation ---------- */
 const titles={home:"Zeferino's Inc. | Finish Carpentry & Flooring Installation in Southwest Florida",services:"Services | Zeferino's Inc.",projects:"Projects | Zeferino's Inc.",builders:"For Builders | Zeferino's Inc.",about:"About | Zeferino's Inc.",contact:"Request an Estimate | Zeferino's Inc."};
 function route(){
-  let page=location.hash.slice(1)||'home',sub='';
-  if(page.startsWith('project-')){sub=page.slice(8);page='projects'}
-  const id=document.getElementById(page)&&document.getElementById(page).classList.contains('tab')?page:'home';
+  let h=location.hash.slice(1)||'home',id=h;
+  if(h.startsWith('city-')){id=renderCity(h.slice(5))?'city':'projects';if(id==='city')titles.city=cities.find(c=>c.slug===h.slice(5)).name+" Projects | Zeferino's Inc."}
+  else if(h.startsWith('project-')){id=renderProject(h.slice(8))?'project':'projects';if(id==='project')titles.project=projects[current].title+', '+projects[current].city+" | Zeferino's Inc."}
+  else if(!document.getElementById(h)||!document.getElementById(h).classList.contains('tab')||h==='city'||h==='project')id='home';
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.id===id));
-  document.querySelectorAll('nav.main a').forEach(a=>{if(a.getAttribute('href')==='#'+id)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  const navId=(id==='city'||id==='project')?'projects':id;
+  document.querySelectorAll('nav.main a').forEach(a=>{if(a.getAttribute('href')==='#'+navId)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   document.title=titles[id];
   closeMenu();
-  const target=sub&&document.getElementById('p-'+sub);
-  if(target){const y=target.getBoundingClientRect().top+scrollY-document.querySelector('header.site').offsetHeight;window.scrollTo({top:y,behavior:'instant'})}
-  else window.scrollTo({top:0,behavior:'instant'});
+  window.scrollTo({top:0,behavior:'instant'});
 }
 window.addEventListener('hashchange',route);
 route();
 function toggleMenu(){const n=document.querySelector('#mobileNav'),b=document.querySelector('.menu-btn');const open=!n.classList.contains('open');n.classList.toggle('open',open);b.setAttribute('aria-expanded',open);b.setAttribute('aria-label',open?'Close menu':'Open menu')}
 function closeMenu(){document.querySelector('#mobileNav').classList.remove('open');const b=document.querySelector('.menu-btn');b.setAttribute('aria-expanded','false');b.setAttribute('aria-label','Open menu')}
 
-/* Estimate form */
+/* ---------- estimate form ---------- */
 function presetService(v){document.querySelector('#leadService').value=v}
+function presetCity(v){document.querySelector('#leadCity').value=v+', FL'}
 function showToast(t){const e=document.querySelector('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),4000)}
 function sendLead(e){
   e.preventDefault();
