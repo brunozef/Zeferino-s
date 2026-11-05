@@ -116,7 +116,7 @@ nav.main .btn:hover{background:var(--brass);color:var(--coal)}
 .hero-foot span{color:#9d968b;font-size:14.5px}
 @media (prefers-reduced-motion:no-preference){
   .hero-copy>*{opacity:0;transform:translateY(14px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
-  .hero-copy>*:nth-child(2){animation-delay:.08s}.hero-copy>*:nth-child(3){animation-delay:.16s}.hero-copy>*:nth-child(4){animation-delay:.24s}
+  .hero-copy>*:nth-child(2){animation-delay:.1s}.hero-copy>*:nth-child(3){animation-delay:.2s}.hero-copy>*:nth-child(4){animation-delay:.3s}.hero-copy>*:nth-child(5){animation-delay:.4s}
   .casing{opacity:0;animation:fade 1.4s .2s ease forwards}
 }
 @keyframes rise{to{opacity:1;transform:none}}
@@ -134,7 +134,7 @@ nav.main .btn:hover{background:var(--brass);color:var(--coal)}
 
 /* Full-bleed statement */
 .statement{position:relative;min-height:78vh;display:flex;align-items:flex-end;color:#fff;overflow:hidden}
-.statement img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:30% 80%}
+.statement img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 55%}
 .statement::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,15,14,.05) 30%,rgba(16,15,14,.72))}
 .statement .wrap{position:relative;z-index:1;width:100%;padding-bottom:88px}
 .statement blockquote{margin:0;font-family:var(--serif);font-size:clamp(32px,4.2vw,60px);line-height:1.12;max-width:17ch}
@@ -239,7 +239,7 @@ form.estimate .note{font-size:13.5px;color:var(--stone)}
 /* Footer */
 footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px solid var(--hair-dark)}
 .foot-top{display:flex;justify-content:space-between;align-items:center;gap:32px;padding:72px 0 56px;border-bottom:1px solid var(--hair-dark);flex-wrap:wrap}
-.foot-top img{mix-blend-mode:lighten;width:220px}
+.foot-top img{mix-blend-mode:lighten;width:220px}.foot-top p{text-align:right}
 .foot-top p{font-family:var(--serif);font-style:italic;font-size:21px;color:#d8d0c3}
 .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1.3fr;gap:48px;padding:56px 0 64px}
 .foot-grid h4{font:500 12px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin:0 0 22px}
@@ -251,6 +251,33 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 .foot-contact .icon{color:var(--brass);width:15px;height:15px}
 .foot-bottom{border-top:1px solid rgba(255,255,255,.06)}
 .foot-bottom .wrap{display:flex;justify-content:space-between;gap:20px;padding-top:24px;padding-bottom:24px;font-size:12.5px;letter-spacing:.06em;color:#7f786e}
+
+/* Brand: monogram + slogan */
+.emblem{width:86px;height:auto;mix-blend-mode:lighten;margin-bottom:34px;filter:drop-shadow(0 0 18px rgba(186,140,70,.18))}
+.slogan{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-wrap:wrap;align-items:center;font:500 12.5px/1 var(--sans);letter-spacing:.32em;text-transform:uppercase;color:var(--brass)}
+.slogan li+li::before,.brand-words span+span::before{content:"";display:inline-block;width:5px;height:5px;border:1px solid var(--brass);transform:rotate(45deg);margin:0 18px 2px 14px;vertical-align:middle}
+.brandband{position:relative;overflow:hidden;text-align:center}
+.brandband .watermark{position:absolute;right:-160px;top:50%;width:620px;transform:translateY(-50%);opacity:.045;mix-blend-mode:lighten;pointer-events:none}
+.brandband .mono{width:150px;margin:0 auto 44px;mix-blend-mode:lighten;filter:drop-shadow(0 0 24px rgba(186,140,70,.22))}
+.brand-words{font-family:var(--serif);font-size:clamp(38px,5.4vw,78px);line-height:1.1;color:#f3ede3;margin:0 auto 26px}
+.brand-words span{white-space:nowrap}
+.brand-words span+span::before{width:10px;height:10px;margin:0 .45em .22em .35em}
+.brandband .lead{margin:0 auto}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);margin-top:88px;border-top:1px solid var(--hair-dark);text-align:left;position:relative}
+.pillars div{padding:40px 36px 0 0}
+.pillars div+div{padding-left:36px;border-left:1px solid var(--hair-dark)}
+.pillars h3{font-size:30px;color:#fff;margin-bottom:6px}
+.pillars .for{font-family:var(--serif);font-style:italic;color:var(--brass);font-size:17px;margin-bottom:16px}
+.pillars p{color:#aaa296;font-size:15.5px}
+.page-head{position:relative;overflow:hidden}
+.page-head .watermark{position:absolute;right:4%;top:50%;transform:translateY(-50%);width:340px;opacity:.09;mix-blend-mode:lighten;pointer-events:none}
+.page-head .wrap{position:relative}
+.closing .emblem{width:64px;margin:0 auto 30px;display:block}
+.foot-brand{display:flex;align-items:center;gap:18px}
+.foot-brand .z{width:62px;mix-blend-mode:lighten}
+.foot-top .slogan{margin:0}
+@media(max-width:960px){.pillars{grid-template-columns:1fr}.pillars div,.pillars div+div{padding:32px 0;border-left:0}.pillars div+div{border-top:1px solid var(--hair-dark)}.page-head .watermark{width:220px;right:-30px;opacity:.07}}
+@media(max-width:640px){.emblem{width:66px;margin-bottom:26px}.slogan{font-size:11px;letter-spacing:.24em}.slogan li+li::before{margin:0 10px 2px 7px}.brandband .mono{width:110px}.brandband .watermark{display:none}.brand-words span{display:block}.brand-words span+span::before{display:none}.foot-top .slogan{font-size:10px}}
 
 .tab{display:none}
 .tab.active{display:block}
@@ -397,9 +424,10 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
     <div class="wrap">
       <div class="hero-grid">
         <div class="hero-copy">
-          <div class="kicker">Precision Finish &amp; Remodeling</div>
-          <h1>Finish carpentry, installed with precision.</h1>
-          <p class="lead">Trim, doors, casings, stairs, handrails and flooring for homeowners, builders and contractors across Southwest Florida.</p>
+          <img class="emblem" src="images/logo-z.png" alt="">
+          <ul class="slogan" aria-label="Build, renovate, transform"><li>Build</li><li>Renovate</li><li>Transform</li></ul>
+          <h1>Precision in every detail.</h1>
+          <p class="lead">Finish carpentry, trim, doors, stairs, handrails and flooring, installed for homeowners, builders and contractors across Southwest Florida.</p>
           <div class="cta-row">
             <a class="btn" href="#contact">Request a free estimate</a>
             <a class="btn line" href="tel:+12393241224"><svg class="icon"><use href="#i-phone"/></svg>(239) 324-1224</a>
@@ -427,6 +455,20 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
         <a class="more" href="#services">All services</a>
       </div>
       <ul class="svc-list" id="homeServices"></ul>
+    </div>
+  </section>
+
+  <section class="band dark brandband">
+    <img class="watermark" src="images/logo-z.png" alt="">
+    <div class="wrap">
+      <img class="mono" src="images/logo-z.png" alt="Zeferino's Z monogram">
+      <h2 class="brand-words"><span>Build.</span> <span>Renovate.</span> <span>Transform.</span></h2>
+      <p class="lead">Three words that describe every job we take on, from new construction to the details that change how a room feels.</p>
+      <div class="pillars">
+        <div><h3>Build</h3><div class="for">For builders and contractors</div><p>Labor-only finish carpentry on new construction: baseboards, casings, doors and crown molding.</p></div>
+        <div><h3>Renovate</h3><div class="for">For homeowners</div><p>Updates that refresh a home: vinyl plank flooring, stairs, handrails, new trim and doors.</p></div>
+        <div><h3>Transform</h3><div class="for">For a room with character</div><p>Architectural details: accent walls, paneling, decorative beams and arched openings.</p></div>
+      </div>
     </div>
   </section>
 
@@ -495,6 +537,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 
   <section class="band dark closing">
     <div class="wrap">
+      <img class="emblem" src="images/logo-z.png" alt="">
       <div class="kicker" style="justify-content:center">Let's talk</div>
       <h2>Tell us about your project.</h2>
       <p class="lead">Send the scope and a few photos, and we'll get back to you with a free estimate.</p>
@@ -510,6 +553,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 <!-- SERVICES -->
 <div id="services" class="tab">
   <section class="page-head dark">
+    <img class="watermark" src="images/logo-z.png" alt="">
     <div class="wrap">
       <div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; Services</div>
       <h1>Our services</h1>
@@ -541,6 +585,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 <!-- PROJECTS -->
 <div id="projects" class="tab">
   <section class="page-head dark">
+    <img class="watermark" src="images/logo-z.png" alt="">
     <div class="wrap">
       <div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; Projects</div>
       <h1>Completed projects</h1>
@@ -560,6 +605,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 <!-- BUILDERS -->
 <div id="builders" class="tab">
   <section class="page-head dark">
+    <img class="watermark" src="images/logo-z.png" alt="">
     <div class="wrap">
       <div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; For builders</div>
       <h1>A partner in the details</h1>
@@ -584,6 +630,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 <!-- ABOUT -->
 <div id="about" class="tab">
   <section class="page-head dark">
+    <img class="watermark" src="images/logo-z.png" alt="">
     <div class="wrap">
       <div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; About</div>
       <h1>Built on precision</h1>
@@ -608,6 +655,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 <!-- CONTACT -->
 <div id="contact" class="tab">
   <section class="page-head dark">
+    <img class="watermark" src="images/logo-z.png" alt="">
     <div class="wrap">
       <div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; Free estimate</div>
       <h1>Request a free estimate</h1>
@@ -646,8 +694,8 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 <footer class="site">
   <div class="wrap">
     <div class="foot-top">
-      <img src="images/logo-zeferinos.png" alt="Zeferino's">
-      <p>Precision in every detail.</p>
+      <div class="foot-brand"><img class="z" src="images/logo-z.png" alt=""><img src="images/logo-zeferinos.png" alt="Zeferino's"></div>
+      <div><p>Precision in every detail.</p><ul class="slogan" style="justify-content:flex-end;margin-top:12px"><li>Build</li><li>Renovate</li><li>Transform</li></ul></div>
     </div>
     <div class="foot-grid">
       <div class="foot-about">
