@@ -188,7 +188,7 @@ async function loadSanibelGallery(){
       const msg=document.createElement('span');msg.textContent=`${heicCount} HEIC photo${heicCount===1?'':'s'} not displayed. Convert to JPG to add ${heicCount===1?'it':'them'} to the gallery. `;
       status.appendChild(msg);
     }
-    const link=document.createElement('a');link.href=sanibelRepo;link.target='_blank';link.rel='noopener noreferrer';
+   const link=document.createElement('a');link.href=sanibelRepo;link.target='_blank';link.rel='noopener noreferrer';
 link.textContent='View original project files';status.appendChild(link);
   }catch(err){
     console.warn('Sanibel gallery:',err);
