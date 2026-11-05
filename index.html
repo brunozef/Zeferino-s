@@ -319,14 +319,14 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 .ig-tile:hover{transform:translateY(-6px);box-shadow:0 18px 30px -16px rgba(22,21,20,.45);z-index:1}
 
 /* Locations */
-.loc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.loc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:24px}
 .loc{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;text-decoration:none;color:#fff;background:#24211d;transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s}
 .loc>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
 .loc::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(16,15,14,.86) 0%,rgba(16,15,14,.1) 55%)}
 .loc:hover{transform:translateY(-8px);box-shadow:0 28px 48px -22px rgba(22,21,20,.55)}
 .loc:hover>img{transform:scale(1.06)}
 .loc .txt{position:absolute;left:28px;right:28px;bottom:26px;z-index:2}
-.loc h3{font-size:34px;color:#fff}
+.loc h3{font-size:clamp(26px,2.3vw,32px);color:#fff}
 .loc .count{font:500 12px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--brass-light);margin-top:8px;display:flex;align-items:center;gap:12px}
 .loc .count::after{content:"";width:26px;height:1px;background:currentColor;transition:width .3s}
 .loc:hover .count::after{width:46px}
@@ -571,7 +571,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
     <div class="wrap">
       <div class="section-head">
         <div><div class="kicker">Selected projects</div><h2>Recent work</h2></div>
-        <p class="lead">Real photographs from our job sites in Sanibel, Cape Coral and Tampa.</p>
+        <p class="lead">Real photographs from our job sites, from Southwest Florida homes to commercial interiors.</p>
       </div>
       <div id="homeProjects"></div>
     </div>
@@ -863,6 +863,11 @@ const projects=[
    cover:4,feature:4,
    photos:[['01-before-stairs','Before: deck and stair railing'],['02-before-railing','Before: damaged railing section'],['03-after-railing','After: new railing section installed'],['04-after-view','After: new railing seen from the deck'],['05-after-exterior','After: the finished deck from outside']]
      .map(([f,t])=>({url:'images/sanibel-deck-railing-'+f+'.jpg',title:t}))},
+  {id:'southaven-hospital',title:'Hospital interior finish carpentry',city:'Southaven',state:'MS',service:'Commercial finish carpentry',
+   text:'Interior finish carpentry at a hospital in the Memphis area: decorative ceiling beams, picture-frame wall molding, shiplap walls, a wood slat accent wall and door casings.',
+   cover:4,feature:1,
+   photos:[['01-ceiling-beam','Decorative ceiling beam on a shiplap ceiling'],['02-ceiling-beams-lobby','Ceiling beams at the entrance'],['03-beam-detail','Beam detail with trim at the ceiling'],['04-beams-shiplap-wall','Ceiling beams and a tall shiplap wall'],['05-slat-accent-wall','Wood slat accent wall'],['06-wall-molding','Picture-frame wall molding'],['07-wall-molding-panels','Wall molding panels on an angled wall'],['08-wall-molding-hallway','Wall molding along the hallway'],['09-molding-corner-detail','Molding detail at an inside corner'],['10-molding-detail','Molding detail at an outside corner'],['11-door-casing','Door casing with shiplap surround'],['12-shiplap-wall-in-progress','Shiplap wall during installation']]
+     .map(([f,t])=>({url:'images/southaven-hospital-'+f+'.jpg',title:t}))},
   {id:'cape-coral',title:'Vinyl plank flooring and stairs',city:'Cape Coral',state:'FL',service:'Flooring and stairs',
    text:'Vinyl plank flooring throughout a residence plus finished stairs with dark wood treads and white risers, shown before, during and after the work.',
    cover:1,
@@ -877,6 +882,8 @@ const projects=[
 
 /* Background photographs for the opening section: the strongest shots. */
 const heroSlides=[
+  {url:'images/southaven-hospital-05-slat-accent-wall.jpg',cap:'Wood slat accent wall, Southaven, MS',pos:'center 45%'},
+  {url:'images/southaven-hospital-02-ceiling-beams-lobby.jpg',cap:'Decorative ceiling beams, Southaven, MS',pos:'center 30%'},
   {url:'images/tampa-flex-molding-01-arch-column.jpg',cap:'Flex molding on an arched opening, Tampa',pos:'center 35%'},
   {url:'images/cape-coral-02-stairs-finished.jpg',cap:'Finished stairs, Cape Coral',pos:'center 55%'},
   {url:H+'4EA3DBFF-8CCE-4055-ACD4-BB834CF81EDC_1_105_c.jpeg',cap:'Exterior wood handrail, Sanibel Island',pos:'center 45%'}
@@ -887,6 +894,7 @@ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'
 const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const WM=(size='')=>`<span class="wm ${size}"><img class="wz" src="images/logo-z-transparent.png" alt=""><img class="ww" src="images/logo-zeferinos-transparent.png" alt=""></span>`;
 const cities=[...new Set(projects.map(p=>p.city))].map(c=>({name:c,slug:slug(c),items:projects.filter(p=>p.city===c)}));
+const stateOf=c=>(projects.find(p=>p.city===c)||{state:'FL'}).state;
 const coverOf=p=>p.photos[p.cover||0];
 const plural=(n,w)=>`${n} ${w}${n===1?'':'s'}`;
 
@@ -904,7 +912,7 @@ document.querySelector('#homeProjects').innerHTML=projects.map(featureHTML).join
 document.querySelector('#serviceProjects').innerHTML=`<div class="cards">${projects.map(cardHTML).join('')}</div>`;
 
 /* ---------- locations ---------- */
-document.querySelector('#locGrid').innerHTML=cities.map(c=>{const ph=coverOf(c.items[0]);return `<a class="loc" href="#city-${c.slug}"><img src="${ph.url}" alt="" loading="lazy">${WM()}<div class="txt"><h3>${esc(c.name)}</h3><div class="count">${plural(c.items.length,'project')}</div></div></a>`}).join('');
+document.querySelector('#locGrid').innerHTML=cities.map(c=>{const ph=coverOf(c.items[0]);return `<a class="loc" href="#city-${c.slug}"><img src="${ph.url}" alt="" loading="lazy">${WM()}<div class="txt"><h3>${esc(c.name)}${c.items[0].state!=='FL'?', '+c.items[0].state:''}</h3><div class="count">${plural(c.items.length,'project')}</div></div></a>`}).join('');
 const also=SERVICE_AREA.filter(a=>!cities.some(c=>c.name===a));
 document.querySelector('#alsoServing').innerHTML=also.length?`<span>Also serving</span>${also.map(a=>`<a href="#contact" onclick="presetCity('${esc(a)}')">${esc(a)}</a>`).join('')}`:'';
 
@@ -924,7 +932,7 @@ function renderCity(sl){
   document.querySelector('#city').innerHTML=`
   <section class="page-head dark"><img class="watermark" src="images/logo-z.png" alt="">
     <div class="wrap"><div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; <a href="#projects">Projects</a> &nbsp;/&nbsp; ${esc(c.name)}</div>
-    <h1>${esc(c.name)}, FL</h1><p class="lead">${plural(c.items.length,'completed project')} by Zeferino's Inc. in ${esc(c.name)}.</p></div></section>
+    <h1>${esc(c.name)}, ${c.items[0].state}</h1><p class="lead">${plural(c.items.length,'completed project')} by Zeferino's Inc. in ${esc(c.name)}.</p></div></section>
   <section class="band linen"><div class="wrap"><div class="cards">${c.items.map(cardHTML).join('')}</div>
     <div class="band-foot"><p>Planning a project in ${esc(c.name)}?</p><a class="btn ink" href="#contact" onclick="presetCity('${esc(c.name)}')">Request a free estimate</a></div></div></section>
   <section class="band"><div class="wrap"><div class="section-head" style="margin-bottom:48px"><div><div class="kicker">Other locations</div><h2>More of our work</h2></div></div>
@@ -957,7 +965,7 @@ function renderProject(id){
 }
 
 /* ---------- Instagram ---------- */
-const igPicks=[[4,6],[3,1],[2,4],[0,1],[1,10],[3,7]];
+const igPicks=[[5,6],[3,4],[4,1],[3,1],[2,4],[3,6]];
 document.querySelector('#igGrid').innerHTML=igPicks.map(([p,i])=>{const ph=projects[p].photos[i];return `<a class="ig-tile" href="${IG}" target="_blank" rel="noopener" aria-label="${esc(ph.title||projects[p].title)}, view more on Instagram"><img src="${ph.url}" alt="" loading="lazy">${WM('sm')}<span><svg class="icon"><use href="#i-ig"/></svg></span></a>`}).join('');
 
 /* ---------- hero slideshow ---------- */
@@ -1006,7 +1014,7 @@ function closeMenu(){document.querySelector('#mobileNav').classList.remove('open
 
 /* ---------- estimate form ---------- */
 function presetService(v){document.querySelector('#leadService').value=v}
-function presetCity(v){document.querySelector('#leadCity').value=v+', FL'}
+function presetCity(v){document.querySelector('#leadCity').value=v+', '+stateOf(v)}
 function showToast(t){const e=document.querySelector('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),4000)}
 function sendLead(e){
   e.preventDefault();
