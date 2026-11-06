@@ -414,6 +414,18 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 .fab-estimate{transition:opacity .25s,transform .25s;position:fixed;right:20px;bottom:20px;z-index:90;box-shadow:0 10px 28px -8px rgba(0,0,0,.45)}
 @media(max-width:640px){.fab-estimate{left:16px;right:16px;bottom:14px}}
 
+/* House cleaning teaser */
+.cleaning-band{padding:0 0 110px}
+.cleaning-box{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:40px;align-items:center;background:#fff;border:1px solid var(--hair);border-left:3px solid var(--brass);padding:44px 48px}
+.cleaning-icon{width:72px;height:72px;border:1px solid var(--hair-dark);display:flex;align-items:center;justify-content:center;color:var(--brass-deep)}
+.cleaning-icon svg{width:38px;height:38px}
+.cleaning-text h2{font-size:clamp(28px,2.6vw,38px);margin-bottom:10px}
+.cleaning-text p{color:var(--stone);max-width:60ch}
+.cleaning-tags{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.cleaning-tags li{border:1px solid var(--hair);padding:6px 14px;font-size:13.5px;color:var(--ink);background:var(--paper)}
+@media(max-width:960px){.cleaning-box{grid-template-columns:1fr;gap:24px;padding:32px 26px}.cleaning-icon{width:56px;height:56px}}
+@media(max-width:640px){.cleaning-band{padding:0 0 80px}}
+
 .tab{display:none}
 .tab.active{display:block}
 
@@ -721,6 +733,23 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
   </section>
 
 
+  <section class="cleaning-band" id="house-cleaning" aria-labelledby="cleaningTitle">
+    <div class="wrap">
+      <div class="cleaning-box">
+        <div class="cleaning-icon" aria-hidden="true"><svg viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M20 5l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path d="M31 25l1.5 3.5L36 30l-3.5 1.5L31 35l-1.5-3.5L26 30l3.5-1.5z"/></g></svg></div>
+        <div class="cleaning-text">
+          <div class="kicker">Also from Zeferino's</div>
+          <h2 id="cleaningTitle">House cleaning, too.</h2>
+          <p>We also clean homes and businesses across Southwest Florida. From seasonal homes to offices, we cover every type of cleaning.</p>
+          <ul class="cleaning-tags">
+            <li>Residential homes</li><li>Seasonal homes</li><li>Airbnb &amp; vacation rentals</li><li>Commercial &amp; offices</li><li>Move-in / move-out</li><li>Post-construction</li>
+          </ul>
+        </div>
+        <a class="btn ink" href="/cleaning/">See our cleaning services</a>
+      </div>
+    </div>
+  </section>
+
   <section class="band linen reviews-band" id="reviews">
     <div class="wrap">
       <div class="kicker" style="justify-content:center">Client reviews</div>
@@ -1022,7 +1051,7 @@ const svcHTML=s=>`<li><h3>${esc(s[0])}</h3><p>${esc(s[1])}</p></li>`;
 document.querySelector('#homeServices').innerHTML=services.map(svcHTML).join('');
 document.querySelector('#allServices').innerHTML=services.map(svcHTML).join('');
 document.querySelector('#footServices').innerHTML=services.slice(0,6).map(s=>`<li><a href="#services">${esc(s[0])}</a></li>`).join('');
-document.querySelector('#leadService').innerHTML=[...services.map(s=>s[0]),'Builder / Subcontractor','Other'].map(o=>`<option>${esc(o)}</option>`).join('');
+document.querySelector('#leadService').innerHTML=[...services.map(s=>s[0]),'House cleaning','Builder / Subcontractor','Other'].map(o=>`<option>${esc(o)}</option>`).join('');
 
 /* ---------- cards ---------- */
 const cardHTML=p=>{const c=coverOf(p);return `<a class="card" href="#project-${p.id}"><div class="ph"><img src="${c.url}" alt="${esc(p.title)} in ${esc(p.city)}" loading="lazy">${WM()}</div><div class="card-body"><div class="where">${esc(p.city)}, ${p.state}</div><h3>${esc(p.title)}</h3><div class="meta">${esc(p.service)} &nbsp;/&nbsp; ${plural(p.photos.length,'photo')}</div></div></a>`};
