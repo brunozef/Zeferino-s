@@ -137,6 +137,15 @@ form.estimate .full{grid-column:1/-1}
 form.estimate input,form.estimate select,form.estimate textarea{font:300 17px/1.5 var(--sans);letter-spacing:0;text-transform:none;color:var(--ink);background:transparent;border:0;border-bottom:1px solid #e3c9d5;padding:10px 0;border-radius:0;width:100%}
 form.estimate select{appearance:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23d94f8c'/%3E%3C/svg%3E") no-repeat right 4px center}
 form.estimate textarea{border:1px solid #e3c9d5;padding:12px 14px;margin-top:6px}
+form.estimate fieldset.chips{border:0;padding:0;margin:0;min-width:0}
+form.estimate fieldset.chips legend{font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);padding:0;margin-bottom:12px}
+form.estimate fieldset.chips>div{display:flex;flex-wrap:wrap;gap:8px}
+form.estimate fieldset.chips label{display:block;cursor:pointer}
+form.estimate fieldset.chips input{position:absolute;opacity:0;width:1px;height:1px}
+form.estimate fieldset.chips span{display:inline-block;font:400 14px/1 var(--sans);letter-spacing:0;text-transform:none;color:var(--ink);border:1px solid #e3c9d5;border-radius:999px;padding:11px 16px;min-width:46px;text-align:center;transition:background .2s,border-color .2s,color .2s}
+form.estimate fieldset.chips label:hover span{border-color:var(--sea)}
+form.estimate fieldset.chips input:checked+span{background:var(--sea);border-color:var(--sea);color:#fff}
+form.estimate fieldset.chips input:focus-visible+span{outline:2px solid var(--brass-deep);outline-offset:2px}
 form.estimate input:focus,form.estimate select:focus,form.estimate textarea:focus{outline:0;border-color:var(--sea)}
 .note{font-size:13.5px;color:var(--stone)}
 .visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -336,14 +345,12 @@ footer a:hover{color:#fff}
       <label>Full name<input name="Name" required autocomplete="name"></label>
       <label>Phone<input name="Phone" required type="tel" autocomplete="tel" placeholder="(239) 000-0000"></label>
       <label class="full">Email<input name="email" type="email" required autocomplete="email"></label>
-      <label>City<input name="City" required placeholder="Naples, FL"></label>
-      <label>Type of cleaning<select name="Cleaning type">
-        <option>Regular cleaning</option><option>Deep cleaning</option><option>Move-in / move-out</option><option>Post-construction cleaning</option><option>Airbnb / vacation rental</option><option>Seasonal home</option><option>Commercial / office</option><option>Not sure yet</option>
-      </select></label>
-      <label>Bedrooms<select name="Bedrooms"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5+</option></select></label>
-      <label>Bathrooms<select name="Bathrooms"><option>1</option><option selected>2</option><option>3</option><option>4+</option></select></label>
-      <label class="full">How often?<select name="Frequency"><option>One time</option><option>Weekly</option><option>Every two weeks</option><option>Monthly</option><option>Between rental guests</option></select></label>
-      <label class="full">Anything else we should know?<textarea name="Details" rows="4" placeholder="Approximate size, pets, preferred days, gate code instructions"></textarea></label>
+      <fieldset class="chips full"><legend>Type of cleaning</legend><div><label><input type="radio" name="Type of cleaning" value="Regular cleaning" required><span>Regular cleaning</span></label><label><input type="radio" name="Type of cleaning" value="Deep cleaning"><span>Deep cleaning</span></label><label><input type="radio" name="Type of cleaning" value="Move-in / move-out"><span>Move-in / move-out</span></label><label><input type="radio" name="Type of cleaning" value="Post-construction"><span>Post-construction</span></label><label><input type="radio" name="Type of cleaning" value="Airbnb / vacation rental"><span>Airbnb / vacation rental</span></label><label><input type="radio" name="Type of cleaning" value="Seasonal home"><span>Seasonal home</span></label><label><input type="radio" name="Type of cleaning" value="Commercial / office"><span>Commercial / office</span></label><label><input type="radio" name="Type of cleaning" value="Not sure yet"><span>Not sure yet</span></label></div></fieldset>
+      <label class="full">City<input name="City" required placeholder="Naples, FL"></label>
+      <fieldset class="chips"><legend>Bedrooms</legend><div><label><input type="radio" name="Bedrooms" value="1" required><span>1</span></label><label><input type="radio" name="Bedrooms" value="2"><span>2</span></label><label><input type="radio" name="Bedrooms" value="3"><span>3</span></label><label><input type="radio" name="Bedrooms" value="4"><span>4</span></label><label><input type="radio" name="Bedrooms" value="5+"><span>5+</span></label></div></fieldset>
+      <fieldset class="chips"><legend>Bathrooms</legend><div><label><input type="radio" name="Bathrooms" value="1" required><span>1</span></label><label><input type="radio" name="Bathrooms" value="2"><span>2</span></label><label><input type="radio" name="Bathrooms" value="3"><span>3</span></label><label><input type="radio" name="Bathrooms" value="4+"><span>4+</span></label></div></fieldset>
+      <label class="full">How often? <em style="font-style:normal;text-transform:none;letter-spacing:0;font-weight:300">(optional)</em><select name="Frequency"><option>One time</option><option>Weekly</option><option>Every two weeks</option><option>Monthly</option><option>Between rental guests</option></select></label>
+      <label class="full">Anything else we should know? <em style="font-style:normal;text-transform:none;letter-spacing:0;font-weight:300">(optional)</em><textarea name="Details" rows="4" placeholder="Approximate size, pets, preferred days, gate code instructions"></textarea></label>
       <div class="full" style="display:flex;flex-direction:column;gap:10px">
         <span style="font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--stone)">Photos <em style="font-style:normal;text-transform:none;letter-spacing:0;font-weight:300">(optional)</em></span>
         <label class="photo-drop" for="leadPhotos">
