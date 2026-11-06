@@ -622,38 +622,27 @@ header.site .wrap{gap:18px}
       <div>
         <div class="kicker">Free estimate</div>
         <h2>Tell us about your project.</h2>
-        <p class="lead" style="margin-top:24px">Send the details and, if you like, a few photos of the space. We'll get back to you with a free estimate.</p>
+        <p class="lead" style="margin-top:24px">Send the details and we'll get back to you with a free estimate.</p>
         <ul class="info-list">
           <li><span>Phone</span><a href="tel:+12393241224">(239) 324-1224</a></li>
           <li><span>Email</span><a href="mailto:zeferinosprecisionfinish@gmail.com">zeferinosprecisionfinish@gmail.com</a></li>
         </ul>
       </div>
       <div class="estimate-slot" data-slot="home">
-      <form class="estimate" id="estimateForm" action="https://formsubmit.co/zeferinosprecisionfinish@gmail.com" method="POST" enctype="multipart/form-data" onsubmit="return sendLead(event)">
+      <form class="estimate" id="estimateForm" action="https://api.web3forms.com/submit" method="POST" onsubmit="return sendLead(event)">
         <h2>Request a free estimate</h2>
-        <input type="hidden" name="_subject" value="New estimate request - zeferinosusa.com">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_next" value="https://www.zeferinosusa.com/?sent=1#estimate">
-        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <input type="hidden" name="access_key" value="14784ad0-2f80-48e4-be6f-91205cb402f9">
+        <input type="hidden" name="subject" value="New estimate request - zeferinosusa.com">
+        <input type="hidden" name="from_name" value="Zeferino's website">
+        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
         <label>Full name<input id="leadName" name="Name" required autocomplete="name"></label>
         <label>Phone<input id="leadPhone" name="Phone" required type="tel" autocomplete="tel" placeholder="(239) 000-0000"></label>
         <label class="full">Email<input id="leadEmail" name="email" type="email" required autocomplete="email"></label>
         <label>Project city<input id="leadCity" name="City" required placeholder="Naples, FL"></label>
         <label>Service needed<select id="leadService" name="Service"></select></label>
         <label class="full">About the project<textarea id="leadDetails" name="Project details" rows="4" placeholder="Rooms, approximate size, materials, timeline"></textarea></label>
-        <div class="full photo-field">
-          <span class="ph-label">Photos <em>(optional)</em></span>
-          <label class="photo-drop" for="leadPhotos">
-            <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></g></svg>
-            <span><strong>Add photos of the space</strong><br>Up to 5 photos. They help us give you a more accurate estimate.</span>
-          </label>
-          <input id="leadPhotos" type="file" accept="image/*" multiple class="visually-hidden" onchange="pickPhotos(this)">
-          <div id="photoSlots" hidden><input type="file" name="attachment1"><input type="file" name="attachment2"><input type="file" name="attachment3"><input type="file" name="attachment4"><input type="file" name="attachment5"></div>
-          <div class="photo-previews" id="photoPreviews"></div>
-        </div>
         <div class="full"><button class="btn" type="submit" id="leadSubmit">Send request</button></div>
-        <p class="full note">Photos are optional. Your request goes straight to the Zeferino’s team.</p>
+        <p class="full note">Have photos of the space? Text them to <a href="sms:+12393241224">(239) 324-1224</a>. Your request goes straight to the Zeferino’s team.</p>
       </form>
       </div>
     </div>
@@ -1210,43 +1199,28 @@ function closeMenu(){document.querySelector('#mobileNav').classList.remove('open
 function presetService(v){document.querySelector('#leadService').value=v}
 function presetCity(v){document.querySelector('#leadCity').value=v+', '+stateOf(v)}
 function showToast(t){const e=document.querySelector('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),4000)}
-let photos=[];
-async function shrink(file){
+function sentMsg(){
+  const f=document.querySelector('#estimateForm');if(f.querySelector('.sent-msg'))return;
+  const m=document.createElement('p');m.className='sent-msg';m.setAttribute('role','status');
+  m.textContent="Thank you! Your request was sent. We'll get back to you soon.";
+  f.querySelector('h2').after(m);m.scrollIntoView({behavior:'smooth',block:'center'});
+}
+async function sendLead(e){
+  e.preventDefault();const f=e.target,btn=document.querySelector('#leadSubmit');
+  btn.disabled=true;btn.textContent='Sending…';
   try{
-    const bmp=await createImageBitmap(file);
-    const k=Math.min(1,1600/Math.max(bmp.width,bmp.height));
-    const c=document.createElement('canvas');c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);
-    c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
-    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.82));
-    return new File([blob],file.name.replace(/\.[^.]+$/,'')+'.jpg',{type:'image/jpeg'});
-  }catch(e){return file}
-}
-async function pickPhotos(input){
-  const picked=[...input.files].filter(f=>f.type.startsWith('image/')||/\.(heic|heif)$/i.test(f.name));
-  for(const f of picked){ if(photos.length>=5){showToast('You can add up to 5 photos.');break} photos.push(await shrink(f)) }
-  input.value='';drawPhotos();
-}
-function removePhoto(i){photos.splice(i,1);drawPhotos()}
-function drawPhotos(){
-  const slots=document.querySelectorAll('#photoSlots input');
-  slots.forEach((inp,i)=>{const dt=new DataTransfer();if(photos[i])dt.items.add(photos[i]);inp.files=dt.files});
-  document.querySelector('#photoPreviews').innerHTML=photos.map((f,i)=>`<figure><img src="${URL.createObjectURL(f)}" alt="Photo ${i+1}"><button type="button" aria-label="Remove photo ${i+1}" onclick="removePhoto(${i})">×</button></figure>`).join('');
-}
-function sendLead(e){
-  const size=photos.reduce((a,f)=>a+f.size,0);
-  if(size>9.5*1024*1024){e.preventDefault();showToast('The photos are too large together. Remove one and try again.');return false}
-  const btn=document.querySelector('#leadSubmit');btn.disabled=true;btn.textContent='Sending…';
-  return true;
+    const r=await fetch(f.action,{method:'POST',headers:{Accept:'application/json'},body:new FormData(f)});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||j.success===false)throw new Error(j.message||'error');
+    f.reset();sentMsg();btn.textContent='Sent';setTimeout(()=>{btn.disabled=false;btn.textContent='Send request'},4000);
+  }catch(err){btn.disabled=false;btn.textContent='Send request';showToast('Sorry, the request could not be sent. Please call (239) 324-1224.')}
+  return false;
 }
 function placeForm(id){
   const f=document.querySelector('#estimateForm'),slot=document.querySelector(`.estimate-slot[data-slot="${id==='contact'?'contact':'home'}"]`);
   if(f&&slot&&f.parentElement!==slot)slot.appendChild(f);
 }
-if(new URLSearchParams(location.search).get('sent')){
-  const m=document.createElement('p');m.className='sent-msg';m.setAttribute('role','status');
-  m.textContent="Thank you! Your request was sent. We'll get back to you soon.";
-  document.querySelector('#estimateForm h2').after(m);
-}
+if(new URLSearchParams(location.search).get('sent'))sentMsg();
 
 </script>
 </body>
