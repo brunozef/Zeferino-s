@@ -330,15 +330,13 @@ footer a:hover{color:#fff}
         <li><span>Email</span><a href="mailto:evasexpertcleaningservicesllc@gmail.com" style="font-size:16px">evasexpertcleaningservicesllc<wbr>@gmail.com</a></li>
       </ul>
     </div>
-    <form class="estimate" id="estimateForm" action="https://formsubmit.co/evasexpertcleaningservicesllc@gmail.com" method="POST" onsubmit="return sendLead(event)">
+    <form class="estimate" id="estimateForm" action="https://api.web3forms.com/submit" method="POST" onsubmit="return sendLead(event)">
       <h2>Request a free cleaning estimate</h2>
-      <input type="hidden" name="_subject" value="New EVA'S CLEANING request - zeferinosusa.com/cleaning">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_next" value="https://www.zeferinosusa.com/cleaning/?sent=1#quote">
+      <input type="hidden" name="access_key" value="ca1e9ad5-7a53-4032-a3da-7ea5fca35088">
+      <input type="hidden" name="subject" value="New EVA'S CLEANING request - zeferinosusa.com/cleaning">
+      <input type="hidden" name="from_name" value="Eva's Expert Cleaning website">
       <input type="hidden" name="Company" value="Eva's Expert Cleaning Services">
-      <input type="hidden" name="_cc" value="brunozeferino1@gmail.com">
-      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+      <input type="checkbox" name="botcheck" class="visually-hidden" style="display:none" tabindex="-1" autocomplete="off">
       <label>Full name<input name="Name" required autocomplete="name"></label>
       <label>Phone<input name="Phone" required type="tel" autocomplete="tel" placeholder="(239) 000-0000"></label>
       <label class="full">Email<input name="email" type="email" required autocomplete="email"></label>
@@ -371,9 +369,13 @@ footer a:hover{color:#fff}
 
 <script>
 function showToast(t){const e=document.querySelector('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),4000)}
-async function shrink(file){try{const bmp=await createImageBitmap(file);const k=Math.min(1,1600/Math.max(bmp.width,bmp.height));const c=document.createElement('canvas');c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.82));return new File([blob],file.name.replace(/\.[^.]+$/,'')+'.jpg',{type:'image/jpeg'})}catch(e){return file}}
-function sendLead(e){const b=document.querySelector('#leadSubmit');b.disabled=true;b.textContent='Sending…';return true}
-if(new URLSearchParams(location.search).get('sent')){const m=document.createElement('p');m.className='sent-msg';m.setAttribute('role','status');m.textContent="Thank you! Your request was sent. Eva will contact you to schedule your free estimate.";document.querySelector('#estimateForm h2').after(m)}
+function sentMsg(){const f=document.querySelector('#estimateForm');if(f.querySelector('.sent-msg'))return;const m=document.createElement('p');m.className='sent-msg';m.setAttribute('role','status');m.textContent="Thank you! Your request was sent. Eva will contact you to schedule your free estimate.";f.querySelector('h2').after(m);m.scrollIntoView({behavior:'smooth',block:'center'})}
+async function sendLead(e){e.preventDefault();const f=e.target,b=document.querySelector('#leadSubmit');b.disabled=true;b.textContent='Sending…';
+try{const r=await fetch(f.action,{method:'POST',headers:{Accept:'application/json'},body:new FormData(f)});const j=await r.json().catch(()=>({}));
+if(r.ok&&j.success!==false){f.reset();sentMsg();b.textContent='Sent';setTimeout(()=>{b.disabled=false;b.textContent='Send request'},4000)}else{throw new Error(j.message||'error')}}
+catch(err){b.disabled=false;b.textContent='Send request';showToast('Sorry, the request could not be sent. Please call Eva at (239) 994-8187.')}
+return false}
+if(new URLSearchParams(location.search).get('sent'))sentMsg();
 </script>
 </body>
 </html>
