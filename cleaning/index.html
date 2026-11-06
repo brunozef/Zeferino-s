@@ -213,7 +213,7 @@ footer a:hover{color:#fff}
     <a href="#how">How it works</a>
     <a href="#videos">See us at work</a>
     <a href="../index.html" class="nav-z">Zeferino's</a>
-    <a class="btn" href="#quote">Free walkthrough</a>
+    <a class="btn" href="#quote">Free estimate</a>
   </nav>
 </div></header>
 
@@ -225,12 +225,12 @@ footer a:hover{color:#fff}
       <h1>A spotless home, cleaned with care.</h1>
       <p class="lead">Residential, seasonal homes, Airbnb and vacation rentals, commercial and office cleaning across Southwest Florida. We cover every type of cleaning, with attention to every detail.</p>
       <div class="cta-row">
-        <a class="btn" href="#quote">Request a free walkthrough</a>
+        <a class="btn" href="#quote">Request a free estimate</a>
         <a class="btn line" href="tel:+12399948187"><svg class="icon"><use href="#i-phone"/></svg>(239) 994-8187</a>
       </div>
     </div>
     <div class="promise"><ul>
-      <li><span class="n">i.</span><div><strong>Walkthrough first</strong><span>We see the home before giving you a precise price.</span></div></li>
+      <li><span class="n">i.</span><div><strong>Free visit first</strong><span>We see the home before giving you a precise price.</span></div></li>
       <li><span class="n">ii.</span><div><strong>Every type of cleaning</strong><span>Homes, seasonal homes, Airbnb, offices and businesses.</span></div></li>
       <li><span class="n">iii.</span><div><strong>Talk to Eva directly</strong><span>Call or text (239) 994-8187.</span></div></li>
     </ul></div>
@@ -241,7 +241,7 @@ footer a:hover{color:#fff}
   <div class="wrap">
     <div class="section-head">
       <div><div class="kicker">Cleaning services</div><h2>What we clean</h2></div>
-      <p class="lead">Choose the service that fits. We confirm what's included during the walkthrough.</p>
+      <p class="lead">Choose the service that fits. We confirm what's included during the visit.</p>
     </div>
     <div class="svc-grid">
       <article class="svc">
@@ -267,7 +267,7 @@ footer a:hover{color:#fff}
         <svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 33h24"/><path d="M11 33V17l9-7 9 7v16"/><path d="M5 21l15-12 15 12"/><path d="M17 26h6"/></g></svg>
         <h3>Post-construction cleaning</h3>
         <p>The final clean after a build or remodel, for homeowners, builders and contractors.</p>
-        <ul><li>Construction dust removed</li><li>Labels and residue off windows and fixtures</li><li>Ready for walkthrough or move-in</li></ul>
+        <ul><li>Construction dust removed</li><li>Labels and residue off windows and fixtures</li><li>Ready for final inspection or move-in</li></ul>
       </article>
       <article class="svc">
         <svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="15" cy="20" r="6"/><path d="M21 20h14M30 20v5M34 20v4"/></g></svg>
@@ -309,7 +309,7 @@ footer a:hover{color:#fff}
     </div>
     <div class="steps">
       <div class="step"><div class="num">i.</div><h3>Send your request</h3><p>Tell us the type of cleaning, the city and the size of the home.</p></div>
-      <div class="step"><div class="num">ii.</div><h3>Free walkthrough</h3><p>We visit the home, see what it needs and give you a precise price.</p></div>
+      <div class="step"><div class="num">ii.</div><h3>Free estimate</h3><p>We visit the home, see what it needs and give you a precise price.</p></div>
       <div class="step"><div class="num">iii.</div><h3>We clean</h3><p>We schedule the cleaning on the day that works for you.</p></div>
     </div>
     <div style="margin-top:72px">
@@ -322,9 +322,9 @@ footer a:hover{color:#fff}
 <section class="band" id="quote">
   <div class="wrap contact-grid">
     <div>
-      <div class="kicker">Free walkthrough</div>
+      <div class="kicker">Free estimate</div>
       <h2>Tell us about your home.</h2>
-      <p class="lead" style="margin-top:22px">Send the details and Eva will contact you to schedule a free walkthrough and give you a precise price.</p>
+      <p class="lead" style="margin-top:22px">Send the details and Eva will contact you to schedule a free visit and give you a precise price.</p>
       <ul class="info-list">
         <li><span>Contact</span><div style="font-family:var(--serif);font-size:19px">Eva</div></li>
         <li><span>Phone</span><a href="tel:+12399948187">(239) 994-8187</a></li>
@@ -332,7 +332,7 @@ footer a:hover{color:#fff}
       </ul>
     </div>
     <form class="estimate" id="estimateForm" action="https://formsubmit.co/zeferinosprecisionfinish@gmail.com" method="POST" onsubmit="return sendLead(event)">
-      <h2>Request a cleaning walkthrough</h2>
+      <h2>Request a free cleaning estimate</h2>
       <input type="hidden" name="_subject" value="New EVA'S CLEANING request - zeferinosusa.com/cleaning">
       <input type="hidden" name="_template" value="table">
       <input type="hidden" name="_captcha" value="false">
@@ -373,7 +373,7 @@ footer a:hover{color:#fff}
 function showToast(t){const e=document.querySelector('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),4000)}
 async function shrink(file){try{const bmp=await createImageBitmap(file);const k=Math.min(1,1600/Math.max(bmp.width,bmp.height));const c=document.createElement('canvas');c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.82));return new File([blob],file.name.replace(/\.[^.]+$/,'')+'.jpg',{type:'image/jpeg'})}catch(e){return file}}
 function sendLead(e){const b=document.querySelector('#leadSubmit');b.disabled=true;b.textContent='Sending…';return true}
-if(new URLSearchParams(location.search).get('sent')){const m=document.createElement('p');m.className='sent-msg';m.setAttribute('role','status');m.textContent="Thank you! Your request was sent. Eva will contact you to schedule the walkthrough.";document.querySelector('#estimateForm h2').after(m)}
+if(new URLSearchParams(location.search).get('sent')){const m=document.createElement('p');m.className='sent-msg';m.setAttribute('role','status');m.textContent="Thank you! Your request was sent. Eva will contact you to schedule your free estimate.";document.querySelector('#estimateForm h2').after(m)}
 </script>
 </body>
 </html>
