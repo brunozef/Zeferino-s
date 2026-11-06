@@ -427,19 +427,17 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 @media(max-width:640px){.cleaning-band{padding:0 0 80px}}
 
 /* Eva's cleaning pill in the header */
-.eva-pill{display:inline-flex;align-items:stretch;min-height:46px;text-decoration:none;border:1px solid var(--brass);margin-left:auto;overflow:hidden;transition:box-shadow .3s,transform .3s}
-.eva-pill .logo{display:flex;align-items:center;background:#fff;padding:0 12px}
-.eva-pill img{height:36px;width:auto;display:block}
-.eva-pill .txt{display:flex;flex-direction:column;justify-content:center;gap:5px;padding:0 16px 0 14px;font:500 10px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--brass);white-space:nowrap;transition:background .3s,color .3s}
-.eva-pill .txt b{font:400 15px/1 var(--serif);letter-spacing:.02em;text-transform:none;color:#ece6dc;transition:color .3s}
-.eva-pill .txt b i{font-style:normal;color:var(--brass);margin-left:6px;display:inline-block;transition:transform .3s,color .3s}
-.eva-pill:hover{transform:translateY(-1px);box-shadow:0 10px 24px -12px rgba(184,149,106,.8)}
-.eva-pill:hover .txt{background:var(--brass);color:var(--coal)}
-.eva-pill:hover .txt b,.eva-pill:hover .txt b i{color:var(--coal)}
-.eva-pill:hover .txt b i{transform:translateX(3px)}
+.eva-pill{display:inline-flex;align-items:stretch;min-height:48px;text-decoration:none;margin-left:auto;border-radius:999px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(243,166,198,.55),0 6px 18px -6px rgba(217,79,140,.55),0 2px 6px rgba(0,0,0,.35);transition:box-shadow .3s,transform .3s}
+.eva-pill .logo{display:flex;align-items:center;background:#fff;padding:0 10px 0 16px}
+.eva-pill img{height:38px;width:auto;display:block}
+.eva-pill .txt{display:flex;flex-direction:column;justify-content:center;gap:5px;padding:0 22px 0 16px;border-radius:999px 0 0 999px;background:linear-gradient(135deg,#f7b6d1 0%,#e46a9f 55%,#d94f8c 100%);font:600 9.5px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.92);white-space:nowrap;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.eva-pill .txt b{font:400 15px/1 var(--serif);letter-spacing:.02em;text-transform:none;color:#fff;text-shadow:0 1px 2px rgba(150,30,80,.35)}
+.eva-pill .txt b i{font-style:normal;margin-left:6px;display:inline-block;transition:transform .3s}
+.eva-pill:hover{transform:translateY(-2px);box-shadow:0 0 0 1px #f3a6c6,0 14px 28px -8px rgba(217,79,140,.75),0 3px 8px rgba(0,0,0,.35)}
+.eva-pill:hover .txt b i{transform:translateX(4px)}
 header.site .wrap{gap:18px}
-@media(max-width:1180px){.eva-pill .txt{display:none}}
-@media(max-width:640px){.eva-pill{min-height:40px}.eva-pill .logo{padding:0 8px}.eva-pill img{height:28px}}
+@media(max-width:1180px){.eva-pill .txt{display:none}.eva-pill .logo{padding:0 16px}}
+@media(max-width:640px){.eva-pill{min-height:42px}.eva-pill .logo{padding:0 12px}.eva-pill img{height:30px}}
 .cleaning-icon.eva{width:auto;height:auto;border:0;padding:0}
 .cleaning-icon.eva img{width:220px;height:auto}
 
