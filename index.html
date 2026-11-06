@@ -102,7 +102,7 @@ nav.main a{color:#d9d2c6;text-decoration:none;font-size:13px;font-weight:400;let
 nav.main a:not(.btn)::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--brass);transition:right .3s}
 nav.main a:not(.btn):hover,nav.main a[aria-current="page"]{color:#fff}
 nav.main a:not(.btn):hover::after,nav.main a[aria-current="page"]::after{right:0}
-nav.main .btn{min-height:46px;padding:0 22px;color:var(--brass);background:transparent;margin-left:6px}
+nav.main .btn{min-height:46px;padding:0 22px;white-space:nowrap;color:var(--brass);background:transparent;margin-left:6px}
 nav.main .btn:hover{background:var(--brass);color:var(--coal)}
 .menu-btn{display:none;background:none;border:1px solid rgba(236,230,220,.3);color:#ece6dc;width:46px;height:46px;cursor:pointer}
 .mobile-nav{display:none}
@@ -427,13 +427,19 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 @media(max-width:640px){.cleaning-band{padding:0 0 80px}}
 
 /* Eva's cleaning pill in the header */
-.eva-pill{display:inline-flex;align-items:center;gap:12px;background:rgba(236,230,220,.04);padding:0 18px 0 12px;min-height:46px;text-decoration:none;border:1px solid rgba(184,149,106,.6);transition:border-color .25s,background .25s;margin-left:auto}
-.eva-pill img{height:34px;width:auto;filter:drop-shadow(0 0 1px rgba(255,255,255,.35))}
-.eva-pill span{font:500 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--brass);white-space:nowrap}
-.eva-pill:hover{border-color:var(--brass);background:rgba(184,149,106,.12)}
+.eva-pill{display:inline-flex;align-items:stretch;min-height:46px;text-decoration:none;border:1px solid var(--brass);margin-left:auto;overflow:hidden;transition:box-shadow .3s,transform .3s}
+.eva-pill .logo{display:flex;align-items:center;background:#fff;padding:0 12px}
+.eva-pill img{height:36px;width:auto;display:block}
+.eva-pill .txt{display:flex;flex-direction:column;justify-content:center;gap:5px;padding:0 16px 0 14px;font:500 10px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--brass);white-space:nowrap;transition:background .3s,color .3s}
+.eva-pill .txt b{font:400 15px/1 var(--serif);letter-spacing:.02em;text-transform:none;color:#ece6dc;transition:color .3s}
+.eva-pill .txt b i{font-style:normal;color:var(--brass);margin-left:6px;display:inline-block;transition:transform .3s,color .3s}
+.eva-pill:hover{transform:translateY(-1px);box-shadow:0 10px 24px -12px rgba(184,149,106,.8)}
+.eva-pill:hover .txt{background:var(--brass);color:var(--coal)}
+.eva-pill:hover .txt b,.eva-pill:hover .txt b i{color:var(--coal)}
+.eva-pill:hover .txt b i{transform:translateX(3px)}
 header.site .wrap{gap:18px}
-@media(max-width:1180px){.eva-pill span{display:none}.eva-pill{padding:0 10px}}
-@media(max-width:640px){.eva-pill{min-height:40px;padding:0 8px}.eva-pill img{height:28px}}
+@media(max-width:1180px){.eva-pill .txt{display:none}}
+@media(max-width:640px){.eva-pill{min-height:40px}.eva-pill .logo{padding:0 8px}.eva-pill img{height:28px}}
 .cleaning-icon.eva{width:auto;height:auto;border:0;padding:0}
 .cleaning-icon.eva img{width:220px;height:auto}
 
@@ -560,7 +566,7 @@ header.site .wrap{gap:18px}
       <a href="#about">About</a>
       <a class="btn" href="#estimate">Free estimate</a>
     </nav>
-    <a class="eva-pill" href="cleaning/index.html" aria-label="Eva's Expert Cleaning Services, house cleaning"><img src="cleaning/media/evas-logo-sm.webp" alt="" width="420" height="167"><span>House cleaning</span></a>
+    <a class="eva-pill" href="cleaning/index.html" aria-label="Eva's Expert Cleaning Services, house cleaning"><span class="logo"><img src="cleaning/media/evas-logo-sm.webp" alt="" width="420" height="167"></span><span class="txt">House cleaning<b>Eva's Expert<i>&rarr;</i></b></span></a>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu" onclick="toggleMenu()">
       <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" stroke-width="1.4"/></svg>
     </button>
