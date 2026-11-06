@@ -102,7 +102,7 @@ nav.main a{color:#d9d2c6;text-decoration:none;font-size:13px;font-weight:400;let
 nav.main a:not(.btn)::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--brass);transition:right .3s}
 nav.main a:not(.btn):hover,nav.main a[aria-current="page"]{color:#fff}
 nav.main a:not(.btn):hover::after,nav.main a[aria-current="page"]::after{right:0}
-nav.main .btn{min-height:46px;padding:0 22px;color:var(--brass);background:transparent;margin-left:6px}
+nav.main .btn{min-height:46px;padding:0 22px;white-space:nowrap;color:var(--brass);background:transparent;margin-left:6px}
 nav.main .btn:hover{background:var(--brass);color:var(--coal)}
 .menu-btn{display:none;background:none;border:1px solid rgba(236,230,220,.3);color:#ece6dc;width:46px;height:46px;cursor:pointer}
 .mobile-nav{display:none}
@@ -416,7 +416,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 
 /* House cleaning teaser */
 .cleaning-band{padding:0 0 110px}
-.cleaning-box{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:40px;align-items:center;background:#fff;border:1px solid var(--hair);border-left:3px solid var(--brass);padding:44px 48px}
+.cleaning-box{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:40px;align-items:center;background:#fff;border:1px solid var(--hair);border-left:3px solid #d94f8c;padding:44px 48px}
 .cleaning-icon{width:72px;height:72px;border:1px solid var(--hair-dark);display:flex;align-items:center;justify-content:center;color:var(--brass-deep)}
 .cleaning-icon svg{width:38px;height:38px}
 .cleaning-text h2{font-size:clamp(28px,2.6vw,38px);margin-bottom:10px}
@@ -425,6 +425,21 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 .cleaning-tags li{border:1px solid var(--hair);padding:6px 14px;font-size:13.5px;color:var(--ink);background:var(--paper)}
 @media(max-width:960px){.cleaning-box{grid-template-columns:1fr;gap:24px;padding:32px 26px}.cleaning-icon{width:56px;height:56px}}
 @media(max-width:640px){.cleaning-band{padding:0 0 80px}}
+
+/* Eva's cleaning pill in the header */
+.eva-pill{display:inline-flex;align-items:stretch;min-height:48px;text-decoration:none;margin-left:auto;border-radius:999px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(243,166,198,.55),0 6px 18px -6px rgba(217,79,140,.55),0 2px 6px rgba(0,0,0,.35);transition:box-shadow .3s,transform .3s}
+.eva-pill .logo{display:flex;align-items:center;background:#fff;padding:0 10px 0 16px}
+.eva-pill img{height:38px;width:auto;display:block}
+.eva-pill .txt{display:flex;flex-direction:column;justify-content:center;gap:5px;padding:0 22px 0 16px;border-radius:999px 0 0 999px;background:linear-gradient(135deg,#f7b6d1 0%,#e46a9f 55%,#d94f8c 100%);font:600 9.5px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.92);white-space:nowrap;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.eva-pill .txt b{font:400 15px/1 var(--serif);letter-spacing:.02em;text-transform:none;color:#fff;text-shadow:0 1px 2px rgba(150,30,80,.35)}
+.eva-pill .txt b i{font-style:normal;margin-left:6px;display:inline-block;transition:transform .3s}
+.eva-pill:hover{transform:translateY(-2px);box-shadow:0 0 0 1px #f3a6c6,0 14px 28px -8px rgba(217,79,140,.75),0 3px 8px rgba(0,0,0,.35)}
+.eva-pill:hover .txt b i{transform:translateX(4px)}
+header.site .wrap{gap:18px}
+@media(max-width:1180px){.eva-pill .txt{display:none}.eva-pill .logo{padding:0 16px}}
+@media(max-width:640px){.eva-pill{min-height:42px}.eva-pill .logo{padding:0 12px}.eva-pill img{height:30px}}
+.cleaning-icon.eva{width:auto;height:auto;border:0;padding:0}
+.cleaning-icon.eva img{width:220px;height:auto}
 
 .tab{display:none}
 .tab.active{display:block}
@@ -549,6 +564,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
       <a href="#about">About</a>
       <a class="btn" href="#estimate">Free estimate</a>
     </nav>
+    <a class="eva-pill" href="cleaning/index.html" aria-label="Eva's Expert Cleaning Services, house cleaning"><span class="logo"><img src="cleaning/media/evas-logo-sm.webp" alt="" width="420" height="167"></span><span class="txt">House cleaning<b>Eva's Expert<i>&rarr;</i></b></span></a>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu" onclick="toggleMenu()">
       <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" stroke-width="1.4"/></svg>
     </button>
@@ -559,6 +575,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
     <a href="#projects">Projects</a>
     <a href="#builders">For builders</a>
     <a href="#about">About</a>
+    <a href="cleaning/index.html">Eva's House Cleaning</a>
     <a href="https://www.instagram.com/zeferinosprecisionfinish/" target="_blank" rel="noopener">Instagram</a>
     <a class="btn" href="#estimate">Request a free estimate</a>
   </nav>
@@ -690,14 +707,14 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
   <section class="band">
     <div class="wrap">
       <div class="section-head">
-        <div><div class="kicker">How we work</div><h2>From first call to final walkthrough</h2></div>
+        <div><div class="kicker">How we work</div><h2>From free estimate to final inspection</h2></div>
         <p class="lead">A clear process, so you always know what happens next.</p>
       </div>
       <div class="steps">
         <div class="step"><div class="num">i.</div><h3>Tell us about the project</h3><p>Call, email or send the form with the scope, the city and a few photos if you have them.</p></div>
-        <div class="step"><div class="num">ii.</div><h3>Receive your estimate</h3><p>We review the scope with you and send a free estimate for the work.</p></div>
+        <div class="step"><div class="num">ii.</div><h3>Free estimate</h3><p>We review the scope with you and send a free estimate for the work.</p></div>
         <div class="step"><div class="num">iii.</div><h3>Installation</h3><p>We schedule the job and install with attention to alignment, joints and clean transitions.</p></div>
-        <div class="step"><div class="num">iv.</div><h3>Final walkthrough</h3><p>We review the finished work with you before the job is closed out.</p></div>
+        <div class="step"><div class="num">iv.</div><h3>Final inspection</h3><p>We review the finished work with you before the job is closed out.</p></div>
       </div>
     </div>
   </section>
@@ -736,16 +753,16 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
   <section class="cleaning-band" id="house-cleaning" aria-labelledby="cleaningTitle">
     <div class="wrap">
       <div class="cleaning-box">
-        <div class="cleaning-icon" aria-hidden="true"><svg viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M20 5l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path d="M31 25l1.5 3.5L36 30l-3.5 1.5L31 35l-1.5-3.5L26 30l3.5-1.5z"/></g></svg></div>
+        <a class="cleaning-icon eva" href="cleaning/index.html"><img src="cleaning/media/evas-logo.webp" alt="Eva's Expert Cleaning Services" width="904" height="359" loading="lazy"></a>
         <div class="cleaning-text">
-          <div class="kicker">Also from Zeferino's</div>
-          <h2 id="cleaningTitle">House cleaning, too.</h2>
-          <p>We also clean homes and businesses across Southwest Florida. From seasonal homes to offices, we cover every type of cleaning.</p>
+          <div class="kicker">House cleaning by our family partner</div>
+          <h2 id="cleaningTitle">Eva's Expert Cleaning Services</h2>
+          <p>Homes and businesses across Southwest Florida, from seasonal homes to offices. Call Eva at <a href="tel:+12399948187">(239) 994-8187</a>.</p>
           <ul class="cleaning-tags">
-            <li>Residential homes</li><li>Seasonal homes</li><li>Airbnb &amp; vacation rentals</li><li>Commercial &amp; offices</li><li>Move-in / move-out</li><li>Post-construction</li>
+            <li>Residential homes</li><li>Seasonal homes</li><li>Airbnb &amp; vacation rentals</li><li>Offices</li><li>Clinics</li><li>Move-in / move-out</li>
           </ul>
         </div>
-        <a class="btn ink" href="/cleaning/">See our cleaning services</a>
+        <a class="btn ink" href="cleaning/index.html">Visit Eva's Cleaning</a>
       </div>
     </div>
   </section>
@@ -1051,7 +1068,7 @@ const svcHTML=s=>`<li><h3>${esc(s[0])}</h3><p>${esc(s[1])}</p></li>`;
 document.querySelector('#homeServices').innerHTML=services.map(svcHTML).join('');
 document.querySelector('#allServices').innerHTML=services.map(svcHTML).join('');
 document.querySelector('#footServices').innerHTML=services.slice(0,6).map(s=>`<li><a href="#services">${esc(s[0])}</a></li>`).join('');
-document.querySelector('#leadService').innerHTML=[...services.map(s=>s[0]),'House cleaning','Builder / Subcontractor','Other'].map(o=>`<option>${esc(o)}</option>`).join('');
+document.querySelector('#leadService').innerHTML=[...services.map(s=>s[0]),'Builder / Subcontractor','Other'].map(o=>`<option>${esc(o)}</option>`).join('');
 
 /* ---------- cards ---------- */
 const cardHTML=p=>{const c=coverOf(p);return `<a class="card" href="#project-${p.id}"><div class="ph"><img src="${c.url}" alt="${esc(p.title)} in ${esc(p.city)}" loading="lazy">${WM()}</div><div class="card-body"><div class="where">${esc(p.city)}, ${p.state}</div><h3>${esc(p.title)}</h3><div class="meta">${esc(p.service)} &nbsp;/&nbsp; ${plural(p.photos.length,'photo')}</div></div></a>`};
