@@ -4,11 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#161514">
-<title>House Cleaning in Southwest Florida | Zeferino's</title>
-<meta name="description" content="House cleaning by Zeferino's in Fort Myers, Cape Coral, Naples and Southwest Florida: regular cleaning, deep cleaning, move-in and move-out, post-construction and vacation rental turnovers. Request a free walkthrough.">
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<title>Eva's Expert Cleaning Services | House Cleaning in Southwest Florida</title>
+<meta name="description" content="Eva's Expert Cleaning Services: residential, seasonal home, Airbnb, commercial, move-in/move-out, deep and post-construction cleaning in Naples, Bonita Springs, Estero, Fort Myers Beach and Babcock Ranch. Call (239) 994-8187.">
+<link rel="icon" href="media/evas-logo-sm.webp">
 <link rel="canonical" href="https://www.zeferinosusa.com/cleaning/">
 <style>
 @font-face{font-family:Pagella;src:url(../fonts/pagella-regular.woff) format('woff');font-weight:400;font-style:normal;font-display:swap}
@@ -17,13 +15,14 @@
 @font-face{font-family:Inter;src:url(../fonts/inter-400.woff) format('woff');font-weight:400;font-display:swap}
 @font-face{font-family:Inter;src:url(../fonts/inter-500.woff) format('woff');font-weight:500 700;font-display:swap}
 :root{
-  --coal:#161514;--ink:#1c1a17;--stone:#5f6a68;
-  --linen:#f1f4f2;      /* cool, fresh linen for the cleaning line */
-  --paper:#fbfcfb;
-  --sea:#2f5d58;        /* deep sea-glass green: the cleaning accent */
-  --sea-light:#d9e7e3;
-  --brass:#b8956a;--brass-deep:#806340;
-  --hair:rgba(28,26,23,.13);--hair-dark:rgba(184,149,106,.24);
+  --coal:#3a2430;      /* deep plum for dark bands */
+  --ink:#2b2026;--stone:#6d5e66;
+  --linen:#fdf1f5;      /* soft blush, from Eva's logo */
+  --paper:#ffffff;
+  --sea:#d94f8c;        /* Eva's pink */
+  --sea-light:#fbd9e7;
+  --brass:#f3a6c6;--brass-deep:#b8376f;
+  --hair:rgba(58,36,48,.12);--hair-dark:rgba(243,166,198,.28);
   --serif:Pagella,'Palatino Linotype',Palatino,Georgia,serif;
   --sans:Inter,'Helvetica Neue',Arial,sans-serif;
 }
@@ -49,33 +48,34 @@ p{margin:0}
 .band{padding:120px 0}
 .band.linen{background:var(--linen)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:54px;padding:0 30px;border:1px solid var(--sea);background:var(--sea);color:#fff;font:500 13px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:background .25s,border-color .25s,color .25s}
-.btn:hover{background:#244a46;border-color:#244a46}
+.btn:hover{background:#b8376f;border-color:#b8376f}
 .btn.line{background:transparent;color:inherit;border-color:currentColor}
 .dark .btn.line{color:#ece6dc;border-color:rgba(236,230,220,.4)}
 .dark .btn.line:hover{color:#fff;border-color:#fff}
 .icon{width:17px;height:17px;flex:none}
 
 /* Header */
-.topbar{background:#100f0e;color:#9d968b;font-size:13px}
+.topbar{background:#2b1a23;color:#e9cfdb;font-size:13px}
 .topbar .wrap{display:flex;justify-content:space-between;align-items:center;gap:24px;min-height:38px}
 .topbar a{text-decoration:none;display:inline-flex;align-items:center;gap:8px}
 .topbar a:hover{color:#ece6dc}
 .topbar .icon{width:14px;height:14px;color:var(--brass)}
 .topbar-links{display:flex;gap:26px}
-header.site{position:sticky;top:0;z-index:50;background:var(--coal);border-bottom:1px solid var(--hair-dark)}
+header.site{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--hair)}
 header.site .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;height:92px}
 .brand{display:flex;align-items:center;gap:18px;text-decoration:none}
-.brand img{height:68px;width:auto}
-.division{font:500 11px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;color:#a9d0c8;border-left:1px solid rgba(255,255,255,.18);padding-left:18px}
+.brand img{height:70px;width:auto}
+.division{display:none}
 nav.main{display:flex;align-items:center;gap:34px}
-nav.main a{color:#d9d2c6;text-decoration:none;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
-nav.main a:hover{color:#fff}
+nav.main a{color:var(--ink);text-decoration:none;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+nav.main a:hover{color:var(--sea)}
+nav.main .btn,nav.main .btn:hover{color:#fff}
 nav.main .btn{min-height:46px;padding:0 22px}
-.back{color:#a39c91!important}
+.back{color:var(--stone)!important}
 
 /* Hero */
 .hero{padding:120px 0 110px;position:relative;overflow:hidden}
-.hero::after{content:"";position:absolute;right:-120px;top:50%;width:620px;height:620px;transform:translateY(-50%);border-radius:50%;background:radial-gradient(circle,rgba(169,208,200,.14),rgba(169,208,200,0) 65%);pointer-events:none}
+.hero::after{content:"";position:absolute;right:-120px;top:50%;width:620px;height:620px;transform:translateY(-50%);border-radius:50%;background:radial-gradient(circle,rgba(243,166,198,.22),rgba(243,166,198,0) 65%);pointer-events:none}
 .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:80px;align-items:end}
 .hero h1{margin-bottom:30px;max-width:13ch}
 .hero .lead{margin-bottom:44px}
@@ -103,6 +103,15 @@ nav.main .btn{min-height:46px;padding:0 22px}
 .svc.feature li{border-color:rgba(255,255,255,.1);color:#d8d0c3}
 .tag{align-self:flex-start;font:500 11px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--brass);border:1px solid var(--hair-dark);padding:6px 10px}
 
+/* Videos */
+.vids{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:24px;align-items:start}
+.vid{margin:0;background:#000;position:relative}
+.vid video{width:100%;display:block;background:#000}
+.vid.tall video{aspect-ratio:4/5;object-fit:cover}
+.vid-col{display:grid;gap:24px}
+.vid-col video{aspect-ratio:16/9;object-fit:cover}
+.vid figcaption{background:#fff;color:var(--stone);font-family:var(--serif);font-style:italic;font-size:16px;padding:12px 2px 0}
+@media(max-width:800px){.vids{grid-template-columns:1fr}}
 /* How it works */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--hair)}
 .step{padding:40px 32px 0 0}
@@ -125,20 +134,20 @@ form.estimate{background:#fff;border:1px solid var(--hair);padding:48px;display:
 form.estimate h2{grid-column:1/-1;font-size:32px}
 form.estimate label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--stone)}
 form.estimate .full{grid-column:1/-1}
-form.estimate input,form.estimate select,form.estimate textarea{font:300 17px/1.5 var(--sans);letter-spacing:0;text-transform:none;color:var(--ink);background:transparent;border:0;border-bottom:1px solid #c3cbc8;padding:10px 0;border-radius:0;width:100%}
-form.estimate select{appearance:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%232f5d58'/%3E%3C/svg%3E") no-repeat right 4px center}
-form.estimate textarea{border:1px solid #c3cbc8;padding:12px 14px;margin-top:6px}
+form.estimate input,form.estimate select,form.estimate textarea{font:300 17px/1.5 var(--sans);letter-spacing:0;text-transform:none;color:var(--ink);background:transparent;border:0;border-bottom:1px solid #e3c9d5;padding:10px 0;border-radius:0;width:100%}
+form.estimate select{appearance:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23d94f8c'/%3E%3C/svg%3E") no-repeat right 4px center}
+form.estimate textarea{border:1px solid #e3c9d5;padding:12px 14px;margin-top:6px}
 form.estimate input:focus,form.estimate select:focus,form.estimate textarea:focus{outline:0;border-color:var(--sea)}
 .note{font-size:13.5px;color:var(--stone)}
 .visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.photo-drop{display:flex!important;flex-direction:row!important;align-items:center;gap:16px!important;border:1px dashed #a9b6b2;padding:16px 20px;cursor:pointer;text-transform:none!important;letter-spacing:0!important;font:300 15px/1.5 var(--sans)!important}
+.photo-drop{display:flex!important;flex-direction:row!important;align-items:center;gap:16px!important;border:1px dashed #e8b3ca;padding:16px 20px;cursor:pointer;text-transform:none!important;letter-spacing:0!important;font:300 15px/1.5 var(--sans)!important}
 .photo-drop strong{color:var(--ink);font-weight:500}
 .photo-drop svg{color:var(--sea);flex:none}
 .photo-previews{display:flex;flex-wrap:wrap;gap:8px}
 .photo-previews figure{margin:0;position:relative;width:72px;height:72px}
 .photo-previews img{width:100%;height:100%;object-fit:cover;border:1px solid var(--hair)}
 .photo-previews button{position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;border:0;background:var(--coal);color:#fff;cursor:pointer;padding:0}
-.sent-msg{grid-column:1/-1;background:#eaf3f0;border:1px solid #b5d0c8;color:#244a46;padding:16px 18px;font-size:15px}
+.sent-msg{grid-column:1/-1;background:#fdeef4;border:1px solid #f3b9d0;color:#8a2a55;padding:16px 18px;font-size:15px}
 
 /* Cross-link + footer */
 .cross{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:center}
@@ -184,23 +193,20 @@ footer a:hover{color:#fff}
 </svg>
 
 <div class="topbar"><div class="wrap">
-  <span class="wide">House cleaning in Southwest Florida</span>
+  <span class="wide">Eva's Expert Cleaning Services, Southwest Florida</span>
   <div class="topbar-links">
-    <a href="tel:+12393241224"><svg class="icon"><use href="#i-phone"/></svg>(239) 324-1224</a>
-    <a class="wide" href="mailto:zeferinosprecisionfinish@gmail.com"><svg class="icon"><use href="#i-mail"/></svg>zeferinosprecisionfinish@gmail.com</a>
-    <a href="https://www.instagram.com/zeferinosprecisionfinish/" target="_blank" rel="noopener" aria-label="Instagram"><svg class="icon"><use href="#i-ig"/></svg></a>
+    <a href="tel:+12399948187"><svg class="icon"><use href="#i-phone"/></svg>(239) 994-8187</a>
   </div>
 </div></div>
 
 <header class="site"><div class="wrap">
-  <a class="brand" href="/cleaning/" aria-label="Zeferino's House Cleaning">
-    <img src="../images/logo-horizontal-640.webp" alt="Zeferino's" width="640" height="208">
-    <span class="division">House Cleaning</span>
+  <a class="brand" href="/cleaning/" aria-label="Eva's Expert Cleaning Services">
+    <img src="media/evas-logo.webp" alt="Eva's Expert Cleaning Services" width="904" height="359">
   </a>
   <nav class="main" aria-label="Main">
     <a href="#services">Services</a>
     <a href="#how">How it works</a>
-    <a class="back" href="/">Carpentry &amp; remodeling</a>
+    <a href="#videos">See us at work</a>
     <a class="btn" href="#quote">Free walkthrough</a>
   </nav>
 </div></header>
@@ -209,18 +215,18 @@ footer a:hover{color:#fff}
 <section class="hero dark">
   <div class="wrap">
     <div>
-      <div class="kicker">Zeferino's House Cleaning</div>
-      <h1>A clean home, finished with care.</h1>
-      <p class="lead">Residential, seasonal homes, Airbnb and vacation rentals, commercial and office cleaning across Southwest Florida. We cover every type of cleaning, with the same attention to detail we bring to every finish.</p>
+      <div class="kicker">Eva's Expert Cleaning Services</div>
+      <h1>A spotless home, cleaned with care.</h1>
+      <p class="lead">Residential, seasonal homes, Airbnb and vacation rentals, commercial and office cleaning across Southwest Florida. We cover every type of cleaning, with attention to every detail.</p>
       <div class="cta-row">
         <a class="btn" href="#quote">Request a free walkthrough</a>
-        <a class="btn line" href="tel:+12393241224"><svg class="icon"><use href="#i-phone"/></svg>(239) 324-1224</a>
+        <a class="btn line" href="tel:+12399948187"><svg class="icon"><use href="#i-phone"/></svg>(239) 994-8187</a>
       </div>
     </div>
     <div class="promise"><ul>
       <li><span class="n">i.</span><div><strong>Walkthrough first</strong><span>We see the home before giving you a precise price.</span></div></li>
       <li><span class="n">ii.</span><div><strong>Every type of cleaning</strong><span>Homes, seasonal homes, Airbnb, offices and businesses.</span></div></li>
-      <li><span class="n">iii.</span><div><strong>One company, two services</strong><span>The same team that finishes homes can clean them too.</span></div></li>
+      <li><span class="n">iii.</span><div><strong>Talk to Eva directly</strong><span>Call or text (239) 994-8187.</span></div></li>
     </ul></div>
   </div>
 </section>
@@ -273,6 +279,22 @@ footer a:hover{color:#fff}
   </div>
 </section>
 
+<section class="band" id="videos">
+  <div class="wrap">
+    <div class="section-head">
+      <div><div class="kicker">See us at work</div><h2>Meet Eva</h2></div>
+      <p class="lead">Real videos from our cleaning jobs.</p>
+    </div>
+    <div class="vids">
+      <figure class="vid tall"><video src="media/evas-intro.mp4" poster="media/evas-intro.jpg" controls playsinline preload="none"></video><figcaption>Meet Eva and our service</figcaption></figure>
+      <div class="vid-col">
+        <figure class="vid"><video src="media/evas-bathroom.mp4" poster="media/evas-bathroom.jpg" controls muted playsinline preload="none"></video><figcaption>Bathroom deep clean</figcaption></figure>
+        <figure class="vid"><video src="media/evas-ceiling.mp4" poster="media/evas-ceiling.jpg" controls muted playsinline preload="none"></video><figcaption>High ceilings, fans and vents</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="band linen" id="how">
   <div class="wrap">
     <div class="section-head">
@@ -286,7 +308,7 @@ footer a:hover{color:#fff}
     </div>
     <div style="margin-top:72px">
       <div class="kicker">Service area</div>
-      <div class="areas"><span>Fort Myers</span><span>Cape Coral</span><span>Naples</span><span>Bonita Springs</span><span>Estero</span><span>Sanibel Island</span></div>
+      <div class="areas"><span>Naples</span><span>Bonita Springs</span><span>Estero</span><span>Fort Myers Beach</span><span>Babcock Ranch</span></div>
     </div>
   </div>
 </section>
@@ -296,24 +318,25 @@ footer a:hover{color:#fff}
     <div>
       <div class="kicker">Free walkthrough</div>
       <h2>Tell us about your home.</h2>
-      <p class="lead" style="margin-top:22px">Send the details and we'll contact you to schedule a free walkthrough and give you a precise price.</p>
+      <p class="lead" style="margin-top:22px">Send the details and Eva will contact you to schedule a free walkthrough and give you a precise price.</p>
       <ul class="info-list">
-        <li><span>Phone</span><a href="tel:+12393241224">(239) 324-1224</a></li>
-        <li><span>Email</span><a href="mailto:zeferinosprecisionfinish@gmail.com">zeferinosprecisionfinish@gmail.com</a></li>
+        <li><span>Contact</span><div style="font-family:var(--serif);font-size:19px">Eva</div></li>
+        <li><span>Phone</span><a href="tel:+12399948187">(239) 994-8187</a></li>
+        <li><span>Text</span><a href="sms:+12399948187">Send Eva a text</a></li>
       </ul>
     </div>
     <form class="estimate" id="estimateForm" action="https://formsubmit.co/zeferinosprecisionfinish@gmail.com" method="POST" enctype="multipart/form-data" onsubmit="return sendLead(event)">
       <h2>Request a cleaning walkthrough</h2>
-      <input type="hidden" name="_subject" value="New HOUSE CLEANING request - zeferinosusa.com">
+      <input type="hidden" name="_subject" value="New EVA'S CLEANING request - zeferinosusa.com/cleaning">
       <input type="hidden" name="_template" value="table">
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_next" value="https://www.zeferinosusa.com/cleaning/?sent=1#quote">
-      <input type="hidden" name="Division" value="House cleaning">
+      <input type="hidden" name="Company" value="Eva's Expert Cleaning Services">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
       <label>Full name<input name="Name" required autocomplete="name"></label>
       <label>Phone<input name="Phone" required type="tel" autocomplete="tel" placeholder="(239) 000-0000"></label>
       <label class="full">Email<input name="email" type="email" required autocomplete="email"></label>
-      <label>City<input name="City" required placeholder="Fort Myers, FL"></label>
+      <label>City<input name="City" required placeholder="Naples, FL"></label>
       <label>Type of cleaning<select name="Cleaning type">
         <option>Regular cleaning</option><option>Deep cleaning</option><option>Move-in / move-out</option><option>Post-construction cleaning</option><option>Airbnb / vacation rental</option><option>Seasonal home</option><option>Commercial / office</option><option>Not sure yet</option>
       </select></label>
@@ -332,23 +355,23 @@ footer a:hover{color:#fff}
         <div class="photo-previews" id="photoPreviews"></div>
       </div>
       <div class="full"><button class="btn" type="submit" id="leadSubmit">Send request</button></div>
-      <p class="full note">Your request goes straight to the Zeferino's team.</p>
+      <p class="full note">Your request goes straight to Eva's team.</p>
     </form>
   </div>
 </section>
 
 <section class="band dark">
   <div class="wrap cross">
-    <div><div class="kicker">Also from Zeferino's</div><h2>Finish carpentry &amp; remodeling</h2><p class="lead" style="margin-top:18px">Trim, doors, stairs, handrails, flooring and windows for homeowners and builders across Southwest Florida.</p></div>
-    <a class="btn line" href="/">See our carpentry work</a>
+    <div><div class="kicker">Family partner</div><h2>Zeferino's Precision Finish</h2><p class="lead" style="margin-top:18px">Trim, doors, stairs, handrails, flooring and windows for homeowners and builders across Southwest Florida.</p></div>
+    <a class="btn line" href="/">Visit Zeferino's</a>
   </div>
 </section>
 </main>
 
 <footer><div class="wrap">
-  <img src="../images/logo-horizontal-640.webp" alt="Zeferino's" width="640" height="208">
-  <div><a href="tel:+12393241224">(239) 324-1224</a> &nbsp;·&nbsp; <a href="mailto:zeferinosprecisionfinish@gmail.com">zeferinosprecisionfinish@gmail.com</a></div>
-  <div>© 2026 Zeferino's Inc.</div>
+  <img src="media/evas-logo.webp" alt="Eva's Expert Cleaning Services" width="904" height="359" style="background:#fff;padding:10px 16px;height:84px">
+  <div>Eva &nbsp;·&nbsp; <a href="tel:+12399948187">(239) 994-8187</a></div>
+  <div>© 2026 Eva's Expert Cleaning Services</div>
 </div></footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -360,7 +383,7 @@ async function pickPhotos(input){for(const f of [...input.files]){if(photos.leng
 function removePhoto(i){photos.splice(i,1);drawPhotos()}
 function drawPhotos(){document.querySelectorAll('#photoSlots input').forEach((inp,i)=>{const dt=new DataTransfer();if(photos[i])dt.items.add(photos[i]);inp.files=dt.files});document.querySelector('#photoPreviews').innerHTML=photos.map((f,i)=>`<figure><img src="${URL.createObjectURL(f)}" alt="Photo ${i+1}"><button type="button" aria-label="Remove photo ${i+1}" onclick="removePhoto(${i})">×</button></figure>`).join('')}
 function sendLead(e){if(photos.reduce((a,f)=>a+f.size,0)>9.5*1024*1024){e.preventDefault();showToast('The photos are too large together. Remove one and try again.');return false}const b=document.querySelector('#leadSubmit');b.disabled=true;b.textContent='Sending…';return true}
-if(new URLSearchParams(location.search).get('sent')){const m=document.createElement('p');m.className='sent-msg';m.setAttribute('role','status');m.textContent="Thank you! Your request was sent. We'll contact you to schedule the walkthrough.";document.querySelector('#estimateForm h2').after(m)}
+if(new URLSearchParams(location.search).get('sent')){const m=document.createElement('p');m.className='sent-msg';m.setAttribute('role','status');m.textContent="Thank you! Your request was sent. Eva will contact you to schedule the walkthrough.";document.querySelector('#estimateForm h2').after(m)}
 </script>
 </body>
 </html>
