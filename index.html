@@ -396,6 +396,24 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 .foot-top .foot-logo{width:min(380px,80vw);height:auto;display:block;mix-blend-mode:normal}
 @media(max-width:640px){.brand-logo{height:52px}.hero-logo{margin-bottom:28px}}
 
+/* Estimate form: photos + floating button */
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.photo-field{display:flex;flex-direction:column;gap:10px}
+.ph-label{font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--stone)}
+.ph-label em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:300}
+.photo-drop{display:flex!important;flex-direction:row!important;align-items:center;gap:16px!important;border:1px dashed #b9b0a2;padding:18px 20px;cursor:pointer;text-transform:none!important;letter-spacing:0!important;font:300 15px/1.5 var(--sans)!important;color:var(--stone)!important;transition:border-color .2s,background .2s}
+.photo-drop strong{color:var(--ink);font-weight:500}
+.photo-drop svg{color:var(--brass-deep);flex:none}
+.photo-drop:hover,#leadPhotos:focus-visible+.photo-drop{border-color:var(--brass-deep);background:#faf7f1}
+.photo-previews{display:flex;flex-wrap:wrap;gap:8px}
+.photo-previews figure{margin:0;position:relative;width:76px;height:76px}
+.photo-previews img{width:100%;height:100%;object-fit:cover;border:1px solid var(--hair)}
+.photo-previews button{position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;border:0;background:var(--coal);color:#fff;font-size:15px;line-height:24px;cursor:pointer;padding:0}
+.sent-msg{grid-column:1/-1;background:#eef3ea;border:1px solid #b9cdb0;color:#2f4a26;padding:16px 18px;font-size:15px}
+.fab-estimate.away{opacity:0;pointer-events:none;transform:translateY(12px)}
+.fab-estimate{transition:opacity .25s,transform .25s;position:fixed;right:20px;bottom:20px;z-index:90;box-shadow:0 10px 28px -8px rgba(0,0,0,.45)}
+@media(max-width:640px){.fab-estimate{left:16px;right:16px;bottom:14px}}
+
 .tab{display:none}
 .tab.active{display:block}
 
@@ -517,7 +535,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
       <a href="#projects">Projects</a>
       <a href="#builders">Builders</a>
       <a href="#about">About</a>
-      <a class="btn" href="#contact">Free estimate</a>
+      <a class="btn" href="#estimate">Free estimate</a>
     </nav>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu" onclick="toggleMenu()">
       <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" stroke-width="1.4"/></svg>
@@ -530,7 +548,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
     <a href="#builders">For builders</a>
     <a href="#about">About</a>
     <a href="https://www.instagram.com/zeferinosprecisionfinish/" target="_blank" rel="noopener">Instagram</a>
-    <a class="btn" href="#contact">Request a free estimate</a>
+    <a class="btn" href="#estimate">Request a free estimate</a>
   </nav>
 </header>
 
@@ -547,7 +565,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
         <h1>Precision in every detail.</h1>
         <p class="lead">Finish carpentry, trim, doors, stairs, handrails and flooring, installed for homeowners, builders and contractors across Southwest Florida.</p>
         <div class="cta-row">
-          <a class="btn" href="#contact">Request a free estimate</a>
+          <a class="btn" href="#estimate">Request a free estimate</a>
           <a class="btn line" href="#projects">View our work</a>
         </div>
       </div>
@@ -567,6 +585,48 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
       </div>
       <div class="loc-grid" id="locGrid"></div>
       <div class="also" id="alsoServing"></div>
+    </div>
+  </section>
+
+  <section class="band linen" id="estimate">
+    <div class="wrap contact-grid">
+      <div>
+        <div class="kicker">Free estimate</div>
+        <h2>Tell us about your project.</h2>
+        <p class="lead" style="margin-top:24px">Send the details and, if you like, a few photos of the space. We'll get back to you with a free estimate.</p>
+        <ul class="info-list">
+          <li><span>Phone</span><a href="tel:+12393241224">(239) 324-1224</a></li>
+          <li><span>Email</span><a href="mailto:zeferinosprecisionfinish@gmail.com">zeferinosprecisionfinish@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="estimate-slot" data-slot="home">
+      <form class="estimate" id="estimateForm" action="https://formsubmit.co/zeferinosprecisionfinish@gmail.com" method="POST" enctype="multipart/form-data" onsubmit="return sendLead(event)">
+        <h2>Request a free estimate</h2>
+        <input type="hidden" name="_subject" value="New estimate request - zeferinosusa.com">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://www.zeferinosusa.com/?sent=1#estimate">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <label>Full name<input id="leadName" name="Name" required autocomplete="name"></label>
+        <label>Phone<input id="leadPhone" name="Phone" required type="tel" autocomplete="tel" placeholder="(239) 000-0000"></label>
+        <label class="full">Email<input id="leadEmail" name="email" type="email" required autocomplete="email"></label>
+        <label>Project city<input id="leadCity" name="City" required placeholder="Naples, FL"></label>
+        <label>Service needed<select id="leadService" name="Service"></select></label>
+        <label class="full">About the project<textarea id="leadDetails" name="Project details" rows="4" placeholder="Rooms, approximate size, materials, timeline"></textarea></label>
+        <div class="full photo-field">
+          <span class="ph-label">Photos <em>(optional)</em></span>
+          <label class="photo-drop" for="leadPhotos">
+            <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></g></svg>
+            <span><strong>Add photos of the space</strong><br>Up to 5 photos. They help us give you a more accurate estimate.</span>
+          </label>
+          <input id="leadPhotos" type="file" accept="image/*" multiple class="visually-hidden" onchange="pickPhotos(this)">
+          <div id="photoSlots" hidden><input type="file" name="attachment1"><input type="file" name="attachment2"><input type="file" name="attachment3"><input type="file" name="attachment4"><input type="file" name="attachment5"></div>
+          <div class="photo-previews" id="photoPreviews"></div>
+        </div>
+        <div class="full"><button class="btn" type="submit" id="leadSubmit">Send request</button></div>
+        <p class="full note">Photos are optional. Your request goes straight to the Zeferino’s team.</p>
+      </form>
+      </div>
     </div>
   </section>
 
@@ -816,17 +876,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
           <li><span>Service area</span><div>Naples, Bonita Springs, Estero, Fort Myers, Cape Coral, Sanibel and surrounding communities</div></li>
         </ul>
       </div>
-      <form class="estimate" onsubmit="sendLead(event)">
-        <h2>Project details</h2>
-        <label>Full name<input id="leadName" required autocomplete="name"></label>
-        <label>Phone<input id="leadPhone" required type="tel" autocomplete="tel" placeholder="(239) 000-0000"></label>
-        <label class="full">Email<input id="leadEmail" type="email" required autocomplete="email"></label>
-        <label>Project city<input id="leadCity" required placeholder="Naples, FL"></label>
-        <label>Service needed<select id="leadService"></select></label>
-        <label class="full">About the project<textarea id="leadDetails" rows="5" placeholder="Rooms, approximate size, materials, timeline"></textarea></label>
-        <div class="full"><button class="btn" type="submit">Send request</button></div>
-        <p class="full note">Sending opens your email app with the request ready to send to zeferinosprecisionfinish@gmail.com.</p>
-      </form>
+      <div class="estimate-slot" data-slot="contact"></div>
     </div>
   </section>
 </div>
@@ -866,6 +916,7 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
   <div class="foot-bottom"><div class="wrap"><span>© 2026 Zeferino's Inc. All rights reserved.</span><span>zeferinosusa.com</span></div></div>
 </footer>
 
+<a class="btn fab-estimate away" id="fabEstimate" href="#estimate">Free estimate</a>
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Project photo viewer" aria-hidden="true">
   <button class="lb-btn lb-close" type="button" aria-label="Close photo" onclick="closePhoto()">×</button>
   <button class="lb-btn lb-prev" type="button" aria-label="Previous photo" onclick="movePhoto(-1)">‹</button>
@@ -1086,7 +1137,8 @@ document.addEventListener('keydown',e=>{if(!document.querySelector('#lightbox').
 /* ---------- navigation ---------- */
 const titles={home:"Zeferino's Inc. | Finish Carpentry & Flooring Installation in Southwest Florida",services:"Services | Zeferino's Inc.",projects:"Projects | Zeferino's Inc.",builders:"For Builders | Zeferino's Inc.",about:"About | Zeferino's Inc.",contact:"Request an Estimate | Zeferino's Inc."};
 function route(){
-  let h=location.hash.slice(1)||'home',id=h;
+  let h=location.hash.slice(1)||'home',id=h,anchor=null;
+  if(h==='estimate'){h='home';id='home';anchor='estimate'}
   if(h.startsWith('city-')){id=renderCity(h.slice(5))?'city':'projects';if(id==='city')titles.city=cities.find(c=>c.slug===h.slice(5)).name+" Projects | Zeferino's Inc."}
   else if(h.startsWith('project-')){id=renderProject(h.slice(8))?'project':'projects';if(id==='project')titles.project=projects[current].title+', '+projects[current].city+" | Zeferino's Inc."}
   else if(!document.getElementById(h)||!document.getElementById(h).classList.contains('tab')||h==='city'||h==='project')id='home';
@@ -1095,9 +1147,15 @@ function route(){
   document.querySelectorAll('nav.main a').forEach(a=>{if(a.getAttribute('href')==='#'+navId)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   document.title=titles[id];
   closeMenu();
-  window.scrollTo({top:0,behavior:'instant'});
+  placeForm(id);
+  document.querySelector('#fabEstimate').hidden=(id==='contact');
+  if(anchor){const t=document.getElementById(anchor);window.scrollTo({top:t.getBoundingClientRect().top+scrollY-document.querySelector('header.site').offsetHeight,behavior:'instant'})}
+  else window.scrollTo({top:0,behavior:'instant'});
 }
 window.addEventListener('hashchange',route);
+let fabSeen=false,fabTop=true;const fabUpd=()=>document.querySelector('#fabEstimate').classList.toggle('away',fabSeen||fabTop);
+addEventListener('scroll',()=>{fabTop=scrollY<500;fabUpd()},{passive:true});fabTop=scrollY<500;
+if('IntersectionObserver' in window){new IntersectionObserver(es=>es.forEach(e=>{fabSeen=e.isIntersecting;fabUpd()})).observe(document.querySelector('#estimate'))}
 route();
 function toggleMenu(){const n=document.querySelector('#mobileNav'),b=document.querySelector('.menu-btn');const open=!n.classList.contains('open');n.classList.toggle('open',open);b.setAttribute('aria-expanded',open);b.setAttribute('aria-label',open?'Close menu':'Open menu')}
 function closeMenu(){document.querySelector('#mobileNav').classList.remove('open');const b=document.querySelector('.menu-btn');b.setAttribute('aria-expanded','false');b.setAttribute('aria-label','Open menu')}
@@ -1106,14 +1164,44 @@ function closeMenu(){document.querySelector('#mobileNav').classList.remove('open
 function presetService(v){document.querySelector('#leadService').value=v}
 function presetCity(v){document.querySelector('#leadCity').value=v+', '+stateOf(v)}
 function showToast(t){const e=document.querySelector('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),4000)}
-function sendLead(e){
-  e.preventDefault();
-  const v=id=>document.querySelector('#'+id).value.trim();
-  const subject=encodeURIComponent(`Estimate request: ${v('leadService')} in ${v('leadCity')}`);
-  const body=encodeURIComponent(`Name: ${v('leadName')}\nPhone: ${v('leadPhone')}\nEmail: ${v('leadEmail')}\nCity: ${v('leadCity')}\nService: ${v('leadService')}\n\nProject details:\n${v('leadDetails')}`);
-  location.href=`mailto:zeferinosprecisionfinish@gmail.com?subject=${subject}&body=${body}`;
-  showToast('Your email app should open with the request. Send it from there to finish.');
+let photos=[];
+async function shrink(file){
+  try{
+    const bmp=await createImageBitmap(file);
+    const k=Math.min(1,1600/Math.max(bmp.width,bmp.height));
+    const c=document.createElement('canvas');c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);
+    c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.82));
+    return new File([blob],file.name.replace(/\.[^.]+$/,'')+'.jpg',{type:'image/jpeg'});
+  }catch(e){return file}
 }
+async function pickPhotos(input){
+  const picked=[...input.files].filter(f=>f.type.startsWith('image/')||/\.(heic|heif)$/i.test(f.name));
+  for(const f of picked){ if(photos.length>=5){showToast('You can add up to 5 photos.');break} photos.push(await shrink(f)) }
+  input.value='';drawPhotos();
+}
+function removePhoto(i){photos.splice(i,1);drawPhotos()}
+function drawPhotos(){
+  const slots=document.querySelectorAll('#photoSlots input');
+  slots.forEach((inp,i)=>{const dt=new DataTransfer();if(photos[i])dt.items.add(photos[i]);inp.files=dt.files});
+  document.querySelector('#photoPreviews').innerHTML=photos.map((f,i)=>`<figure><img src="${URL.createObjectURL(f)}" alt="Photo ${i+1}"><button type="button" aria-label="Remove photo ${i+1}" onclick="removePhoto(${i})">×</button></figure>`).join('');
+}
+function sendLead(e){
+  const size=photos.reduce((a,f)=>a+f.size,0);
+  if(size>9.5*1024*1024){e.preventDefault();showToast('The photos are too large together. Remove one and try again.');return false}
+  const btn=document.querySelector('#leadSubmit');btn.disabled=true;btn.textContent='Sending…';
+  return true;
+}
+function placeForm(id){
+  const f=document.querySelector('#estimateForm'),slot=document.querySelector(`.estimate-slot[data-slot="${id==='contact'?'contact':'home'}"]`);
+  if(f&&slot&&f.parentElement!==slot)slot.appendChild(f);
+}
+if(new URLSearchParams(location.search).get('sent')){
+  const m=document.createElement('p');m.className='sent-msg';m.setAttribute('role','status');
+  m.textContent="Thank you! Your request was sent. We'll get back to you soon.";
+  document.querySelector('#estimateForm h2').after(m);
+}
+
 </script>
 </body>
 </html>
