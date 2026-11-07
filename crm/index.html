@@ -127,7 +127,7 @@ tr.click:hover td{background:#fafbfc}
 .hide-m{}
 .login{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#2a2622,#161514 60%,#0b0b0a);display:flex;align-items:center;justify-content:center;z-index:70;padding:20px}
 .login .box{width:100%;max-width:360px;text-align:center}
-.login img{mix-blend-mode:lighten}.login img.z{width:110px;margin-bottom:14px}.login img.w{width:240px;display:block;margin:0 auto 6px}
+.login img{mix-blend-mode:lighten}.login img.ic{width:150px;border-radius:34px;margin-bottom:14px;mix-blend-mode:normal;box-shadow:0 10px 30px rgba(0,0,0,.6)}.login img.z{width:110px;margin-bottom:14px}.login img.w{width:240px;display:block;margin:0 auto 6px}
 .login .tg{color:#d2b48a;letter-spacing:3px;font-size:11px;text-transform:uppercase;margin-bottom:26px}
 .login input{background:#1f1d1a;border-color:#3a352f;color:#f3f0ea;margin-bottom:10px;padding:12px}
 .login .btn{width:100%;padding:12px}
@@ -370,7 +370,7 @@ async function loadAll(){
 function showLogin(msg){
   let el=document.getElementById('login');
   if(!el){el=document.createElement('div');el.id='login';el.className='login';document.body.appendChild(el)}
-  el.innerHTML=`<form class="box" id="lf"><img class="z" src="${LOGO_Z}" alt=""><img class="w" src="${LOGO_WORD}" alt="Zeferino's"><div class="tg">Precision Finish · CRM</div>
+  el.innerHTML=`<form class="box" id="lf"><img class="ic" src="/crm/icon-512.png" alt="Zeferino's CRM"><div class="tg">Zeferino's Precision Finish</div>
   <input type="text" name="email" placeholder="Usuário ou e-mail" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required value="${esc(lastUser())}">
   <input type="password" name="password" placeholder="Senha" autocomplete="current-password" required>
   <div class="err">${esc(msg||'')}</div><button class="btn a">Entrar</button></form>`;
