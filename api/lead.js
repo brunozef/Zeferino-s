@@ -9,7 +9,7 @@ const VAPID_PUBLIC = 'BLaOpAHxXjQqAw2b4oXH9isncMoXRBKtzjjV0cOyZLfs53hBpSP2GQH3kR
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ ok: false });
-  const key = process.env.SUPABASE_SECRET_KEY;
+  const key = (process.env.SUPABASE_SECRET_KEY || '').trim().replace(/^Bearer\s+/i, '');
   if (!key) return res.status(503).json({ ok: false, error: 'not_configured' });
 
   let b = req.body;
@@ -26,10 +26,10 @@ export default async function handler(req, res) {
   if (key.startsWith('eyJ')) h.Authorization = 'Bearer ' + key; // chave antiga service_role
 
   const ins = await fetch(`${SB}/rest/v1/leads`, { method: 'POST', headers: { ...h, Prefer: 'return=minimal' }, body: JSON.stringify(lead) });
-  if (!ins.ok) return res.status(502).json({ ok: false, error: 'db_' + ins.status });
+  if (!ins.ok) return res.status(502).json({ ok: false, error: 'db_' + ins.status, keyHint: key.slice(0, 10) + '…(' + key.length + ')' });
 
   let sent = 0;
-  const vp = process.env.VAPID_PRIVATE_KEY;
+  const vp = (process.env.VAPID_PRIVATE_KEY || '').trim();
   if (vp) {
     try {
       webpush.setVapidDetails('mailto:zeferinosprecisionfinish@gmail.com', VAPID_PUBLIC, vp);
