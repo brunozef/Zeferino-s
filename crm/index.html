@@ -386,7 +386,7 @@ function showLogin(msg){
 }
 async function logout(){await sb.auth.signOut();location.reload()}
 async function startApp(user){
-  USER=user; await loadAll(); importLeads(false);
+  USER=user; await loadAll(); importLeads(false); syncPush(false).catch(()=>{});
   setInterval(()=>{if(document.visibilityState==='visible'){loadAll();importLeads(false)}},60000);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-(S.lastSync||0)>15000){loadAll();importLeads(false)}});
 }
@@ -451,6 +451,7 @@ function vPainel(){
   const recent=docs.sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0,6);
   return `<div class="row spread"><div><h1>Painel</h1><p class="sub">${esc(S.settings.company)} · ${fmtDpt(t)}</p></div>
   <div class="row"><button class="btn" onclick="editClient()">+ Cliente</button><button class="btn" onclick="editJob()">+ Agendar</button><button class="btn a" onclick="newDoc('estimate')">+ Novo Estimate</button></div></div>
+  ${pushState()!=='on'&&pushState()!=='denied'?`<div class="card row spread" style="margin-bottom:14px"><div><b>Receba um aviso quando chegar lead</b><div class="small muted">Ative as notificações neste aparelho.</div></div>${pushBtn()}</div>`:''}
   ${newLeads().length?`<div class="card" style="margin-bottom:14px;border-color:var(--amber)"><div class="row spread"><b style="font-family:var(--serif);font-size:17px">🔔 ${newLeads().length} lead(s) novo(s) do site</b><button class="btn sm ghost" onclick="go('leads')">Ver todos →</button></div>${newLeads().sort((a,b)=>(b.leadDate||'').localeCompare(a.leadDate||'')).slice(0,3).map(leadCard).join('')}</div>`:''}
   <div class="grid kpis">
     <div class="card kpi"><div class="l">Clientes</div><div class="v">${Object.keys(S.clients).length}</div><div class="s">cadastrados</div></div>
@@ -493,7 +494,7 @@ function vLeads(){
   if(f==='open') list=list.filter(c=>['new','contacted','quoted'].includes(c.leadStatus));
   list.sort((a,b)=>(b.leadDate||'').localeCompare(a.leadDate||''));
   return `<div class="row spread"><div><h1>Leads</h1><p class="sub">Pedidos de orçamento do formulário do site (zeferinosusa.com) entram aqui na hora</p></div>
-  <div class="row"><span class="small muted">${esc(S.leadMsg||'')}</span><button class="btn a" ${S.importing?'disabled':''} onclick="importLeads(true)">${S.importing?'Verificando…':'Atualizar leads'}</button></div></div>
+  <div class="row">${pushBtn()}<span class="small muted">${esc(S.leadMsg||'')}</span><button class="btn a" ${S.importing?'disabled':''} onclick="importLeads(true)">${S.importing?'Verificando…':'Atualizar leads'}</button></div></div>
   <div class="tabs">${[['open','Em aberto'],['all','Todos']].map(([k,v])=>`<button class="${f===k?'on':''}" onclick="S.leadF='${k}';render()">${v}</button>`).join('')}</div>
   ${list.length?list.map(leadCard).join(''):'<div class="card empty">Nenhum lead aqui ainda. Quando alguém preencher o formulário do site, ele aparece nesta tela.</div>'}`;
 }
@@ -1014,7 +1015,7 @@ function vConfig(){
   ${T('invTerms','Termos padrão da invoice',2)}
   </div>
   <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn p" onclick="saveConfig()">Salvar configurações</button></div>
-  <div class="card" style="margin-top:14px"><div class="row spread"><div><b>Conta</b><div class="small muted">${esc(USER?.email||'')}</div></div><div class="row"><button class="btn" onclick="installApp()">📲 Instalar app</button><button class="btn d" onclick="logout()">Sair</button></div></div></div>
+  <div class="card" style="margin-top:14px"><div class="row spread"><div><b>Conta</b><div class="small muted">${esc(USER?.email||'')}</div></div><div class="row">${pushBtn()}<button class="btn" onclick="installApp()">📲 Instalar app</button><button class="btn d" onclick="logout()">Sair</button></div></div></div>
   <div class="card" style="margin-top:14px"><b>Numeração</b><p class="small muted">Próximos números: ${Object.entries(KINDS).map(([k,v])=>`${v.pre}-${s.next?.[k]||1001}`).join(' · ')}</p></div>`;
 }
 function saveConfig(){
@@ -1034,6 +1035,31 @@ function doDel(coll,id){
   del(coll,id);toast('Excluído');
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+/* ---------- Notificações ---------- */
+const VAPID_PUBLIC='BLaOpAHxXjQqAw2b4oXH9isncMoXRBKtzjjV0cOyZLfs53hBpSP2GQH3kR9yMTt_tu64vzlFGkTYhHEDdyPTyNA';
+function pushSupported(){return 'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window}
+function pushState(){if(!pushSupported())return 'unsupported';return Notification.permission==='granted'&&S.pushOn?'on':Notification.permission}
+function b64u(s){const p='='.repeat((4-s.length%4)%4);const b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from([...b].map(c=>c.charCodeAt(0)))}
+async function syncPush(ask){
+  if(!pushSupported()||!USER)return false;
+  if(Notification.permission!=='granted'){ if(!ask)return false; const p=await Notification.requestPermission(); if(p!=='granted'){toast('Notificações bloqueadas. Libere em Ajustes → Notificações → Zeferino\'s CRM');render();return false} }
+  const reg=await navigator.serviceWorker.ready;
+  let sub=await reg.pushManager.getSubscription();
+  if(!sub) sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(VAPID_PUBLIC)});
+  const {error}=await sb.from('push_subs').upsert({endpoint:sub.endpoint,owner:USER.id,sub:sub.toJSON()},{onConflict:'endpoint'});
+  if(error){if(ask)toast('Erro ao ativar: '+error.message);return false}
+  S.pushOn=true;render();return true;
+}
+async function enablePush(){
+  if(!pushSupported()){
+    if(isIOS&&!standalone){modal(`<h2>Ativar notificações</h2><p>No iPhone, as notificações só funcionam com o CRM aberto pelo <b>ícone na tela de início</b>.</p><p class="muted">Abra o app pelo ícone Zeferino's CRM e toque de novo em “Ativar notificações”.</p><div class="row" style="justify-content:flex-end"><button class="btn p" onclick="closeModal()">Ok</button></div>`)}
+    else toast('Este aparelho/navegador não aceita notificações. Use o app instalado pelo Safari (iPhone) ou Chrome.');
+    return;
+  }
+  try{ if(await syncPush(true)) toast('🔔 Notificações ativadas neste aparelho!') }catch(e){toast('Não foi possível ativar: '+(e.message||e))}
+}
+function pushBtn(){const st=pushState();return st==='on'?`<span class="tag t-done">🔔 Notificações ativas</span>`:`<button class="btn a" onclick="enablePush()">🔔 Ativar notificações</button>`}
 
 /* ---------- Instalar (PWA) ---------- */
 let deferredPrompt=null;
