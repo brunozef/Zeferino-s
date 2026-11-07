@@ -1283,8 +1283,11 @@ function sentMsg(){
   m.textContent="Thank you! Your request was sent. We'll get back to you soon.";
   f.querySelector('h2').after(m);m.scrollIntoView({behavior:'smooth',block:'center'});
 }
+function crmLead(fd,src){try{const g=k=>(fd.get(k)||'').toString().slice(0,1000);let det=g('Project details')||g('Details');if(src==='cleaning'){det=['Type: '+g('Type of cleaning'),'Bedrooms: '+g('Bedrooms'),'Bathrooms: '+g('Bathrooms'),'Frequency: '+g('Frequency'),g('Details')].filter(x=>x&&!/: $/.test(x)).join('\n')}
+fetch('https://oxjcnimuhjgcthvodmcn.supabase.co/rest/v1/leads',{method:'POST',keepalive:true,headers:{'apikey':'sb_publishable_zf_LFOOZ5EmB1C-_GHze6A_8s8xiwe8','Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({name:g('Name').slice(0,190),phone:g('Phone'),email:g('email'),city:g('City'),service:src==='cleaning'?('Cleaning – '+g('Type of cleaning')):g('Service'),details:det.slice(0,4900),source:src})}).catch(()=>{})}catch(e){}}
 async function sendLead(e){
   e.preventDefault();const f=e.target,btn=document.querySelector('#leadSubmit');
+  if(!f.botcheck||!f.botcheck.checked)crmLead(new FormData(f),'site');
   btn.disabled=true;btn.textContent='Sending…';
   try{
     const r=await fetch(f.action,{method:'POST',headers:{Accept:'application/json'},body:new FormData(f)});
