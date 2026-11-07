@@ -26,7 +26,7 @@ export default async function handler(req, res) {
   if (key.startsWith('eyJ')) h.Authorization = 'Bearer ' + key; // chave antiga service_role
 
   const ins = await fetch(`${SB}/rest/v1/leads`, { method: 'POST', headers: { ...h, Prefer: 'return=minimal' }, body: JSON.stringify(lead) });
-  if (!ins.ok) return res.status(502).json({ ok: false, error: 'db_' + ins.status, keyHint: key.slice(0, 10) + '…(' + key.length + ')' });
+  if (!ins.ok) return res.status(502).json({ ok: false, error: 'db_' + ins.status });
 
   let sent = 0;
   const vp = (process.env.VAPID_PRIVATE_KEY || '').trim();
@@ -50,5 +50,24 @@ export default async function handler(req, res) {
       }));
     } catch (e) { /* o lead já foi salvo; a notificação é bônus */ }
   }
-  return res.status(200).json({ ok: true, sent });
+  // Alerta pelo Pushover com som próprio (opcional: PUSHOVER_TOKEN e PUSHOVER_USER na Vercel)
+  let pushover = false;
+  const pt = (process.env.PUSHOVER_TOKEN || '').trim(), pu = (process.env.PUSHOVER_USER || '').trim();
+  if (pt && pu) {
+    try {
+      const r = await fetch('https://api.pushover.net/1/messages.json', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: pt, user: pu,
+          title: '💰 Novo lead: ' + (lead.name || 'cliente do site'),
+          message: [[lead.service, lead.city].filter(Boolean).join(' – '), lead.phone, lead.details.slice(0, 200)].filter(Boolean).join('\n'),
+          sound: (process.env.PUSHOVER_SOUND || 'zeferinos').trim(),
+          priority: 1,
+          url: 'https://www.zeferinosusa.com/crm/#leads', url_title: "Abrir Zeferino's CRM"
+        })
+      });
+      pushover = r.ok;
+    } catch (e) { /* o lead já foi salvo */ }
+  }
+  return res.status(200).json({ ok: true, sent, pushover });
 }
