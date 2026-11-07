@@ -387,6 +387,27 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 .review-summary{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin:0 0 40px;color:var(--stone);font-size:15px}
 .review-summary .stars{margin:0}.review-summary .stars svg{width:18px;height:18px}
 .review-summary a{color:var(--brass-deep);font-weight:500}
+/* review carousel */
+.rv[hidden]{display:none}
+.rv{max-width:1080px;margin:0 auto 56px;text-align:left}
+.rv-viewport{overflow:hidden;margin:0 -14px;padding:14px}
+.rv-track.few{justify-content:center}
+.rv-track{display:flex;gap:28px;transition:transform .7s cubic-bezier(.22,.61,.36,1);will-change:transform}
+.rv-track .review{margin:0;flex:0 0 calc((100% - 56px)/3);min-height:260px;box-shadow:0 18px 40px -28px rgba(40,30,15,.35);transition:transform .35s,box-shadow .35s}
+.rv-track .review:hover{transform:translateY(-4px);box-shadow:0 26px 50px -28px rgba(40,30,15,.45)}
+.review .rv-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.review .rv-g{width:18px;height:18px;flex:none}
+.review blockquote{display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+.review .rv-when{font:400 12px var(--sans);color:var(--stone);letter-spacing:0;text-transform:none;margin-left:6px}
+.rv-controls{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:30px}
+.rv-controls[hidden]{display:none}
+.rv-nav{width:46px;height:46px;border:1px solid var(--brass);background:transparent;color:var(--brass-deep);display:grid;place-items:center;cursor:pointer;transition:background .25s,color .25s}
+.rv-nav:hover{background:var(--brass);color:var(--coal)}
+.rv-dots{display:flex;gap:10px}
+.rv-dots button{width:8px;height:8px;border-radius:50%;border:0;padding:0;background:rgba(184,149,106,.35);cursor:pointer;transition:background .25s,transform .25s}
+.rv-dots button.on{background:var(--brass-deep);transform:scale(1.3)}
+@media(max-width:980px){.rv-track .review{flex-basis:calc((100% - 28px)/2)}}
+@media(max-width:640px){.rv-track{gap:16px}.rv-track .review{flex-basis:100%}}
 .review cite{font:500 12.5px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--stone);font-style:normal;margin-top:auto}
 
 /* Official logos */
@@ -760,7 +781,14 @@ header.site .wrap{gap:18px}
     <div class="wrap">
       <div class="kicker" style="justify-content:center">Client reviews</div>
       <h2>Worked with us? Tell others how it went.</h2>
-      <div class="review-grid" id="reviewGrid" hidden></div>
+      <div class="rv" id="reviewCarousel" hidden>
+        <div class="rv-viewport"><div class="rv-track" id="reviewTrack"></div></div>
+        <div class="rv-controls">
+          <button type="button" class="rv-nav" id="rvPrev" aria-label="Previous review"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+          <div class="rv-dots" id="rvDots"></div>
+          <button type="button" class="rv-nav" id="rvNext" aria-label="Next review"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+        </div>
+      </div>
       <p class="lead">Your Google review helps homeowners and builders in Southwest Florida find a finish crew they can trust. It takes less than a minute.</p>
       <div class="cta-row">
         <a class="btn ink gbtn" href="https://g.page/r/CXTSTTdy2QNmEAI/review" target="_blank" rel="noopener"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7c2.2-2 3.4-5 3.4-8.5z"/><path fill="#34A853" d="M12 23.5c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.4 1.1-3.9 1.1-3 0-5.5-2-6.4-4.7H1.8v3A11.5 11.5 0 0 0 12 23.5z"/><path fill="#FBBC05" d="M5.6 14.2a6.9 6.9 0 0 1 0-4.4v-3H1.8a11.5 11.5 0 0 0 0 10.4z"/><path fill="#EA4335" d="M12 5.1c1.7 0 3.2.6 4.4 1.7l3.3-3.3A11.5 11.5 0 0 0 1.8 6.8l3.8 3c.9-2.7 3.4-4.7 6.4-4.7z"/></svg></span>Leave a Google review</a>
@@ -1127,18 +1155,63 @@ const reviews=[
   {name:'Express',stars:5,text:'Bruno Zeverismo delivers high-quality work and is very professional. I highly recommend him, 100%!'},
   {name:'Elber Vamondes',stars:5,text:'I had a very good experience with Zeferino’s Finish, very professional, detailed and fair price.  I will use this company again for future projects.'}
 ];
-if(reviews.length){
-  const st=n=>'<span class="stars" aria-label="'+n+' out of 5 stars">'+'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.8l2.8 6 6.5.7-4.9 4.4 1.4 6.4L12 17l-5.8 3.3 1.4-6.4-4.9-4.4 6.5-.7z"/></svg>'.repeat(n)+'</span>';
-  const g=document.querySelector('#reviewGrid');
-  g.innerHTML=reviews.map(r=>`<figure class="review">${st(r.stars)}<blockquote>${esc(r.text)}</blockquote><cite>${esc(r.name)}${r.where?', '+esc(r.where):''}</cite></figure>`).join('');
-  g.hidden=false;
-  document.querySelector('.reviews-band h2').textContent='What our clients say';
-  const avg=(reviews.reduce((a,r)=>a+r.stars,0)/reviews.length).toFixed(1);
-  const sum=document.createElement('p');sum.className='review-summary';
-  sum.innerHTML=`${st(Math.round(avg))}<span>${avg} on Google, from ${reviews.length} review${reviews.length>1?'s':''}</span> <a href="${MAPS_REVIEWS}" target="_blank" rel="noopener">Read them on Google</a>`;
-  g.before(sum);
-  document.querySelector('.reviews-band .lead').textContent='Worked with us? Your Google review helps homeowners and builders in Southwest Florida find a finish crew they can trust.';
+const G_ICON='<svg class="rv-g" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7c2.2-2 3.4-5 3.4-8.5z"/><path fill="#34A853" d="M12 23.5c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.4 1.1-3.9 1.1-3 0-5.5-2-6.4-4.7H1.8v3A11.5 11.5 0 0 0 12 23.5z"/><path fill="#FBBC05" d="M5.6 14.2a6.9 6.9 0 0 1 0-4.4v-3H1.8a11.5 11.5 0 0 0 0 10.4z"/><path fill="#EA4335" d="M12 5.1c1.7 0 3.2.6 4.4 1.7l3.3-3.3A11.5 11.5 0 0 0 1.8 6.8l3.8 3c.9-2.7 3.4-4.7 6.4-4.7z"/></svg>';
+const rvStars=n=>'<span class="stars" aria-label="'+n+' out of 5 stars">'+'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.8l2.8 6 6.5.7-4.9 4.4 1.4 6.4L12 17l-5.8 3.3 1.4-6.4-4.9-4.4 6.5-.7z"/></svg>'.repeat(n)+'</span>';
+let rvIndex=0,rvTimer=null,rvList=[];
+function rvPerView(){return innerWidth<=640?1:innerWidth<=980?2:3}
+function rvPages(){return Math.max(1,rvList.length-rvPerView()+1)}
+function rvGo(i,user){
+  const pages=rvPages();rvIndex=(i+pages)%pages;
+  const track=document.querySelector('#reviewTrack'),card=track.children[0];if(!card)return;
+  const step=card.getBoundingClientRect().width+parseFloat(getComputedStyle(track).gap||0);
+  track.style.transform=`translateX(${-rvIndex*step}px)`;
+  document.querySelectorAll('#rvDots button').forEach((d,k)=>{d.classList.toggle('on',k===rvIndex);d.setAttribute('aria-current',k===rvIndex?'true':'false')});
+  if(user)rvAuto();
 }
+function rvAuto(){clearInterval(rvTimer);if(!reduceMotion()&&rvPages()>1)rvTimer=setInterval(()=>rvGo(rvIndex+1),6500)}
+function reduceMotion(){return matchMedia('(prefers-reduced-motion: reduce)').matches}
+function rvLayout(){
+  const pages=rvPages();
+  document.querySelector('#rvDots').innerHTML=Array.from({length:pages},(_,k)=>`<button type="button" aria-label="Show review ${k+1}"></button>`).join('');
+  document.querySelectorAll('#rvDots button').forEach((d,k)=>d.onclick=()=>rvGo(k,true));
+  document.querySelector('.rv-controls').hidden=pages<2;
+  document.querySelector('#reviewTrack').classList.toggle('few',rvList.length<rvPerView());
+  rvGo(Math.min(rvIndex,pages-1));rvAuto();
+}
+function renderReviews(list,rating,count){
+  rvList=list.filter(r=>r.text&&r.stars>=4);
+  if(!rvList.length)return;
+  const box=document.querySelector('#reviewCarousel');
+  document.querySelector('#reviewTrack').innerHTML=rvList.map(r=>`<figure class="review"><div class="rv-head">${rvStars(r.stars)}${G_ICON}</div><blockquote>${esc(r.text)}</blockquote><cite>${esc(r.name)}${r.when?`<span class="rv-when">· ${esc(r.when)}</span>`:''}</cite></figure>`).join('');
+  box.hidden=false;
+  document.querySelector('.reviews-band h2').textContent='What our clients say';
+  const avg=rating?Number(rating).toFixed(1):(list.reduce((a,r)=>a+r.stars,0)/list.length).toFixed(1);
+  const total=count||list.length;
+  let sum=document.querySelector('.review-summary');
+  if(!sum){sum=document.createElement('p');sum.className='review-summary';box.before(sum)}
+  sum.innerHTML=`${rvStars(Math.round(avg))}<span>${avg} on Google, from ${total} review${total>1?'s':''}</span> <a href="${MAPS_REVIEWS}" target="_blank" rel="noopener">Read them on Google</a>`;
+  document.querySelector('.reviews-band .lead').textContent='Worked with us? Your Google review helps homeowners and builders in Southwest Florida find a finish crew they can trust.';
+  rvLayout();
+}
+(function(){
+  const box=document.querySelector('#reviewCarousel');
+  document.querySelector('#rvPrev').onclick=()=>rvGo(rvIndex-1,true);
+  document.querySelector('#rvNext').onclick=()=>rvGo(rvIndex+1,true);
+  box.addEventListener('mouseenter',()=>clearInterval(rvTimer));box.addEventListener('mouseleave',rvAuto);
+  box.addEventListener('focusin',()=>clearInterval(rvTimer));box.addEventListener('focusout',rvAuto);
+  let x0=null;box.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+  box.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)rvGo(rvIndex+(dx<0?1:-1),true);x0=null});
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>rvList.length&&rvLayout(),150)});
+})();
+renderReviews(reviews);
+/* New Google reviews arrive automatically from /api/reviews once the Google key is set on Vercel. */
+fetch('/api/reviews').then(r=>r.ok?r.json():null).then(d=>{
+  if(!d||!d.ok||!d.reviews)return;
+  const key=r=>(r.name+'|'+r.text.slice(0,40)).toLowerCase();
+  const seen=new Set(d.reviews.map(key));
+  const merged=[...d.reviews.sort((a,b)=>(b.time||'').localeCompare(a.time||'')),...reviews.filter(r=>!seen.has(key(r)))];
+  rvIndex=0;renderReviews(merged,d.rating,d.count);
+}).catch(()=>{});
 
 /* ---------- Instagram ---------- */
 const igPicks=[[4,3],[8,6],[6,4],[4,1],[3,7],[5,6]];
