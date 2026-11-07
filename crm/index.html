@@ -336,6 +336,9 @@ function totals(d){
 const SB_URL='https://oxjcnimuhjgcthvodmcn.supabase.co', SB_KEY='sb_publishable_zf_LFOOZ5EmB1C-_GHze6A_8s8xiwe8';
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
 let USER=null;
+// Nomes de usuário (ID) que podem entrar no lugar do e-mail
+const USERNAMES={'zeferinos':'zeferinosprecisionfinish@gmail.com'};
+function lastUser(){try{return localStorage.getItem('zcrm_user')||'zeferinos'}catch(e){return 'zeferinos'}}
 async function save(coll,id,data){
   if(!USER) return;
   const {error}=await sb.from('crm_records').upsert({owner:USER.id,coll,id,data,updated_at:new Date().toISOString()},{onConflict:'owner,coll,id'});
@@ -368,12 +371,16 @@ function showLogin(msg){
   let el=document.getElementById('login');
   if(!el){el=document.createElement('div');el.id='login';el.className='login';document.body.appendChild(el)}
   el.innerHTML=`<form class="box" id="lf"><img class="z" src="${LOGO_Z}" alt=""><img class="w" src="${LOGO_WORD}" alt="Zeferino's"><div class="tg">Precision Finish · CRM</div>
-  <input type="email" name="email" placeholder="E-mail" autocomplete="username" required value="zeferinosprecisionfinish@gmail.com">
+  <input type="text" name="email" placeholder="Usuário ou e-mail" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required value="${esc(lastUser())}">
   <input type="password" name="password" placeholder="Senha" autocomplete="current-password" required>
   <div class="err">${esc(msg||'')}</div><button class="btn a">Entrar</button></form>`;
   el.querySelector('#lf').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const b=e.target.querySelector('button');b.disabled=true;b.textContent='Entrando…';
-    const {data,error}=await sb.auth.signInWithPassword({email:f.get('email').trim(),password:f.get('password')});
-    if(error){showLogin(error.message==='Invalid login credentials'?'E-mail ou senha incorretos.':error.message);return}
+    const login=f.get('email').trim().toLowerCase();
+    const email=login.includes('@')?login:USERNAMES[login];
+    if(!email){showLogin('Usuário não encontrado.');return}
+    const {data,error}=await sb.auth.signInWithPassword({email,password:f.get('password')});
+    if(!error){try{localStorage.setItem('zcrm_user',login)}catch(x){}}
+    if(error){showLogin(error.message==='Invalid login credentials'?'Usuário ou senha incorretos.':error.message);return}
     el.remove();await startApp(data.user);};
 }
 async function logout(){await sb.auth.signOut();location.reload()}
