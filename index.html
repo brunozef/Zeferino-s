@@ -14,6 +14,17 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="canonical" href="https://www.zeferinosusa.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zeferino's Precision Finish &amp; Remodeling">
+<meta property="og:url" content="https://www.zeferinosusa.com/">
+<meta property="og:title" content="Zeferino's Precision Finish &amp; Remodeling | Finish Carpentry in Southwest Florida">
+<meta property="og:description" content="Trim, doors, crown molding, stairs, handrails and vinyl plank flooring for homeowners and builders across Southwest Florida. Free estimates: (239) 324-1224.">
+<meta property="og:image" content="https://www.zeferinosusa.com/images/og-home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Zeferino's Precision Finish &amp; Remodeling logo beside a tray ceiling with crown molding in Fort Myers">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.zeferinosusa.com/images/og-home.jpg">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"HomeAndConstructionBusiness","name":"Zeferino's Inc.","alternateName":"Zeferino's Precision Finish & Remodeling","url":"https://www.zeferinosusa.com/","logo":"https://www.zeferinosusa.com/favicon-512.png","image":"https://www.zeferinosusa.com/favicon-512.png","telephone":"+1-239-324-1224","email":"zeferinosprecisionfinish@gmail.com","areaServed":"Southwest Florida","sameAs":["https://www.instagram.com/zeferinosprecisionfinish/"]}
 </script>
@@ -414,7 +425,18 @@ footer.site{background:var(--coal);color:#a39c91;font-size:14.5px;border-top:1px
 .hero-logo{width:min(380px,78vw);height:auto;margin:0 0 40px -6px;filter:drop-shadow(0 6px 24px rgba(0,0,0,.45))}
 .closing-logo{width:min(440px,84vw);height:auto;margin:0 auto 40px;display:block}
 .foot-top .foot-logo{width:min(380px,80vw);height:auto;display:block;mix-blend-mode:normal}
-@media(max-width:640px){.brand-logo{height:52px}.hero-logo{margin-bottom:28px}}
+.brand-compact{display:none;align-items:center;gap:11px}
+.brand-compact .bz{height:44px;width:auto}
+.brand-compact .bw{width:158px;height:auto}
+/* hero: smaller lockup so the estimate button stays on the first screen */
+.hero-logo{width:min(250px,60vw);margin:0 0 30px -4px}
+.hero.photo .hero-copy{padding:72px 0 56px}
+.hero.photo .hero-copy h1{margin-bottom:24px}
+.hero.photo .hero-copy .lead{margin-bottom:34px}
+@media(max-height:820px) and (min-width:961px){.hero.photo .hero-copy{padding:48px 0 44px}.hero-logo{width:210px;margin-bottom:22px}.hero.photo .hero-foot div{padding-top:20px;padding-bottom:22px}}
+@media(max-width:640px){.brand-logo{display:none}.brand-compact{display:flex}.hero-logo{width:200px;margin-bottom:22px}.hero.photo .hero-copy{padding:44px 0 36px}.hero.photo .hero-copy h1{margin-bottom:18px}.hero.photo .hero-copy .lead{margin-bottom:26px}}
+.home-all{margin-top:88px;display:flex;justify-content:center}
+@media(max-width:640px){.home-all{margin-top:64px}.home-all .btn{width:100%}}
 
 /* Estimate form: photos + floating button */
 .visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -599,6 +621,7 @@ header.site{position:sticky}
   <div class="wrap">
     <a class="brand" href="#home" aria-label="Zeferino's Inc. home">
       <img class="brand-logo" src="images/logo-horizontal-640.webp" alt="Zeferino's Precision Finish &amp; Remodeling" width="640" height="208">
+      <span class="brand-compact" aria-hidden="true"><img class="bz" src="images/wm-z.webp" alt="" width="160" height="135"><img class="bw" src="images/wm-word.webp" alt="" width="420" height="66"></span>
     </a>
     <nav class="main" aria-label="Main">
       <a href="#services">Services</a>
@@ -635,7 +658,7 @@ header.site{position:sticky}
     <div class="slide-cap"><span id="slideCap"></span><div class="slide-dots" id="slideDots"></div></div>
     <div class="wrap">
       <div class="hero-copy">
-        <img class="hero-logo" src="images/logo-stacked.webp" alt="Zeferino's Precision Finish &amp; Remodeling. Build. Renovate. Transform." width="900" height="525" fetchpriority="high">
+        <img class="hero-logo" src="images/logo-stacked-560.webp" alt="Zeferino's Precision Finish &amp; Remodeling. Build. Renovate. Transform." width="900" height="525" fetchpriority="high">
         <h1>Precision in every detail.</h1>
         <p class="lead">Finish carpentry, trim, doors, stairs, handrails and flooring, installed for homeowners, builders and contractors across Southwest Florida.</p>
         <div class="cta-row">
@@ -662,7 +685,26 @@ header.site{position:sticky}
     </div>
   </section>
 
-  <section class="band linen" id="estimate">
+  <section class="band linen reviews-band" style="padding-top:104px;padding-bottom:104px" id="reviews">
+    <div class="wrap">
+      <div class="kicker" style="justify-content:center">Client reviews</div>
+      <h2>Worked with us? Tell others how it went.</h2>
+      <div class="rv" id="reviewCarousel" hidden>
+        <div class="rv-viewport"><div class="rv-track" id="reviewTrack"></div></div>
+        <div class="rv-controls">
+          <button type="button" class="rv-nav" id="rvPrev" aria-label="Previous review"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+          <div class="rv-dots" id="rvDots"></div>
+          <button type="button" class="rv-nav" id="rvNext" aria-label="Next review"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+        </div>
+      </div>
+      <p class="lead">Your Google review helps homeowners and builders in Southwest Florida find a finish crew they can trust. It takes less than a minute.</p>
+      <div class="cta-row">
+        <a class="btn ink gbtn" href="https://g.page/r/CXTSTTdy2QNmEAI/review" target="_blank" rel="noopener"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7c2.2-2 3.4-5 3.4-8.5z"/><path fill="#34A853" d="M12 23.5c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.4 1.1-3.9 1.1-3 0-5.5-2-6.4-4.7H1.8v3A11.5 11.5 0 0 0 12 23.5z"/><path fill="#FBBC05" d="M5.6 14.2a6.9 6.9 0 0 1 0-4.4v-3H1.8a11.5 11.5 0 0 0 0 10.4z"/><path fill="#EA4335" d="M12 5.1c1.7 0 3.2.6 4.4 1.7l3.3-3.3A11.5 11.5 0 0 0 1.8 6.8l3.8 3c.9-2.7 3.4-4.7 6.4-4.7z"/></svg></span>Leave a Google review</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="estimate">
     <div class="wrap contact-grid">
       <div>
         <div class="kicker">Free estimate</div>
@@ -725,7 +767,7 @@ header.site{position:sticky}
       <blockquote>The finish is what you live with every day.</blockquote>
       <cite>Vinyl plank flooring, Sanibel Island</cite>
     </div>
-    <div class="wm lg"><img class="wz" src="images/logo-z-transparent.png" alt=""><img class="ww" src="images/logo-zeferinos-transparent.png" alt=""></div>
+    <div class="wm lg"><img class="wz" src="images/wm-z.webp" alt=""><img class="ww" src="images/wm-word.webp" alt=""></div>
   </section>
 
   <section class="band linen">
@@ -735,6 +777,7 @@ header.site{position:sticky}
         <p class="lead">Real photographs from our job sites, from Southwest Florida homes to commercial interiors.</p>
       </div>
       <div id="homeProjects"></div>
+      <div class="home-all"><a class="btn ink" href="#projects" id="homeAllBtn">View all projects</a></div>
     </div>
   </section>
 
@@ -785,24 +828,6 @@ header.site{position:sticky}
 
 
   
-  <section class="band linen reviews-band" id="reviews">
-    <div class="wrap">
-      <div class="kicker" style="justify-content:center">Client reviews</div>
-      <h2>Worked with us? Tell others how it went.</h2>
-      <div class="rv" id="reviewCarousel" hidden>
-        <div class="rv-viewport"><div class="rv-track" id="reviewTrack"></div></div>
-        <div class="rv-controls">
-          <button type="button" class="rv-nav" id="rvPrev" aria-label="Previous review"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
-          <div class="rv-dots" id="rvDots"></div>
-          <button type="button" class="rv-nav" id="rvNext" aria-label="Next review"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
-        </div>
-      </div>
-      <p class="lead">Your Google review helps homeowners and builders in Southwest Florida find a finish crew they can trust. It takes less than a minute.</p>
-      <div class="cta-row">
-        <a class="btn ink gbtn" href="https://g.page/r/CXTSTTdy2QNmEAI/review" target="_blank" rel="noopener"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7c2.2-2 3.4-5 3.4-8.5z"/><path fill="#34A853" d="M12 23.5c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.4 1.1-3.9 1.1-3 0-5.5-2-6.4-4.7H1.8v3A11.5 11.5 0 0 0 12 23.5z"/><path fill="#FBBC05" d="M5.6 14.2a6.9 6.9 0 0 1 0-4.4v-3H1.8a11.5 11.5 0 0 0 0 10.4z"/><path fill="#EA4335" d="M12 5.1c1.7 0 3.2.6 4.4 1.7l3.3-3.3A11.5 11.5 0 0 0 1.8 6.8l3.8 3c.9-2.7 3.4-4.7 6.4-4.7z"/></svg></span>Leave a Google review</a>
-      </div>
-    </div>
-  </section>
 
   <section class="band dark closing">
     <div class="wrap">
@@ -991,7 +1016,7 @@ header.site{position:sticky}
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Project photo viewer" aria-hidden="true">
   <button class="lb-btn lb-close" type="button" aria-label="Close photo" onclick="closePhoto()">×</button>
   <button class="lb-btn lb-prev" type="button" aria-label="Previous photo" onclick="movePhoto(-1)">‹</button>
-  <figure><div class="lb-frame"><img id="lbImg" alt=""><video id="lbVid" controls playsinline preload="metadata" hidden></video><div class="wm lg"><img class="wz" src="images/logo-z-transparent.png" alt=""><img class="ww" src="images/logo-zeferinos-transparent.png" alt=""></div></div><figcaption id="lbCap"></figcaption></figure>
+  <figure><div class="lb-frame"><img id="lbImg" alt=""><video id="lbVid" controls playsinline preload="metadata" hidden></video><div class="wm lg"><img class="wz" src="images/wm-z.webp" alt=""><img class="ww" src="images/wm-word.webp" alt=""></div></div><figcaption id="lbCap"></figcaption></figure>
   <button class="lb-btn lb-next" type="button" aria-label="Next photo" onclick="movePhoto(1)">›</button>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1082,7 +1107,7 @@ const heroSlides=[
 /* ---------- helpers ---------- */
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-const WM=(size='')=>`<span class="wm ${size}"><img class="wz" src="images/logo-z-transparent.png" alt=""><img class="ww" src="images/logo-zeferinos-transparent.png" alt=""></span>`;
+const WM=(size='')=>`<span class="wm ${size}"><img class="wz" src="images/wm-z.webp" alt=""><img class="ww" src="images/wm-word.webp" alt=""></span>`;
 const cities=[...new Set(projects.map(p=>p.city))].map(c=>({name:c,slug:slug(c),items:projects.filter(p=>p.city===c)}));
 const stateOf=c=>(projects.find(p=>p.city===c)||{state:'FL'}).state;
 const coverOf=p=>p.photos[p.cover||0];
@@ -1098,7 +1123,10 @@ document.querySelector('#leadService').innerHTML=[...services.map(s=>s[0]),'Buil
 /* ---------- cards ---------- */
 const cardHTML=p=>{const c=coverOf(p);return `<a class="card" href="#project-${p.id}"><div class="ph"><img src="${c.url}" alt="${esc(p.title)} in ${esc(p.city)}" loading="lazy">${WM()}</div><div class="card-body"><div class="where">${esc(p.city)}, ${p.state}</div><h3>${esc(p.title)}</h3><div class="meta">${esc(p.service)} &nbsp;/&nbsp; ${plural(p.photos.length,'photo')}</div></div></a>`};
 const featureHTML=p=>{const c=p.photos[p.feature??p.cover];return `<a class="feature" href="#project-${p.id}"><div class="feature-img"><img src="${c.url}" alt="${esc(p.title)} in ${esc(p.city)}" loading="lazy">${WM()}</div><div><div class="where">${esc(p.city)}, ${p.state}</div><h3>${esc(p.title)}</h3><p>${esc(p.text.split('.')[0])}.</p><span class="more">View the project</span></div></a>`};
-document.querySelector('#homeProjects').innerHTML=projects.map(featureHTML).join('');
+/* Home shows three projects; the rest are on the Projects page. Change the ids here to feature others. */
+const HOME_FEATURED=['fort-myers-crown-molding','sanibel-flooring','cape-coral'];
+document.querySelector('#homeProjects').innerHTML=HOME_FEATURED.map(id=>projects.find(p=>p.id===id)).filter(Boolean).map(featureHTML).join('');
+document.querySelector('#homeAllBtn').textContent='View all '+projects.length+' projects';
 document.querySelector('#serviceProjects').innerHTML=`<div class="cards">${projects.map(cardHTML).join('')}</div>`;
 
 /* ---------- locations ---------- */
