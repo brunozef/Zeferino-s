@@ -592,6 +592,110 @@ header.site{position:sticky}
 .play-badge::after{content:"";margin-left:4px;border-style:solid;border-width:10px 0 10px 16px;border-color:transparent transparent transparent var(--brass)}
 #lbVid{max-width:100%;max-height:calc(100vh - 180px);background:#000}
 .lb-frame.is-video .wm{display:none}
+
+/* ==========================================================================
+   PORTFOLIO, MOTION AND MOBILE MENU
+   Motion runs only when the visitor has not asked for reduced motion.
+   ========================================================================== */
+#chips{margin-bottom:14px}
+#typeChips{margin-bottom:48px}
+.empty{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--stone);padding:72px 0;text-align:center}
+.cards .card{box-shadow:0 1px 0 rgba(28,26,23,.05),0 14px 28px -24px rgba(22,21,20,.6)}
+.card:hover .card-body h3{color:var(--brass-deep)}
+.card .card-body h3{transition:color .3s}
+.feature-img{box-shadow:0 28px 50px -36px rgba(22,21,20,.6)}
+.project-cover{box-shadow:0 34px 60px -40px rgba(22,21,20,.65)}
+
+/* Before and after */
+.ba-wrap{margin-top:112px}
+.ba-wrap .kicker{margin-bottom:36px}
+.ba{margin:0 0 56px}
+.ba-frame{position:relative;aspect-ratio:16/10;overflow:hidden;background:#24211d;box-shadow:0 30px 60px -36px rgba(22,21,20,.6)}
+.ba-frame>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ba-before{clip-path:inset(0 calc(100% - var(--p,50%)) 0 0)}
+.ba-line{position:absolute;top:0;bottom:0;left:var(--p,50%);width:2px;margin-left:-1px;background:rgba(255,250,240,.92);box-shadow:0 0 14px rgba(0,0,0,.35);z-index:2;pointer-events:none}
+.ba input[type=range]{width:100%;margin:22px 0 0;accent-color:var(--brass)}
+.ba figcaption{display:grid;grid-template-columns:1fr 2fr 1fr;gap:12px;margin-top:14px;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone)}
+.ba figcaption span:nth-child(2){font-family:var(--serif);font-style:italic;text-transform:none;letter-spacing:0;font-size:17px;text-align:center;color:var(--ink)}
+.ba figcaption span:last-child{text-align:right}
+
+/* Gold buttons */
+.btn{position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(135deg,#dcc29b 0%,#b8956a 52%,#977650 100%);border-color:#c9a878;color:#16140f;box-shadow:inset 0 1px 0 rgba(255,246,228,.35),0 12px 26px -16px rgba(150,115,70,.9)}
+.btn::after{content:"";position:absolute;top:0;bottom:0;left:0;width:45%;background:linear-gradient(105deg,transparent,rgba(255,247,228,.55),transparent);transform:translateX(-130%) skewX(-18deg);z-index:-1}
+.btn:hover{background:linear-gradient(135deg,#e6d0ab 0%,#c6a574 52%,#a4835a 100%);border-color:#dcc29b;box-shadow:inset 0 1px 0 rgba(255,246,228,.45),0 18px 34px -16px rgba(150,115,70,.95)}
+.btn.line{background:transparent;color:inherit;border-color:currentColor;box-shadow:none}
+.btn.line::after{background:linear-gradient(105deg,transparent,rgba(184,149,106,.28),transparent)}
+.btn.ink{background:var(--coal);border-color:var(--coal);color:#ece6dc;box-shadow:none}
+.btn.ink::after{background:linear-gradient(105deg,transparent,rgba(210,180,138,.3),transparent)}
+.btn.ink:hover{background:#2b2825;border-color:#2b2825;box-shadow:none}
+nav.main .btn{background:transparent;color:var(--brass);border-color:var(--brass);box-shadow:none}
+nav.main .btn::after{display:none}
+nav.main .btn:hover{background:var(--brass);color:var(--coal)}
+
+/* Mobile menu: full screen on phones and tablets */
+@media(max-width:960px){
+  .mobile-nav.open{position:fixed;inset:0;z-index:120;display:flex;flex-direction:column;padding:104px 34px 40px;overflow-y:auto;border:0;background:radial-gradient(110% 55% at 100% 0%,rgba(184,149,106,.2),transparent 60%),radial-gradient(90% 50% at 0% 100%,rgba(184,149,106,.12),transparent 70%),var(--coal)}
+  .mobile-nav.open>a:not(.btn):not(.eva-menu){font-size:31px;padding:20px 0;border-bottom:1px solid rgba(184,149,106,.2);color:#f1ebe0}
+  .mobile-nav.open>a:not(.btn):not(.eva-menu):hover{color:var(--brass-light)}
+  .mobile-nav .menu-close{position:absolute;top:14px;right:18px;width:50px;height:50px;border:1px solid rgba(184,149,106,.5);background:transparent;color:var(--brass-light);font-size:28px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0}
+  .mobile-nav .menu-close:hover{background:var(--brass);color:var(--coal)}
+  .mobile-nav.open .btn{margin-top:30px;min-height:58px;justify-content:center}
+  .mobile-nav.open a.eva-menu{margin-top:22px}
+}
+@media(min-width:961px){.mobile-nav .menu-close{display:none}}
+body.menu-open{overflow:hidden}
+body.menu-open .fab-estimate{opacity:0!important;pointer-events:none}
+
+@media (prefers-reduced-motion:no-preference){
+  /* Text and blocks fade up as they enter the screen */
+  .reveal{opacity:0;translate:0 26px;transition:opacity 1.1s cubic-bezier(.2,.7,.2,1) var(--d,0s),translate 1.1s cubic-bezier(.2,.7,.2,1) var(--d,0s),transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .5s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;translate:0 0}
+
+  /* Each page fades in when it is opened */
+  .tab.active{animation:tabIn .9s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes tabIn{from{opacity:0;translate:0 14px}to{opacity:1;translate:0 0}}
+
+  /* Logo: cinematic entrance, out of soft focus with a warm glow */
+  .hero-logo{animation:logoIn 2.3s cubic-bezier(.2,.7,.1,1) .1s both}
+  @keyframes logoIn{
+    0%{opacity:0;filter:blur(18px) brightness(1.9) drop-shadow(0 6px 24px rgba(0,0,0,.45));transform:scale(1.07) translateY(16px)}
+    50%{opacity:1;filter:blur(0) brightness(1.18) drop-shadow(0 6px 24px rgba(0,0,0,.45)) drop-shadow(0 0 22px rgba(210,180,138,.35));transform:scale(1.01) translateY(0)}
+    100%{opacity:1;filter:drop-shadow(0 6px 24px rgba(0,0,0,.45));transform:none}
+  }
+
+  /* Portfolio cards: gentle tilt toward the pointer, lift on hover */
+  .cards .card.tilt{transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--lift,0px));transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .5s cubic-bezier(.2,.7,.2,1),opacity 1.1s cubic-bezier(.2,.7,.2,1) var(--d,0s),translate 1.1s cubic-bezier(.2,.7,.2,1) var(--d,0s)}
+  .cards .card.tilt:hover,.cards .card.tilt:focus-visible{--lift:-8px;box-shadow:0 34px 52px -26px rgba(22,21,20,.55),0 0 0 1px rgba(184,149,106,.28)}
+
+  /* Gold buttons: soft sheen on hover */
+  .btn{transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,background .35s,border-color .35s,color .35s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn:active{transform:translateY(0)}
+  .btn::after{transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+  .btn:hover::after{transform:translateX(330%) skewX(-18deg)}
+
+  /* Mobile menu: panel fades in, links rise one after another */
+  .mobile-nav.open{animation:navIn .45s ease both}
+  @keyframes navIn{from{opacity:0}to{opacity:1}}
+  .mobile-nav.open>a:not(.btn):not(.eva-menu){animation:navItem .75s cubic-bezier(.2,.7,.2,1) both}
+  .mobile-nav.open>:nth-child(2){animation-delay:.08s}
+  .mobile-nav.open>:nth-child(3){animation-delay:.14s}
+  .mobile-nav.open>:nth-child(4){animation-delay:.2s}
+  .mobile-nav.open>:nth-child(5){animation-delay:.26s}
+  .mobile-nav.open>:nth-child(6){animation-delay:.32s}
+  .mobile-nav.open>:nth-child(7){animation-delay:.38s}
+  @keyframes navItem{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+}
+
+/* Before and after, side by side (for photos taken from different angles) */
+.ba-side{margin:0 0 56px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.ba-side>div{display:flex;flex-direction:column;gap:12px}
+.ba-side-img{position:relative;aspect-ratio:4/3;overflow:hidden;background:#24211d;box-shadow:0 28px 52px -36px rgba(22,21,20,.6)}
+.ba-side-img>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ba-side figcaption{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--stone)}
+.ba-side>div:last-child figcaption{color:var(--brass-deep)}
+.ba-side-cap{grid-column:1/-1;font-family:var(--serif);font-style:italic;font-size:19px;color:var(--stone);margin-top:4px}
+@media(max-width:640px){.ba-side{grid-template-columns:1fr;gap:28px}.ba-side>div:first-child{order:0}.ba-side-cap{margin-top:0}}
 </style>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>
@@ -635,6 +739,7 @@ header.site{position:sticky}
     </button>
   </div>
   <nav class="mobile-nav" id="mobileNav" aria-label="Mobile">
+    <button class="menu-close" type="button" onclick="closeMenu()" aria-label="Close menu">&times;</button>
     <a href="#home">Home</a>
     <a href="#services">Services</a>
     <a href="#projects">Projects</a>
@@ -748,9 +853,9 @@ header.site{position:sticky}
   </section>
 
   <section class="band dark brandband">
-    <img class="watermark" src="images/logo-z.png" alt="">
+    <img class="watermark" src="images/logo-z-600.webp" alt="" loading="lazy">
     <div class="wrap">
-      <img class="mono" src="images/logo-z.png" alt="Zeferino's Z monogram">
+      <img class="mono" src="images/logo-z-600.webp" alt="Zeferino's Z monogram">
       <h2 class="brand-words"><span>Build.</span> <span>Renovate.</span> <span>Transform.</span></h2>
       <p class="lead">Three words that describe every job we take on, from new construction to the details that change how a room feels.</p>
       <div class="pillars">
@@ -847,7 +952,7 @@ header.site{position:sticky}
 <!-- SERVICES -->
 <div id="services" class="tab">
   <section class="page-head dark">
-    <img class="watermark" src="images/logo-z.png" alt="">
+    <img class="watermark" src="images/logo-z-600.webp" alt="" loading="lazy">
     <div class="wrap">
       <div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; Services</div>
       <h1>Our services</h1>
@@ -879,7 +984,7 @@ header.site{position:sticky}
 <!-- PROJECTS -->
 <div id="projects" class="tab">
   <section class="page-head dark">
-    <img class="watermark" src="images/logo-z.png" alt="">
+    <img class="watermark" src="images/logo-z-600.webp" alt="" loading="lazy">
     <div class="wrap">
       <div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; Projects</div>
       <h1>Completed projects</h1>
@@ -888,8 +993,9 @@ header.site{position:sticky}
   </section>
   <section class="band linen">
     <div class="wrap">
-      <div class="chips" id="chips" role="group" aria-label="Filter projects by city"></div>
-      <div class="cards" id="projectGrid"></div>
+      <div class="chips" id="chips"></div>
+      <div class="chips" id="typeChips"></div>
+      <div id="projectGrid"></div>
     </div>
   </section>
 </div>
@@ -903,7 +1009,7 @@ header.site{position:sticky}
 <!-- BUILDERS -->
 <div id="builders" class="tab">
   <section class="page-head dark">
-    <img class="watermark" src="images/logo-z.png" alt="">
+    <img class="watermark" src="images/logo-z-600.webp" alt="" loading="lazy">
     <div class="wrap">
       <div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; For builders</div>
       <h1>A partner in the details</h1>
@@ -928,7 +1034,7 @@ header.site{position:sticky}
 <!-- ABOUT -->
 <div id="about" class="tab">
   <section class="page-head dark">
-    <img class="watermark" src="images/logo-z.png" alt="">
+    <img class="watermark" src="images/logo-z-600.webp" alt="" loading="lazy">
     <div class="wrap">
       <div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; About</div>
       <h1>Built on precision</h1>
@@ -953,7 +1059,7 @@ header.site{position:sticky}
 <!-- CONTACT -->
 <div id="contact" class="tab">
   <section class="page-head dark">
-    <img class="watermark" src="images/logo-z.png" alt="">
+    <img class="watermark" src="images/logo-z-600.webp" alt="" loading="lazy">
     <div class="wrap">
       <div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; Free estimate</div>
       <h1>Request a free estimate</h1>
@@ -1020,16 +1126,8 @@ header.site{position:sticky}
   <button class="lb-btn lb-next" type="button" aria-label="Next photo" onclick="movePhoto(1)">›</button>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="js/projects.js"></script>
 <script>
-/* ==========================================================================
-   HOW TO ADD A NEW PROJECT
-   1. Put the photos in a folder inside images/ (one folder per project).
-   2. Copy one block in the "projects" list below and fill in the title,
-      city, service, text and the photo file names.
-   A new city is created automatically: it appears in "Projects by location",
-   in the city filter and gets its own page. Every photo gets the
-   Zeferino's watermark automatically.
-   ========================================================================== */
 const IG='https://www.instagram.com/zeferinosprecisionfinish/';
 const SERVICE_AREA=['Naples','Bonita Springs','Estero','Fort Myers','Cape Coral','Sanibel Island'];
 
@@ -1043,65 +1141,6 @@ const services=[
   ['Decorative beams','Ceiling beams that add warmth and structure.'],
   ['Stairs & handrails','Stair treads, risers and interior or exterior handrails.'],
   ['Vinyl plank flooring','Underlayment preparation and vinyl plank installation.']
-];
-
-const H='images/sanibel-exterior-handrail/';
-const projects=[
-  {id:'sanibel-handrail',title:'Exterior wood handrail',city:'Sanibel Island',state:'FL',service:'Exterior finish carpentry',
-   text:'Installation of an exterior wood handrail on the stairs and porch of a residential property, with attention to precise alignment, secure installation and clean finishing.',
-   cover:0,
-   photos:['4EA3DBFF-8CCE-4055-ACD4-BB834CF81EDC','6342C326-B229-47BE-9545-8562816ABA6C','732B7692-87C6-42E9-A679-8B90C5EA64F4','C3C7060E-694A-445E-A18D-D41A167435DA','9F43FB68-CFC7-4308-9ECE-886829AC72D7','9B67283C-C193-4368-9B80-06FD240A8675','4A6715AE-7844-4985-BA0A-C1273ADAF72C','26DB59AF-25AC-4096-A038-03B0751374B5','46C60CD9-CA19-4242-96A9-6BFBAD2EC5AD','974BC3AB-8362-40AA-9B57-31410517765A','BCFB0049-DC83-4F3E-B7DB-36A4330BFBC5','D94BD2A5-2852-4F19-945F-BBD602754D6F','DC545279-C570-4097-AC85-0BA12940A3F0']
-     .map(f=>({url:H+f+'_1_105_c.jpeg',title:''}))},
-  {id:'sanibel-flooring',title:'Vinyl plank flooring',city:'Sanibel Island',state:'FL',service:'Flooring installation',
-   text:'Vinyl plank flooring throughout a residence, from sound-membrane preparation to the finished floor in the living area, bedroom, kitchen and hallway.',
-   cover:8,feature:8,
-   photos:[['01-prep-living-room','Preparation: living room'],['02-prep-bedroom-entry','Preparation: bedroom entry'],['03-prep-bedroom','Preparation: bedroom'],['04-prep-wide-living','Preparation: living area'],['05-prep-living-water-view','Preparation: living area with water view'],['06-prep-kitchen','Preparation: kitchen'],['07-installed-living-room','Installed: living room'],['08-installed-living-water-view','Installed: living area with water view'],['09-installed-bedroom','Installed: bedroom'],['10-installed-hallway','Installed: hallway'],['11-installed-kitchen','Installed: kitchen']]
-     .map(([f,t])=>({url:'images/sanibel-vinyl-'+f+'.jpg',title:t}))},
-  {id:'sanibel-deck-railing',title:'Deck railing repair',city:'Sanibel Island',state:'FL',service:'Exterior finish carpentry',
-   text:'Repair of a damaged section of deck railing on a raised home: new wood railing and balusters built and fitted to the existing rails and stairs. Photos show the deck before and after the work.',
-   cover:4,feature:4,
-   photos:[['01-before-stairs','Before: deck and stair railing'],['02-before-railing','Before: damaged railing section'],['03-after-railing','After: new railing section installed'],['04-after-view','After: new railing seen from the deck'],['05-after-exterior','After: the finished deck from outside']]
-     .map(([f,t])=>({url:'images/sanibel-deck-railing-'+f+'.jpg',title:t}))},
-  {id:'sanibel-impact-doors',title:'Impact sliding door replacement',city:'Sanibel Island',state:'FL',service:'Door installation',
-   text:'Replacement of the old standard sliding glass doors on two levels of a Sanibel Island home with new PGT WinGuard impact-rated sliding doors. Photos show the old doors, the removal and the new impact doors installed.',
-   cover:6,feature:7,
-   photos:[['01-before-upper-doors','Before: old sliding doors on the upper deck'],['02-before-deck-doors','Before: old sliding doors on the lower deck'],['03-removing-old-door','Removing the old sliding door'],['04-old-panels-removed','Old door panels removed'],['05-opening-ready','Opening prepared for the new door'],['06-installing-impact-door','Installing the new impact sliding door'],['07-after-upper-impact-door','After: new impact sliding door on the upper deck'],['08-after-deck-impact-doors','After: new impact sliding doors on the lower deck']]
-     .map(([f,t])=>({url:'images/sanibel-impact-doors-'+f+'.jpg',title:t}))},
-  {id:'fort-myers-crown-molding',title:'Crown molding and tray ceilings',city:'Fort Myers',state:'FL',service:'New construction finish carpentry',
-   text:'Crown molding, tray ceiling trim and layered frame ceilings installed in new construction homes at Esplanade Lake Club in Fort Myers, from foyers and hallways to great rooms and bedrooms.',
-   cover:2,feature:4,
-   photos:[{url:'videos/zeferinos-promo-reel-poster.jpg',video:'videos/zeferinos-promo-reel.mp4',title:'Video: crown molding installation and the finished rooms'}].concat([['01-before-tray-ceiling','Before: octagonal tray ceiling without trim'],['02-after-tray-ceiling-crown','After: the same tray ceiling with crown molding'],['03-tray-ceiling-bay-windows','Tray ceiling with crown over a bay window'],['04-foyer-triple-frame-ceiling','Foyer ceiling with three layered trim frames'],['05-coffered-frame-detail','Layered frame ceiling detail'],['06-hallway-frame-ceiling','Hallway ceiling with double trim frame'],['07-hallway-tray-crown','Hallway tray ceiling with crown'],['08-great-room-tray','Great room tray ceiling with crown'],['09-bedroom-tray-crown','Bedroom tray ceiling with crown'],['10-great-room-crown','Crown molding through the great room'],['11-tray-crown-entry-view','Tray ceiling with crown at the entry'],['12-tray-crown-bedroom','Tray ceiling with recessed lights and crown'],['13-crown-corner-detail','Crown molding returns on a wall column'],['14-crown-kitchen-column','Crown molding around a kitchen column']]
-     .map(([f,t])=>({url:'images/fort-myers-crown-'+f+'.jpg',title:t})))},
-  {id:'new-construction-windows',title:'New construction window installation',city:'Arcadia Area',state:'FL',service:'Window installation',
-   text:'Installation of new PlyGem windows in a new construction home near Arcadia, with flashing tape sealed around every opening, followed by exterior window trim and siding.',
-   cover:6,feature:6,
-   photos:[['01-before-front-openings','Before: rough window openings on the front of the house'],['02-before-corner','Before: house wrapped, openings ready'],['03-rough-opening-flashed','Rough opening with sill flashing'],['04-new-plygem-window','New PlyGem window before installation'],['05-window-installed','Window installed in the opening'],['06-window-flashing-tape','Window sealed with flashing tape'],['07-front-windows-installed','After: front windows and door installed'],['08-side-window-installed','Side window installed'],['09-rear-window-installed','Rear window installed'],['10-window-trim-siding','Window trim with siding going on']]
-     .map(([f,t])=>({url:'images/new-construction-windows-'+f+'.jpg',title:t}))},
-  {id:'southaven-hospital',title:'Hospital interior finish carpentry',city:'Southaven',state:'MS',service:'Commercial finish carpentry',
-   text:'Interior finish carpentry at a hospital in the Memphis area: decorative ceiling beams, picture-frame wall molding, shiplap walls, a wood slat accent wall and door casings.',
-   cover:4,feature:1,
-   photos:[['01-ceiling-beam','Decorative ceiling beam on a shiplap ceiling'],['02-ceiling-beams-lobby','Ceiling beams at the entrance'],['03-beam-detail','Beam detail with trim at the ceiling'],['04-beams-shiplap-wall','Ceiling beams and a tall shiplap wall'],['05-slat-accent-wall','Wood slat accent wall'],['06-wall-molding','Picture-frame wall molding'],['07-wall-molding-panels','Wall molding panels on an angled wall'],['08-wall-molding-hallway','Wall molding along the hallway'],['09-molding-corner-detail','Molding detail at an inside corner'],['10-molding-detail','Molding detail at an outside corner'],['11-door-casing','Door casing with shiplap surround'],['12-shiplap-wall-in-progress','Shiplap wall during installation']]
-     .map(([f,t])=>({url:'images/southaven-hospital-'+f+'.jpg',title:t}))},
-  {id:'cape-coral',title:'Vinyl plank flooring and stairs',city:'Cape Coral',state:'FL',service:'Flooring and stairs',
-   text:'Vinyl plank flooring throughout a residence plus finished stairs with dark wood treads and white risers, shown before, during and after the work.',
-   cover:1,
-   photos:[['01-stairs-before','Stairs before the work'],['02-stairs-finished','Finished stairs with dark wood treads and white risers'],['03-living-area','Open living area with vinyl plank flooring'],['04-bedroom-view','Flooring leading into the bedroom'],['05-hallway','Hallway with vinyl plank flooring'],['06-bedroom','Bedroom with vinyl plank flooring'],['07-bedroom-corner','Flooring and trim in a bedroom corner'],['08-stairs-top-view','Finished stairs seen from the hallway'],['09-video-glass-door-window','Planks laid beside a glass door and window'],['10-video-large-window','Flooring in a room with a large window'],['11-video-living-kitchen','Flooring in the open living and kitchen area'],['12-video-hallway-install','Installation in progress in the hallway']]
-     .map(([f,t])=>({url:'images/cape-coral-'+f+'.jpg',title:t}))},
-  {id:'tampa',title:'Flex molding on arched openings',city:'Tampa',state:'FL',service:'Architectural trim',
-   text:'Flex molding casing installed around the arched openings of a residence, matched to the curve of each arch.',
-   cover:0,feature:0,
-   photos:[['01-arch-column','Arched opening with column view'],['02-arch-kitchen','Arched opening to the kitchen'],['03-arch-closet','Arched opening in a hallway'],['04-arch-room','Arched opening into a room'],['05-closet-door','Louvered closet door with trim beside the arch'],['06-arch-bathroom','Arched opening to the bathroom'],['07-arch-dining','Arched opening to the dining area']]
-     .map(([f,t])=>({url:'images/tampa-flex-molding-'+f+'.jpg',title:t}))}
-];
-
-/* Background photographs for the opening section: the strongest shots. */
-const heroSlides=[
-  {url:'images/southaven-hospital-05-slat-accent-wall.jpg',cap:'Wood slat accent wall, Southaven, MS',pos:'center 45%'},
-  {url:'images/fort-myers-crown-03-tray-ceiling-bay-windows.jpg',cap:'Tray ceiling and crown molding, Fort Myers',pos:'center 40%'},
-  {url:'images/southaven-hospital-02-ceiling-beams-lobby.jpg',cap:'Decorative ceiling beams, Southaven, MS',pos:'center 30%'},
-  {url:'images/tampa-flex-molding-01-arch-column.jpg',cap:'Flex molding on an arched opening, Tampa',pos:'center 35%'},
-  {url:'images/cape-coral-02-stairs-finished.jpg',cap:'Finished stairs, Cape Coral',pos:'center 55%'},
-  {url:H+'4EA3DBFF-8CCE-4055-ACD4-BB834CF81EDC_1_105_c.jpeg',cap:'Exterior wood handrail, Sanibel Island',pos:'center 45%'}
 ];
 
 /* ---------- helpers ---------- */
@@ -1120,67 +1159,149 @@ document.querySelector('#allServices').innerHTML=services.map(svcHTML).join('');
 document.querySelector('#footServices').innerHTML=services.slice(0,6).map(s=>`<li><a href="#services">${esc(s[0])}</a></li>`).join('');
 document.querySelector('#leadService').innerHTML=[...services.map(s=>s[0]),'Builder / Subcontractor','Other'].map(o=>`<option>${esc(o)}</option>`).join('');
 
+/* ---------- photos: ALT text and responsive images ---------- */
+const DEFAULT_DESC = document.querySelector('meta[name="description"]').getAttribute('content');
+const photoAlt = (p, ph, i) => ph.title || `${p.title}, ${p.city} ${p.state}, photo ${i + 1} of ${p.photos.length}`;
+const SIZES_CARD = '(max-width:640px) 92vw, (max-width:1120px) 46vw, 380px';
+function photoImg(p, i, o = {}) {
+  const ph = p.photos[i];
+  return `<img src="${optSrc(ph.url, 800)}" srcset="${optSrcset(ph.url)}" sizes="${o.sizes || SIZES_CARD}" alt="${esc(photoAlt(p, ph, i))}" loading="${o.eager ? 'eager' : 'lazy'}" decoding="async"${o.eager ? ' fetchpriority="high"' : ''}>`;
+}
+
+/* ---------- motion: skipped when the visitor prefers reduced motion ---------- */
+const reduceMotionPref = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+const revealIO = 'IntersectionObserver' in window ? new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); }
+}), { rootMargin: '0px 0px -6% 0px', threshold: 0.08 }) : null;
+function bindMotion(root = document) {
+  root.querySelectorAll('.reveal:not(.in)').forEach((el, k) => {
+    el.style.setProperty('--d', ((k % 6) * 0.07).toFixed(2) + 's');
+    if (revealIO) revealIO.observe(el); else el.classList.add('in');
+  });
+  if (finePointer && !reduceMotionPref()) root.querySelectorAll('.tilt:not([data-tilt])').forEach(el => {
+    el.dataset.tilt = '1';
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--rx', ((0.5 - (e.clientY - r.top) / r.height) * 7).toFixed(2) + 'deg');
+      el.style.setProperty('--ry', (((e.clientX - r.left) / r.width - 0.5) * 7).toFixed(2) + 'deg');
+    });
+    el.addEventListener('pointerleave', () => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
+  });
+}
+/* Fade-in for text blocks across the site. Add class "reveal" to any new block you want to animate. */
+document.querySelectorAll('.section-head,.intro>*,.svc-list li,.steps .step,.checklist li,.points>div,.pillars>div,.ig-tile,.review,.kicker,.closing h2,.closing .lead,.closing .cta-row,.split>*,.contact-grid>*,.info-list li,.also,.band-foot,.page-head .wrap>*,.cities,.foot-grid>div')
+  .forEach(el => el.classList.add('reveal'));
+
 /* ---------- cards ---------- */
-const cardHTML=p=>{const c=coverOf(p);return `<a class="card" href="#project-${p.id}"><div class="ph"><img src="${c.url}" alt="${esc(p.title)} in ${esc(p.city)}" loading="lazy">${WM()}</div><div class="card-body"><div class="where">${esc(p.city)}, ${p.state}</div><h3>${esc(p.title)}</h3><div class="meta">${esc(p.service)} &nbsp;/&nbsp; ${plural(p.photos.length,'photo')}</div></div></a>`};
-const featureHTML=p=>{const c=p.photos[p.feature??p.cover];return `<a class="feature" href="#project-${p.id}"><div class="feature-img"><img src="${c.url}" alt="${esc(p.title)} in ${esc(p.city)}" loading="lazy">${WM()}</div><div><div class="where">${esc(p.city)}, ${p.state}</div><h3>${esc(p.title)}</h3><p>${esc(p.text.split('.')[0])}.</p><span class="more">View the project</span></div></a>`};
+const cardHTML = p => `<a class="card tilt reveal" href="#project-${p.id}"><div class="ph">${photoImg(p, p.cover || 0)}${WM()}</div><div class="card-body"><div class="where">${esc(p.city)}, ${p.state}</div><h3>${esc(p.title)}</h3><div class="meta">${esc(p.service)} &nbsp;/&nbsp; ${plural(p.photos.length, 'photo')}</div></div></a>`;
+const featureHTML = p => { const i = p.feature ?? p.cover ?? 0; return `<a class="feature reveal" href="#project-${p.id}"><div class="feature-img">${photoImg(p, i, { sizes: '(max-width:960px) 92vw, 560px' })}${WM()}</div><div><div class="where">${esc(p.city)}, ${p.state}</div><h3>${esc(p.title)}</h3><p>${esc(p.text.split('.')[0])}.</p><span class="more">View the project</span></div></a>`; };
+
 /* Home shows three projects; the rest are on the Projects page. Change the ids here to feature others. */
-const HOME_FEATURED=['fort-myers-crown-molding','sanibel-flooring','cape-coral'];
-document.querySelector('#homeProjects').innerHTML=HOME_FEATURED.map(id=>projects.find(p=>p.id===id)).filter(Boolean).map(featureHTML).join('');
-document.querySelector('#homeAllBtn').textContent='View all '+projects.length+' projects';
-document.querySelector('#serviceProjects').innerHTML=`<div class="cards">${projects.map(cardHTML).join('')}</div>`;
+const HOME_FEATURED = ['fort-myers-crown-molding', 'sanibel-flooring', 'cape-coral'];
+document.querySelector('#homeProjects').innerHTML = HOME_FEATURED.map(id => projects.find(p => p.id === id)).filter(Boolean).map(featureHTML).join('');
+document.querySelector('#homeAllBtn').textContent = 'View all ' + projects.length + ' projects';
+document.querySelector('#serviceProjects').innerHTML = `<div class="cards">${projects.map(cardHTML).join('')}</div>`;
 
 /* ---------- locations ---------- */
-document.querySelector('#locGrid').innerHTML=cities.map(c=>{const ph=coverOf(c.items[0]);return `<a class="loc" href="#city-${c.slug}"><img src="${ph.url}" alt="" loading="lazy">${WM()}<div class="txt"><h3>${esc(c.name)}${c.items[0].state!=='FL'?', '+c.items[0].state:''}</h3><div class="count">${plural(c.items.length,'project')}</div></div></a>`}).join('');
-const also=SERVICE_AREA.filter(a=>!cities.some(c=>c.name===a));
-document.querySelector('#alsoServing').innerHTML=also.length?`<span>Also serving</span>${also.map(a=>`<a href="#contact" onclick="presetCity('${esc(a)}')">${esc(a)}</a>`).join('')}`:'';
+document.querySelector('#locGrid').innerHTML = cities.map(c => {
+  const p0 = c.items[0], ph = p0.photos[p0.cover || 0];
+  return `<a class="loc reveal" href="#city-${c.slug}"><img src="${optSrc(ph.url, 800)}" srcset="${optSrcset(ph.url)}" sizes="(max-width:640px) 92vw, (max-width:960px) 46vw, 380px" alt="Finish carpentry in ${esc(c.name)}, ${esc(p0.state)}" loading="lazy" decoding="async">${WM()}<div class="txt"><h3>${esc(c.name)}${p0.state !== 'FL' ? ', ' + p0.state : ''}</h3><div class="count">${plural(c.items.length, 'project')}</div></div></a>`;
+}).join('');
+const also = SERVICE_AREA.filter(a => !cities.some(c => c.name === a));
+document.querySelector('#alsoServing').innerHTML = also.length ? `<span>Also serving</span>${also.map(a => `<a href="#contact" onclick="presetCity('${esc(a)}')">${esc(a)}</a>`).join('')}` : '';
 
-/* ---------- projects page with city filter ---------- */
-let activeCity='all';
-function drawProjects(){
-  document.querySelector('#chips').innerHTML=[{name:'All locations',slug:'all',items:projects},...cities].map(c=>`<button type="button" aria-pressed="${activeCity===c.slug}" onclick="filterCity('${c.slug}')">${esc(c.name)}<small>${c.items.length}</small></button>`).join('');
-  const list=activeCity==='all'?projects:projects.filter(p=>slug(p.city)===activeCity);
-  document.querySelector('#projectGrid').innerHTML=list.map(cardHTML).join('');
+/* ---------- projects page: filter by location and by service ---------- */
+let activeCity = 'all', activeType = 'all';
+function chipRow(sel, label, items, active, fn) {
+  const el = document.querySelector(sel);
+  el.setAttribute('role', 'group');
+  el.setAttribute('aria-label', label);
+  el.innerHTML = items.map(c => `<button type="button" aria-pressed="${active === c.slug}" onclick="${fn}('${c.slug}')">${esc(c.name)}<small>${c.n}</small></button>`).join('');
 }
-function filterCity(sl){activeCity=sl;drawProjects()}
+function drawProjects() {
+  chipRow('#chips', 'Filter by location', [{ name: 'All locations', slug: 'all', n: projects.length }, ...cities.map(c => ({ name: c.name, slug: c.slug, n: c.items.length }))], activeCity, 'filterCity');
+  const types = PROJECT_TYPES.map(t => ({ name: t, slug: slug(t), n: projects.filter(p => p.types.includes(t)).length })).filter(t => t.n);
+  chipRow('#typeChips', 'Filter by service', [{ name: 'All services', slug: 'all', n: projects.length }, ...types], activeType, 'filterType');
+  const list = projects.filter(p => (activeCity === 'all' || slug(p.city) === activeCity) && (activeType === 'all' || p.types.some(t => slug(t) === activeType)));
+  document.querySelector('#projectGrid').innerHTML = list.length
+    ? `<div class="cards">${list.map(cardHTML).join('')}</div>`
+    : '<p class="empty">No projects match these filters yet. New work is added as it is finished.</p>';
+  bindMotion(document.querySelector('#projectGrid'));
+}
+function filterCity(sl) { activeCity = sl; drawProjects(); }
+function filterType(sl) { activeType = sl; drawProjects(); }
+function setType(sl) { activeType = sl; activeCity = 'all'; }
 drawProjects();
 
 /* ---------- city page ---------- */
-function renderCity(sl){
-  const c=cities.find(x=>x.slug===sl); if(!c)return false;
-  document.querySelector('#city').innerHTML=`
-  <section class="page-head dark"><img class="watermark" src="images/logo-z.png" alt="">
+function renderCity(sl) {
+  const c = cities.find(x => x.slug === sl); if (!c) return false;
+  document.querySelector('#city').innerHTML = `
+  <section class="page-head dark"><img class="watermark" src="images/logo-z-600.webp" alt="" loading="lazy">
     <div class="wrap"><div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; <a href="#projects">Projects</a> &nbsp;/&nbsp; ${esc(c.name)}</div>
-    <h1>${esc(c.name)}, ${c.items[0].state}</h1><p class="lead">${plural(c.items.length,'completed project')} by Zeferino's Inc. in ${esc(c.name)}.</p></div></section>
+    <h1>${esc(c.name)}, ${c.items[0].state}</h1><p class="lead">${plural(c.items.length, 'completed project')} by Zeferino's Inc. in ${esc(c.name)}.</p></div></section>
   <section class="band linen"><div class="wrap"><div class="cards">${c.items.map(cardHTML).join('')}</div>
     <div class="band-foot"><p>Planning a project in ${esc(c.name)}?</p><a class="btn ink" href="#contact" onclick="presetCity('${esc(c.name)}')">Request a free estimate</a></div></div></section>
   <section class="band"><div class="wrap"><div class="section-head" style="margin-bottom:48px"><div><div class="kicker">Other locations</div><h2>More of our work</h2></div></div>
-    <div class="also" style="margin-top:0;border-top:0;padding-top:0">${cities.filter(x=>x.slug!==sl).map(x=>`<a href="#city-${x.slug}">${esc(x.name)}</a>`).join('')}<a href="#projects">All projects</a></div></div></section>`;
+    <div class="also" style="margin-top:0;border-top:0;padding-top:0">${cities.filter(x => x.slug !== sl).map(x => `<a href="#city-${x.slug}">${esc(x.name)}</a>`).join('')}<a href="#projects">All projects</a></div></div></section>`;
   return true;
 }
 
-/* ---------- project detail page ---------- */
-let current=null;
-function renderProject(id){
-  const pi=projects.findIndex(p=>p.id===id); if(pi<0)return false;
-  const p=projects[pi],c=coverOf(p),cs=slug(p.city);current=pi;
-  const more=projects.filter(x=>x.id!==id).sort((a,b)=>(b.city===p.city)-(a.city===p.city)).slice(0,3);
-  document.querySelector('#project').innerHTML=`
-  <section class="page-head dark"><img class="watermark" src="images/logo-z.png" alt="">
+/* ---------- before and after: a slider over two photos of the SAME project ---------- */
+function beforeAfter(p) {
+  return (p.pairs || []).map(pr => {
+    const b = p.photos.findIndex(x => x.url === pr.before), a = p.photos.findIndex(x => x.url === pr.after);
+    if (b < 0 || a < 0) return '';
+    const bu = p.photos[b].url, au = p.photos[a].url, sz = '(max-width:960px) 92vw, 1100px';
+    if (pr.view === 'side') return `<figure class="ba-side reveal">
+      <div><div class="ba-side-img"><img src="${optSrc(bu, 800)}" srcset="${optSrcset(bu)}" sizes="(max-width:640px) 92vw, 540px" alt="Before: ${esc(pr.label)}" loading="lazy" decoding="async">${WM('sm')}</div><figcaption>Before</figcaption></div>
+      <div><div class="ba-side-img"><img src="${optSrc(au, 800)}" srcset="${optSrcset(au)}" sizes="(max-width:640px) 92vw, 540px" alt="After: ${esc(pr.label)}" loading="lazy" decoding="async">${WM('sm')}</div><figcaption>After</figcaption></div>
+      <p class="ba-side-cap">${esc(pr.label)}</p>
+    </figure>`;
+    return `<figure class="ba reveal" style="--p:50%">
+      <div class="ba-frame">
+        <img class="ba-after" src="${optSrc(au, 1600)}" srcset="${optSrcset(au)}" sizes="${sz}" alt="After: ${esc(pr.label)}" loading="lazy" decoding="async">
+        <img class="ba-before" src="${optSrc(bu, 1600)}" srcset="${optSrcset(bu)}" sizes="${sz}" alt="Before: ${esc(pr.label)}" loading="lazy" decoding="async">
+        <span class="ba-line" aria-hidden="true"></span>
+        ${WM('sm')}
+      </div>
+      <input type="range" min="0" max="100" value="50" aria-label="Drag to compare before and after: ${esc(pr.label)}" oninput="this.closest('.ba').style.setProperty('--p',this.value+'%')">
+      <figcaption><span>Before</span><span>${esc(pr.label)}</span><span>After</span></figcaption>
+    </figure>`;
+  }).join('');
+}
+
+/* ---------- project page: one gallery per project ---------- */
+let current = null;
+function renderProject(id) {
+  const pi = projects.findIndex(p => p.id === id); if (pi < 0) return false;
+  const p = projects[pi], cs = slug(p.city), ci = p.cover || 0;
+  current = pi;
+  const more = projects.filter(x => x.id !== id).sort((a, b) => (b.city === p.city) - (a.city === p.city)).slice(0, 3);
+  const ba = beforeAfter(p);
+  document.querySelector('#project').innerHTML = `
+  <section class="page-head dark"><img class="watermark" src="images/logo-z-600.webp" alt="" loading="lazy">
     <div class="wrap"><div class="crumb"><a href="#home">Home</a> &nbsp;/&nbsp; <a href="#projects">Projects</a> &nbsp;/&nbsp; <a href="#city-${cs}">${esc(p.city)}</a></div>
     <h1>${esc(p.title)}</h1><p class="lead">${esc(p.city)}, ${p.state}</p></div></section>
   <div class="wrap"><article class="project">
     <div class="project-top">
-      <div><div class="kicker">${esc(p.service)}</div><p class="lead">${esc(p.text)}</p>
-        <dl><dt>Location</dt><dd><a href="#city-${cs}" style="text-decoration:none">${esc(p.city)}, ${p.state}</a></dd><dt>Service</dt><dd>${esc(p.service)}</dd><dt>Photos</dt><dd>${p.photos.length}</dd></dl>
+      <div class="reveal"><div class="kicker">${esc(p.service)}</div><p class="lead">${esc(p.text)}</p>
+        <dl><dt>Location</dt><dd><a href="#city-${cs}">${esc(p.city)}, ${p.state}</a></dd>
+        <dt>Services</dt><dd>${p.types.map(t => `<a href="#projects" onclick="setType('${slug(t)}')">${esc(t)}</a>`).join(', ')}</dd>
+        <dt>Photos</dt><dd>${p.photos.length}</dd></dl>
         <a class="btn ink" href="#contact" style="margin-top:36px">Request a similar project</a></div>
-      <button class="project-cover ph" type="button" onclick="openPhoto(${pi},${p.cover||0})" aria-label="Enlarge cover photo"><img src="${c.url}" alt="${esc(c.title||p.title)}">${WM('lg')}</button>
+      <button class="project-cover ph" type="button" onclick="openPhoto(${pi},${ci})" aria-label="Enlarge: ${esc(photoAlt(p, p.photos[ci], ci))}">${photoImg(p, ci, { eager: true, sizes: '(max-width:960px) 92vw, 620px' })}${WM('lg')}</button>
     </div>
-    <div class="thumbs">${p.photos.map((ph,i)=>`<button class="ph${ph.video?' is-video':''}" type="button" onclick="openPhoto(${pi},${i})" aria-label="Open ${ph.video?'video':'photo'} ${i+1} of ${p.photos.length}${ph.title?': '+esc(ph.title):''}"><img src="${ph.url}" alt="" loading="lazy">${ph.video?'<span class="play-badge"></span>':WM('sm')}</button>`).join('')}</div>
+    ${ba ? `<div class="ba-wrap"><div class="kicker">Before and after</div>${ba}</div>` : ''}
+    <div class="thumbs">${p.photos.map((ph, i) => `<button class="ph${ph.video ? ' is-video' : ''}" type="button" onclick="openPhoto(${pi},${i})" aria-label="Open ${ph.video ? 'video' : 'photo'} ${i + 1} of ${p.photos.length}: ${esc(photoAlt(p, ph, i))}">${photoImg(p, i, { sizes: '160px' })}${ph.video ? '<span class="play-badge"></span>' : WM('sm')}</button>`).join('')}</div>
   </article></div>
   <section class="band linen"><div class="wrap"><div class="section-head" style="margin-bottom:56px"><div><div class="kicker">Keep exploring</div><h2>More projects</h2></div><a class="more" href="#projects">All projects</a></div>
     <div class="cards">${more.map(cardHTML).join('')}</div></div></section>`;
+  bindMotion(document.querySelector('#project'));
   return true;
 }
+
 
 /* ---------- Google reviews ----------
    Add real reviews from the Google Business Profile here, copied word for word:
@@ -1252,11 +1373,11 @@ fetch('/api/reviews').then(r=>r.ok?r.json():null).then(d=>{
 
 /* ---------- Instagram ---------- */
 const igPicks=[[4,4],[8,6],[6,4],[4,2],[3,7],[5,6]];
-document.querySelector('#igGrid').innerHTML=igPicks.map(([p,i])=>{const ph=projects[p].photos[i];return `<a class="ig-tile" href="${IG}" target="_blank" rel="noopener" aria-label="${esc(ph.title||projects[p].title)}, view more on Instagram"><img src="${ph.url}" alt="" loading="lazy">${WM('sm')}<span><svg class="icon"><use href="#i-ig"/></svg></span></a>`}).join('');
+document.querySelector('#igGrid').innerHTML=igPicks.map(([p,i])=>{const ph=projects[p].photos[i];return `<a class="ig-tile" href="${IG}" target="_blank" rel="noopener" aria-label="${esc(ph.title||projects[p].title)}, view more on Instagram">${photoImg(projects[p],i,{sizes:'200px'})}${WM('sm')}<span><svg class="icon"><use href="#i-ig"/></svg></span></a>`}).join('');
 
 /* ---------- hero slideshow ---------- */
 const slidesEl=document.querySelector('#slides');
-slidesEl.innerHTML=heroSlides.map((h,i)=>`<img src="${h.url}" alt="" style="object-position:${h.pos}" ${i?'loading="lazy"':'fetchpriority="high"'}>`).join('');
+slidesEl.innerHTML=heroSlides.map((h,i)=>`<img src="${optSrc(h.url,1600)}" srcset="${optSrcset(h.url)}" sizes="100vw" alt="" style="object-position:${h.pos}" ${i?'loading="lazy"':'fetchpriority="high"'}>`).join('');
 document.querySelector('#slideDots').innerHTML=heroSlides.map((h,i)=>`<button type="button" aria-label="Show photo ${i+1}: ${esc(h.cap)}" onclick="showSlide(${i},true)"></button>`).join('');
 let slide=0,slideTimer=null;
 const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1270,41 +1391,91 @@ function showSlide(i,user){
 function restartSlides(){clearInterval(slideTimer);if(!reduce)slideTimer=setInterval(()=>showSlide((slide+1)%heroSlides.length),7000)}
 showSlide(0);restartSlides();
 
-/* ---------- lightbox ---------- */
-let lbP=0,lbI=0,lastFocus=null;
-function openPhoto(p,i){lbP=p;lbI=i;lastFocus=document.activeElement;renderPhoto();const m=document.querySelector('#lightbox');m.classList.add('open');m.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';m.querySelector('.lb-close').focus()}
-function renderPhoto(){const p=projects[lbP],ph=p.photos[lbI];const img=document.querySelector('#lbImg'),vid=document.querySelector('#lbVid');vid.pause();img.closest('.lb-frame').classList.toggle('is-video',!!ph.video);if(ph.video){img.hidden=true;img.removeAttribute('src');vid.hidden=false;vid.poster=ph.url;vid.src=ph.video;vid.setAttribute('aria-label',ph.title||p.title);vid.play().catch(()=>{})}else{vid.hidden=true;vid.removeAttribute('src');vid.load();img.hidden=false;img.src=ph.url;}img.alt=ph.title||(p.title+', photo '+(lbI+1));document.querySelector('#lbCap').textContent=`${p.title}, ${p.city}, ${p.state}${ph.title?'. '+ph.title:''}. Photo ${lbI+1} of ${p.photos.length}`}
-function movePhoto(d){const n=projects[lbP].photos.length;lbI=(lbI+d+n)%n;renderPhoto()}
-function closePhoto(){document.querySelector('#lbVid').pause();const m=document.querySelector('#lightbox');m.classList.remove('open');m.setAttribute('aria-hidden','true');document.body.style.overflow='';if(lastFocus)lastFocus.focus()}
-document.querySelector('#lightbox').addEventListener('click',e=>{if(e.target.id==='lightbox')closePhoto()});
-document.addEventListener('keydown',e=>{if(!document.querySelector('#lightbox').classList.contains('open'))return;if(e.key==='Escape')closePhoto();else if(e.key==='ArrowLeft')movePhoto(-1);else if(e.key==='ArrowRight')movePhoto(1)});
+/* ---------- lightbox: enlarge, arrows, keyboard and swipe ---------- */
+let lbP = 0, lbI = 0, lastFocus = null, touchX = null;
+function openPhoto(p, i) { lbP = p; lbI = i; lastFocus = document.activeElement; renderPhoto(); const m = document.querySelector('#lightbox'); m.classList.add('open'); m.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; m.querySelector('.lb-close').focus(); }
+function renderPhoto() {
+  const p = projects[lbP], ph = p.photos[lbI];
+  const img = document.querySelector('#lbImg'), vid = document.querySelector('#lbVid');
+  vid.pause();
+  img.closest('.lb-frame').classList.toggle('is-video', !!ph.video);
+  if (ph.video) {
+    img.hidden = true; img.removeAttribute('src');
+    vid.hidden = false; vid.poster = optSrc(ph.url, 1600); vid.src = ph.video;
+    vid.setAttribute('aria-label', ph.title || p.title); vid.play().catch(() => {});
+  } else {
+    vid.hidden = true; vid.removeAttribute('src'); vid.load();
+    img.hidden = false;
+    img.srcset = optSrc(ph.url, 800) + ' 800w, ' + optSrc(ph.url, 1600) + ' 1600w';
+    img.sizes = '100vw';
+    img.src = optSrc(ph.url, 1600);
+  }
+  img.alt = photoAlt(p, ph, lbI);
+  document.querySelector('#lbCap').textContent = `${p.title}, ${p.city}, ${p.state}${ph.title ? '. ' + ph.title : ''}. Photo ${lbI + 1} of ${p.photos.length}`;
+}
+function movePhoto(d) { const n = projects[lbP].photos.length; lbI = (lbI + d + n) % n; renderPhoto(); }
+function closePhoto() { document.querySelector('#lbVid').pause(); const m = document.querySelector('#lightbox'); m.classList.remove('open'); m.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); }
+const lbEl = document.querySelector('#lightbox');
+lbEl.addEventListener('click', e => { if (e.target.id === 'lightbox') closePhoto(); });
+lbEl.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+lbEl.addEventListener('touchend', e => { if (touchX === null) return; const dx = e.changedTouches[0].clientX - touchX; if (Math.abs(dx) > 50) movePhoto(dx < 0 ? 1 : -1); touchX = null; });
+document.addEventListener('keydown', e => {
+  if (lbEl.classList.contains('open')) {
+    if (e.key === 'Escape') closePhoto(); else if (e.key === 'ArrowLeft') movePhoto(-1); else if (e.key === 'ArrowRight') movePhoto(1);
+    return;
+  }
+  if (e.key === 'Escape' && document.body.classList.contains('menu-open')) closeMenu();
+});
 
 /* ---------- navigation ---------- */
-const titles={home:"Zeferino's Inc. | Finish Carpentry & Flooring Installation in Southwest Florida",services:"Services | Zeferino's Inc.",projects:"Projects | Zeferino's Inc.",builders:"For Builders | Zeferino's Inc.",about:"About | Zeferino's Inc.",contact:"Request an Estimate | Zeferino's Inc."};
-function route(){
-  let h=location.hash.slice(1)||'home',id=h,anchor=null;
-  if(h==='estimate'){h='home';id='home';anchor='estimate'}
-  if(h.startsWith('city-')){id=renderCity(h.slice(5))?'city':'projects';if(id==='city')titles.city=cities.find(c=>c.slug===h.slice(5)).name+" Projects | Zeferino's Inc."}
-  else if(h.startsWith('project-')){id=renderProject(h.slice(8))?'project':'projects';if(id==='project')titles.project=projects[current].title+', '+projects[current].city+" | Zeferino's Inc."}
-  else if(!document.getElementById(h)||!document.getElementById(h).classList.contains('tab')||h==='city'||h==='project')id='home';
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.id===id));
-  const navId=(id==='city'||id==='project')?'projects':id;
-  document.querySelectorAll('nav.main a').forEach(a=>{if(a.getAttribute('href')==='#'+navId)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
-  document.title=titles[id];
+const titles = {home:"Zeferino's Inc. | Finish Carpentry & Flooring Installation in Southwest Florida",services:"Services | Zeferino's Inc.",projects:"Projects | Zeferino's Inc.",builders:"For Builders | Zeferino's Inc.",about:"About | Zeferino's Inc.",contact:"Request an Estimate | Zeferino's Inc."};
+/* Page title and description follow the page you are on, so each project and city has its own. */
+function updateSEO(id) {
+  let desc = DEFAULT_DESC;
+  if (id === 'project' && current !== null) desc = projects[current].text;
+  else if (id === 'city') { const c = cities.find(x => x.slug === location.hash.slice(6)); if (c) desc = `${c.items.length} finish carpentry ${c.items.length > 1 ? 'projects' : 'project'} by Zeferino's in ${c.name}, ${c.items[0].state}: trim, doors, stairs and flooring.`; }
+  else if (id === 'projects') desc = 'Completed finish carpentry and flooring projects across Southwest Florida. Filter by city or by service.';
+  const set = (sel, val) => { const e = document.querySelector(sel); if (e) e.setAttribute('content', val); };
+  set('meta[name="description"]', desc);
+  set('meta[property="og:description"]', desc);
+  set('meta[property="og:title"]', document.title);
+  set('meta[property="og:url"]', location.href.split('#')[0] + location.hash);
+}
+function route() {
+  let h = location.hash.slice(1) || 'home', id = h, anchor = null;
+  if (h === 'estimate') { h = 'home'; id = 'home'; anchor = 'estimate'; }
+  if (h.startsWith('city-')) { id = renderCity(h.slice(5)) ? 'city' : 'projects'; if (id === 'city') titles.city = cities.find(c => c.slug === h.slice(5)).name + " Projects | Zeferino's Inc."; }
+  else if (h.startsWith('project-')) { id = renderProject(h.slice(8)) ? 'project' : 'projects'; if (id === 'project') titles.project = projects[current].title + ', ' + projects[current].city + " | Zeferino's Inc."; }
+  else if (!document.getElementById(h) || !document.getElementById(h).classList.contains('tab') || h === 'city' || h === 'project') id = 'home';
+  if (id === 'projects') drawProjects();
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.id === id));
+  const navId = (id === 'city' || id === 'project') ? 'projects' : id;
+  document.querySelectorAll('nav.main a').forEach(a => { if (a.getAttribute('href') === '#' + navId) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  document.title = titles[id];
   closeMenu();
   placeForm(id);
-  document.querySelector('#fabEstimate').hidden=(id==='contact');
-  if(anchor){const t=document.getElementById(anchor);window.scrollTo({top:t.getBoundingClientRect().top+scrollY-document.querySelector('header.site').offsetHeight,behavior:'instant'})}
-  else window.scrollTo({top:0,behavior:'instant'});
+  document.querySelector('#fabEstimate').hidden = (id === 'contact');
+  if (anchor) { const t = document.getElementById(anchor); window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - document.querySelector('header.site').offsetHeight, behavior: 'instant' }); }
+  else window.scrollTo({ top: 0, behavior: 'instant' });
+  bindMotion(document);
+  updateSEO(id);
 }
-window.addEventListener('hashchange',route);
-let fabSeen=false,fabTop=true;const fabUpd=()=>document.querySelector('#fabEstimate').classList.toggle('away',fabSeen||fabTop);
-addEventListener('scroll',()=>{fabTop=scrollY<500;fabUpd()},{passive:true});fabTop=scrollY<500;
-if('IntersectionObserver' in window){new IntersectionObserver(es=>es.forEach(e=>{fabSeen=e.isIntersecting;fabUpd()})).observe(document.querySelector('#estimate'))}
+window.addEventListener('hashchange', route);
+let fabSeen = false, fabTop = true;
+const fabUpd = () => document.querySelector('#fabEstimate').classList.toggle('away', fabSeen || fabTop);
+addEventListener('scroll', () => { fabTop = scrollY < 500; fabUpd(); }, { passive: true }); fabTop = scrollY < 500;
+if ('IntersectionObserver' in window) { new IntersectionObserver(es => es.forEach(e => { fabSeen = e.isIntersecting; fabUpd(); })).observe(document.querySelector('#estimate')); }
 route();
-function toggleMenu(){const n=document.querySelector('#mobileNav'),b=document.querySelector('.menu-btn');const open=!n.classList.contains('open');n.classList.toggle('open',open);b.setAttribute('aria-expanded',open);b.setAttribute('aria-label',open?'Close menu':'Open menu')}
-document.addEventListener('click',e=>{const n=document.querySelector('#mobileNav');if(n.classList.contains('open')&&!e.target.closest('#mobileNav')&&!e.target.closest('.menu-btn'))closeMenu()});
-function closeMenu(){document.querySelector('#mobileNav').classList.remove('open');const b=document.querySelector('.menu-btn');b.setAttribute('aria-expanded','false');b.setAttribute('aria-label','Open menu')}
+function toggleMenu() { setMenu(!document.querySelector('#mobileNav').classList.contains('open')); }
+function closeMenu() { setMenu(false); }
+function setMenu(open) {
+  const n = document.querySelector('#mobileNav'), b = document.querySelector('.menu-btn');
+  n.classList.toggle('open', open);
+  b.setAttribute('aria-expanded', open);
+  b.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  document.body.classList.toggle('menu-open', open);
+}
+document.addEventListener('click', e => { const n = document.querySelector('#mobileNav'); if (n.classList.contains('open') && !e.target.closest('#mobileNav') && !e.target.closest('.menu-btn')) closeMenu(); });
 
 /* ---------- estimate form ---------- */
 function presetService(v){document.querySelector('#leadService').value=v}
