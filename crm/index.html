@@ -745,7 +745,7 @@ function openDoc(id){S.view='documentos';S.docId=id;S.edit=null;S.clientId=null;
 function vEditor(){
   const d=S.edit, k=d.kind;
   return `<button class="btn sm ghost" onclick="S.edit=null;render()">← Cancelar</button>
-  <div class="row spread" style="margin:8px 0 16px"><h1>${KINDS[k].pt}${d.avulso?' avulsa':''} ${esc(d.number)}</h1><div class="row"><button class="btn" onclick="S.edit=null;render()">Cancelar</button><button class="btn p" onclick="saveEdit()">Salvar</button></div></div>
+  <div class="row spread" style="margin:8px 0 16px"><h1>${KINDS[k].pt}${d.avulso?' avulsa':''} ${esc(d.number)}</h1><div class="row"><button class="btn" onclick="S.edit=null;render()">Cancelar</button><button class="btn" onclick="previewPdf(S.edit)">👁 Prévia</button><button class="btn p" onclick="saveEdit()">Salvar</button></div></div>
   <div class="card"><div class="fg">
    ${d.avulso?'':`<div class="f"><label>Cliente *</label><div class="row" style="flex-wrap:nowrap"><select id="e-client" onchange="S.edit.clientId=this.value;const c=S.clients[this.value];if(c&&!S.edit.jobAddress){S.edit.jobAddress=[c.address,c.city,c.state,c.zip].filter(Boolean).join(', ');document.getElementById('e-addr').value=S.edit.jobAddress}">${clientOptions(d.clientId)}</select><button class="btn sm" title="Novo cliente" onclick="editClient()">+</button></div></div>`}
    <div class="f"><label>Projeto / título</label><input data-e="title" value="${esc(d.title||'')}" placeholder="Ex.: Trim package – 3BR/2BA"></div>
@@ -790,7 +790,7 @@ function vEditor(){
    <div class="f"><label>Observações para o cliente (inglês)</label><textarea data-e="notes">${esc(d.notes||'')}</textarea></div>
    <div class="f"><label>Termos / condições ${k==='contract'?'adicionais':''} (inglês)</label><textarea data-e="terms" rows="3">${esc(d.terms||'')}</textarea></div>
   </div>
-  <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="S.edit=null;render()">Cancelar</button><button class="btn p" onclick="saveEdit()">Salvar ${KINDS[k].pt}</button></div>`;
+  <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="S.edit=null;render()">Cancelar</button><button class="btn" onclick="previewPdf(S.edit)">👁 Prévia do PDF</button><button class="btn p" onclick="saveEdit()">Salvar ${KINDS[k].pt}</button></div>`;
 }
 document.addEventListener('input',e=>{
   if(!S.edit) return; const el=e.target;
@@ -835,6 +835,7 @@ function vDocView(){
    <div class="row">
     <button class="btn" onclick="S.edit=clone(S.docs['${d.id}']);S.docId=null;render()">Editar</button>
     ${dl?`<button class="btn p" onclick="downloadPdf('${d.id}')">Baixar PDF</button>`:''}
+    <button class="btn a" onclick="previewPdf(S.docs['${d.id}'])">👁 Prévia do PDF</button>
     <button class="btn" onclick="copyEmail('${d.id}')">Copiar e-mail</button>
     <button class="btn" onclick="docMenu('${d.id}')">Mais…</button>
    </div></div>
@@ -1010,6 +1011,46 @@ function buildPdf(d){
   const n=pdf.internal.getNumberOfPages();
   for(let i=1;i<=n;i++){pdf.setPage(i);pdf.setFontSize(8);pdf.setTextColor(150);pdf.text(`${s.company} · ${K.en} #${d.number} · Page ${i} of ${n}`,W/2,pdf.internal.pageSize.getHeight()-24,{align:'center'})}
   return pdf;
+}
+/* ---------- Prévia do PDF ---------- */
+let _pdfjs=null;
+function loadScript(src){return new Promise((ok,bad)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=bad;document.head.appendChild(s)})}
+async function getPdfjs(){
+  if(_pdfjs)return _pdfjs;
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  return _pdfjs=window.pdfjsLib;
+}
+async function previewPdf(d){
+  if(!d)return;
+  if(!window.jspdf){toast('Gerador de PDF não carregou. Recarregue a página.');return}
+  if(!d.lines||!d.lines.length){toast('Adicione pelo menos um item para ver a prévia');return}
+  const saved=!!S.docs[d.id]&&d.number!=='(novo)';
+  modal(`<h2>Prévia – ${KINDS[d.kind].pt}${d.avulso?' avulsa':''} ${esc(d.number==='(novo)'?'(número sai ao salvar)':d.number)}</h2>
+  <p class="small muted" style="margin-top:-8px">É assim que o cliente vai ver o arquivo PDF.</p>
+  <div id="pv" style="background:#e9e5dd;border-radius:10px;padding:10px;max-height:70vh;overflow:auto;text-align:center"><div class="empty">Gerando prévia…</div></div>
+  <div class="row" style="justify-content:flex-end;margin-top:12px;gap:8px">
+   <button class="btn" onclick="closeModal()">${saved?'Fechar':'Voltar e editar'}</button>
+   ${saved?`<button class="btn" onclick="closeModal();copyEmail('${d.id}')">Copiar e-mail</button><button class="btn p" onclick="downloadPdf('${d.id}')">Baixar PDF</button>`:`<button class="btn p" onclick="closeModal();saveEdit()">Está certo — Salvar</button>`}
+  </div>`,true);
+  try{
+    const bytes=buildPdf(d).output('arraybuffer');
+    const lib=await getPdfjs();
+    const doc=await lib.getDocument({data:new Uint8Array(bytes)}).promise;
+    const box=document.getElementById('pv'); if(!box)return; box.innerHTML='';
+    const w=Math.min(box.clientWidth-20,820);
+    for(let i=1;i<=doc.numPages;i++){
+      const pg=await doc.getPage(i);const v1=pg.getViewport({scale:1});
+      const scale=w/v1.width, dpr=Math.min(window.devicePixelRatio||1,2);
+      const vp=pg.getViewport({scale:scale*dpr});
+      const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;c.style.width=w+'px';c.style.height=(vp.height/dpr)+'px';c.style.background='#fff';c.style.boxShadow='0 4px 14px rgba(0,0,0,.18)';c.style.margin='0 auto 12px';c.style.display='block';
+      box.appendChild(c);
+      await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+    }
+  }catch(e){
+    const box=document.getElementById('pv');
+    if(box) box.innerHTML='<div class="doc-prev" style="text-align:left">'+docPreviewHtml(d)+'</div>';
+  }
 }
 async function downloadPdf(id){
   const d=S.docs[id];
