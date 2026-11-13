@@ -54,7 +54,9 @@ const projects = [
     cover: 8, feature: 8,
     photos: [['01-prep-living-room', 'Preparation: living room'], ['02-prep-bedroom-entry', 'Preparation: bedroom entry'], ['03-prep-bedroom', 'Preparation: bedroom'], ['04-prep-wide-living', 'Preparation: living area'], ['05-prep-living-water-view', 'Preparation: living area with water view'], ['06-prep-kitchen', 'Preparation: kitchen'], ['07-installed-living-room', 'Installed: living room'], ['08-installed-living-water-view', 'Installed: living area with water view'], ['09-installed-bedroom', 'Installed: bedroom'], ['10-installed-hallway', 'Installed: hallway'], ['11-installed-kitchen', 'Installed: kitchen']]
       .map(([f, t]) => ({ url: 'images/sanibel-vinyl-' + f + '.jpg', title: t })),
-    pairs: []
+    pairs: [
+      { before: 'images/sanibel-vinyl-01-prep-living-room.jpg', after: 'images/sanibel-vinyl-07-installed-living-room.jpg', label: 'Living room, before and after the flooring', view: 'side' }
+    ]
   },
   {
     id: 'sanibel-deck-railing',
@@ -66,7 +68,9 @@ const projects = [
     cover: 4, feature: 4,
     photos: [['01-before-stairs', 'Before: deck and stair railing'], ['02-before-railing', 'Before: damaged railing section'], ['03-after-railing', 'After: new railing section installed'], ['04-after-view', 'After: new railing seen from the deck'], ['05-after-exterior', 'After: the finished deck from outside']]
       .map(([f, t]) => ({ url: 'images/sanibel-deck-railing-' + f + '.jpg', title: t })),
-    pairs: []
+    pairs: [
+      { before: 'images/sanibel-deck-railing-02-before-railing.jpg', after: 'images/sanibel-deck-railing-03-after-railing.jpg', label: 'Damaged railing section, before and after', view: 'side' }
+    ]
   },
   {
     id: 'sanibel-impact-doors',
