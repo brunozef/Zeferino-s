@@ -141,6 +141,18 @@ const projects = [
     ]
   },
   {
+    id: 'north-forum-reserve',
+    title: 'Interior doors, casing and handrail',
+    city: 'Fort Myers', state: 'FL',
+    types: ['Doors & windows', 'Trim & molding', 'Stairs & railings'],
+    service: 'New construction finish carpentry',
+    text: 'Finish carpentry in a new construction home at North Forum Reserve in Fort Myers: prehung interior doors, bifold closet doors, door casing, the front entry door and a wall-mounted wood handrail on the stairs.',
+    cover: 3, feature: 3,
+    photos: [['01', 'Prehung interior door and bifold doors delivered to the room'], ['02', 'Hallway with casing on three door openings'], ['03', 'Hallway doors with casing, front door at the end'], ['04', 'Interior door and bifold closet doors with casing'], ['05', 'Bifold closet doors under a sloped ceiling'], ['06', 'Bifold closet door with casing beside a window'], ['07', 'Bedroom door and double bifold closet doors'], ['08', 'Bedroom with interior door and bifold closet'], ['09', 'Front entry door installed'], ['10', 'Wall-mounted wood handrail on the staircase']]
+      .map(([f, t]) => ({ url: 'images/north-forum-reserve/nfr-' + f + '.jpg', title: t })),
+    pairs: []
+  },
+  {
     id: 'tampa',
     title: 'Flex molding on arched openings',
     city: 'Tampa', state: 'FL',
