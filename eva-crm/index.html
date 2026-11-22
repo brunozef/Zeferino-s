@@ -297,7 +297,7 @@ const SB_URL='https://oxjcnimuhjgcthvodmcn.supabase.co', SB_KEY='sb_publishable_
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
 let USER=null;
 // Nomes de usuário (ID) que podem entrar no lugar do e-mail
-const USERNAMES={'eva':'evasexpertcleaningservicesllc@gmail.com','zeferinos':'zeferinosprecisionfinish@gmail.com'};
+const USERNAMES={"eva's":'evasexpertcleaningservicesllc@gmail.com','evas':'evasexpertcleaningservicesllc@gmail.com','eva':'evasexpertcleaningservicesllc@gmail.com','zeferinos':'zeferinosprecisionfinish@gmail.com'};
 function lastUser(){try{return localStorage.getItem('ecrm_user')||''}catch(e){return ''}}
 async function save(coll,id,data){
   if(!USER) return;
@@ -335,7 +335,7 @@ function showLogin(msg){
   <input type="password" name="password" placeholder="Senha" autocomplete="current-password" required>
   <div class="err">${esc(msg||'')}</div><button class="btn a">Entrar</button></form>`;
   el.querySelector('#lf').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const b=e.target.querySelector('button');b.disabled=true;b.textContent='Entrando…';
-    const login=f.get('email').trim().toLowerCase();
+    const login=f.get('email').trim().toLowerCase().replace(/[’‘`´]/g,"'");
     const email=login.includes('@')?login:USERNAMES[login];
     if(!email){showLogin('Usuário não encontrado.');return}
     const {data,error}=await sb.auth.signInWithPassword({email,password:f.get('password')});
