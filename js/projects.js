@@ -26,7 +26,8 @@ const PROJECT_TYPES = [
   'Architectural details',
   'Doors & windows',
   'Flooring',
-  'Stairs & railings'
+  'Stairs & railings',
+  'Cabinets'
 ];
 
 const H = 'images/sanibel-exterior-handrail/';
@@ -162,6 +163,19 @@ const projects = [
     cover: 0, feature: 0,
     photos: [['01-arch-column', 'Arched opening with column view'], ['02-arch-kitchen', 'Arched opening to the kitchen'], ['03-arch-closet', 'Arched opening in a hallway'], ['04-arch-room', 'Arched opening into a room'], ['05-closet-door', 'Louvered closet door with trim beside the arch'], ['06-arch-bathroom', 'Arched opening to the bathroom'], ['07-arch-dining', 'Arched opening to the dining area']]
       .map(([f, t]) => ({ url: 'images/tampa-flex-molding-' + f + '.jpg', title: t })),
+    pairs: []
+  },
+  {
+    id: 'punta-gorda-deep-creek-cabinets',
+    title: 'Kitchen and bathroom cabinet installation',
+    city: 'Punta Gorda', state: 'FL',
+    types: ['Cabinets'],
+    service: 'New construction cabinet installation',
+    text: 'White shaker cabinets installed in a new construction home in Deep Creek, Punta Gorda: kitchen base and wall cabinets with crown on top, a tall oven cabinet, and the bathroom vanities, set level and ready for countertops.',
+    cover: 2, feature: 2,
+    photos: [{ url: 'videos/punta-gorda-cabinets-poster.jpg', video: 'videos/punta-gorda-cabinets.mp4', title: 'Video: walkthrough of the installed kitchen and bathroom cabinets' }]
+      .concat([['01', 'Tall oven cabinet with upper cabinets and crown'], ['02', 'Kitchen corner with wall cabinets and crown molding'], ['03', 'Staggered-height wall cabinets with crown'], ['04', 'Wall cabinets and base cabinets ready for the countertop'], ['05', 'Bathroom vanity wall with base cabinets and a tall linen cabinet'], ['06', 'Vanity base cabinet beside the bathroom door']]
+      .map(([f, t]) => ({ url: 'images/punta-gorda-deep-creek-cabinets/pgdc-' + f + '.jpg', title: t }))),
     pairs: []
   }
 ];
