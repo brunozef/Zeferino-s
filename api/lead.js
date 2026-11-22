@@ -33,12 +33,13 @@ export default async function handler(req, res) {
   if (vp) {
     try {
       webpush.setVapidDetails('mailto:zeferinosprecisionfinish@gmail.com', VAPID_PUBLIC, vp);
-      const r = await fetch(`${SB}/rest/v1/push_subs?select=endpoint,sub`, { headers: h });
+      const app = lead.source === 'cleaning' ? 'eva' : 'zcrm';
+      const r = await fetch(`${SB}/rest/v1/push_subs?select=endpoint,sub&app=eq.${app}`, { headers: h });
       const subs = r.ok ? await r.json() : [];
       const payload = JSON.stringify({
-        title: '🔔 Novo lead: ' + (lead.name || 'cliente do site'),
+        title: lead.source === 'cleaning' ? '🧼 New cleaning lead: ' + (lead.name || 'website') : '🔔 Novo lead: ' + (lead.name || 'cliente do site'),
         body: [lead.service, lead.city].filter(Boolean).join(' – ') + (lead.phone ? '\n' + lead.phone : ''),
-        url: '/crm/#leads'
+        url: lead.source === 'cleaning' ? '/eva-crm/#leads' : '/crm/#leads'
       });
       await Promise.all(subs.map(async x => {
         try { await webpush.sendNotification(x.sub, payload, { TTL: 86400, urgency: 'high' }); sent++; }
@@ -53,7 +54,7 @@ export default async function handler(req, res) {
   // Alerta pelo Pushover com som próprio (opcional: PUSHOVER_TOKEN e PUSHOVER_USER na Vercel)
   let pushover = false;
   const pt = (process.env.PUSHOVER_TOKEN || '').trim(), pu = (process.env.PUSHOVER_USER || '').trim();
-  if (pt && pu) {
+  if (pt && pu && lead.source !== 'cleaning') {
     try {
       const r = await fetch('https://api.pushover.net/1/messages.json', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
