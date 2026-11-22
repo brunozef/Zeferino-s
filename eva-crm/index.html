@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -158,7 +158,7 @@ tr.click:hover td{background:#fafbfc}
   <aside class="side">
     <div class="brand"><img id="lw" alt="Eva's Expert Cleaning Services"><span>Cleaning · CRM</span></div>
     <nav class="nav" id="nav"></nav>
-    <div class="foot">Saved automatically<br><a href="#" style="color:#d94f8c" onclick="event.preventDefault();logout()">Sign out</a></div>
+    <div class="foot">Dados salvos automaticamente<br><a href="#" style="color:#d94f8c" onclick="event.preventDefault();logout()">Sair</a></div>
   </aside>
   <main class="main" id="main"></main>
 </div>
@@ -168,56 +168,56 @@ const LOGO_EVA="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAggAAADOCAMAAABsDA
 
 /* ============ CATÁLOGO PADRÃO (preços de MÃO DE OBRA, referência SWFL 2026) ============ */
 const CATS = {
-  std:'Standard Cleaning',
-  rec:'Recurring Cleaning',
-  deep:'Deep Cleaning',
-  move:'Move-in / Move-out',
-  str:'Airbnb & Vacation Rentals',
-  post:'Post-Construction',
-  com:'Commercial & Office',
-  addon:'Add-ons & Extras',
-  gen:'Hourly & Fees',
-  custom:'My services'
+  std:'Standard Cleaning · Limpeza padrão',
+  rec:'Recurring Cleaning · Limpeza recorrente',
+  deep:'Deep Cleaning · Limpeza pesada',
+  move:'Move-in / Move-out · Mudança',
+  str:'Airbnb & Vacation Rentals · Temporada',
+  post:'Post-Construction · Pós-obra',
+  com:'Commercial & Office · Comercial',
+  addon:'Add-ons & Extras · Adicionais',
+  gen:'Hourly & Fees · Hora e taxas',
+  custom:'Meus serviços'
 };
-const UNITS = {VISIT:'per visit',EA:'each (EA)',SF:'square foot (SF)',HR:'hour (HR)',LOAD:'load',LS:'flat rate (LS)',DAY:'day'};
+const UNITS = {VISIT:'por visita (VISIT)',EA:'unidade (EA)',SF:'pé² (SF)',HR:'hora (HR)',LOAD:'carga de roupa (LOAD)',LS:'valor fechado (LS)',DAY:'diária (DAY)'};
 // [id, cat, name, unit, low, high, default, EN description (vai no documento), PT (explicação)]
 const RAW = [
-['st-1','std','Standard Clean – 1 Bed / 1 Bath','VISIT',100,140,120,'Dust all reachable surfaces, wipe counters and appliance exteriors, clean sinks, toilets, tubs and showers, make beds, empty trash, vacuum and mop all floors.','Light upkeep for a home already in good shape.'],
-['st-2','std','Standard Clean – 2 Bed / 2 Bath','VISIT',120,170,145,'Dust all reachable surfaces, wipe counters and appliance exteriors, clean sinks, toilets, tubs and showers, make beds, empty trash, vacuum and mop all floors.','Most common condo / small home.'],
-['st-3','std','Standard Clean – 3 Bed / 2 Bath','VISIT',145,200,170,'Dust all reachable surfaces, wipe counters and appliance exteriors, clean sinks, toilets, tubs and showers, make beds, empty trash, vacuum and mop all floors.','Typical single-family home.'],
+['st-1','std','Standard Clean – 1 Bed / 1 Bath','VISIT',100,140,120,'Dust all reachable surfaces, wipe counters and appliance exteriors, clean sinks, toilets, tubs and showers, make beds, empty trash, vacuum and mop all floors.','Manutenção leve, casa já em bom estado.'],
+['st-2','std','Standard Clean – 2 Bed / 2 Bath','VISIT',120,170,145,'Dust all reachable surfaces, wipe counters and appliance exteriors, clean sinks, toilets, tubs and showers, make beds, empty trash, vacuum and mop all floors.','Condomínio / casa pequena (mais comum).'],
+['st-3','std','Standard Clean – 3 Bed / 2 Bath','VISIT',145,200,170,'Dust all reachable surfaces, wipe counters and appliance exteriors, clean sinks, toilets, tubs and showers, make beds, empty trash, vacuum and mop all floors.','Casa típica.'],
 ['st-4','std','Standard Clean – 4 Bed / 3 Bath','VISIT',180,260,215,'Dust all reachable surfaces, wipe counters and appliance exteriors, clean sinks, toilets, tubs and showers, make beds, empty trash, vacuum and mop all floors.',''],
-['st-5','std','Standard Clean – 5+ Bed / 4+ Bath','VISIT',230,350,280,'Dust all reachable surfaces, wipe counters and appliance exteriors, clean sinks, toilets, tubs and showers, make beds, empty trash, vacuum and mop all floors.','Large / luxury home.'],
-['st-sf','std','Standard Clean – per sq ft','SF',0.08,0.15,0.10,'Standard cleaning priced by the home\'s square footage.','Use for unusual layouts.'],
-['rc-w','rec','Recurring Clean – Weekly (per visit, 2–3 BR)','VISIT',110,150,125,'Weekly maintenance cleaning of kitchen, bathrooms, bedrooms and living areas; floors vacuumed and mopped.','Weekly clients usually get the best rate.'],
-['rc-b','rec','Recurring Clean – Biweekly (per visit, 2–3 BR)','VISIT',125,170,140,'Biweekly maintenance cleaning of kitchen, bathrooms, bedrooms and living areas; floors vacuumed and mopped.','Every 2 weeks.'],
-['rc-m','rec','Recurring Clean – Monthly (per visit, 2–3 BR)','VISIT',140,190,160,'Monthly maintenance cleaning of kitchen, bathrooms, bedrooms and living areas; floors vacuumed and mopped.','Once a month.'],
+['st-5','std','Standard Clean – 5+ Bed / 4+ Bath','VISIT',230,350,280,'Dust all reachable surfaces, wipe counters and appliance exteriors, clean sinks, toilets, tubs and showers, make beds, empty trash, vacuum and mop all floors.','Casa grande / alto padrão.'],
+['st-sf','std','Standard Clean – per sq ft','SF',0.08,0.15,0.10,'Standard cleaning priced by the home\'s square footage.','Use para plantas diferentes.'],
+['rc-w','rec','Recurring Clean – Weekly (per visit, 2–3 BR)','VISIT',110,150,125,'Weekly maintenance cleaning of kitchen, bathrooms, bedrooms and living areas; floors vacuumed and mopped.','Cliente semanal costuma ter o melhor preço.'],
+['rc-b','rec','Recurring Clean – Biweekly (per visit, 2–3 BR)','VISIT',125,170,140,'Biweekly maintenance cleaning of kitchen, bathrooms, bedrooms and living areas; floors vacuumed and mopped.','A cada 2 semanas.'],
+['rc-m','rec','Recurring Clean – Monthly (per visit, 2–3 BR)','VISIT',140,190,160,'Monthly maintenance cleaning of kitchen, bathrooms, bedrooms and living areas; floors vacuumed and mopped.','Uma vez por mês.'],
 ['rc-l','rec','Recurring Clean – Large Home 4+ BR (per visit)','VISIT',170,260,200,'Recurring maintenance cleaning for larger homes; all living areas, kitchen and bathrooms.',''],
-['dp-2','deep','Deep Clean – up to 2 Bed','VISIT',200,320,250,'Top-to-bottom cleaning: baseboards, door frames, light switches, vents, ceiling fans, inside microwave, cabinet fronts, detailed bathroom and kitchen scrubbing, plus all standard tasks.','First visit or homes not cleaned recently.'],
+['dp-2','deep','Deep Clean – up to 2 Bed','VISIT',200,320,250,'Top-to-bottom cleaning: baseboards, door frames, light switches, vents, ceiling fans, inside microwave, cabinet fronts, detailed bathroom and kitchen scrubbing, plus all standard tasks.','Primeira visita ou casa sem limpeza há tempo.'],
 ['dp-3','deep','Deep Clean – 3 Bed','VISIT',260,400,320,'Top-to-bottom cleaning: baseboards, door frames, light switches, vents, ceiling fans, inside microwave, cabinet fronts, detailed bathroom and kitchen scrubbing, plus all standard tasks.',''],
 ['dp-4','deep','Deep Clean – 4+ Bed','VISIT',340,550,420,'Top-to-bottom cleaning: baseboards, door frames, light switches, vents, ceiling fans, inside microwave, cabinet fronts, detailed bathroom and kitchen scrubbing, plus all standard tasks.',''],
 ['dp-sf','deep','Deep Clean – per sq ft','SF',0.15,0.25,0.20,'Deep cleaning priced by square footage.',''],
-['mv-2','move','Move-in / Move-out – up to 2 Bed','VISIT',220,350,275,'Empty-home cleaning: inside cabinets and drawers, inside oven and refrigerator, baseboards, windowsills, closets, bathrooms and all floors.','Empty home, ready for new residents.'],
+['mv-2','move','Move-in / Move-out – up to 2 Bed','VISIT',220,350,275,'Empty-home cleaning: inside cabinets and drawers, inside oven and refrigerator, baseboards, windowsills, closets, bathrooms and all floors.','Casa vazia, pronta para novos moradores.'],
 ['mv-3','move','Move-in / Move-out – 3 Bed','VISIT',280,450,350,'Empty-home cleaning: inside cabinets and drawers, inside oven and refrigerator, baseboards, windowsills, closets, bathrooms and all floors.',''],
 ['mv-4','move','Move-in / Move-out – 4+ Bed','VISIT',380,650,480,'Empty-home cleaning: inside cabinets and drawers, inside oven and refrigerator, baseboards, windowsills, closets, bathrooms and all floors.',''],
 ['mv-sf','move','Move-in / Move-out – per sq ft','SF',0.20,0.35,0.25,'Move-in / move-out cleaning priced by square footage.',''],
-['bnb-s','str','Airbnb Turnover – 1–2 Bed','VISIT',85,140,110,'Guest turnover: change linens and towels, make beds, clean kitchen and bathrooms, empty trash, vacuum and mop, reset and stage the unit, report damages.','Between guest stays.'],
+['bnb-s','str','Airbnb Turnover – 1–2 Bed','VISIT',85,140,110,'Guest turnover: change linens and towels, make beds, clean kitchen and bathrooms, empty trash, vacuum and mop, reset and stage the unit, report damages.','Entre um hóspede e outro.'],
 ['bnb-l','str','Airbnb Turnover – 3+ Bed','VISIT',130,220,165,'Guest turnover: change linens and towels, make beds, clean kitchen and bathrooms, empty trash, vacuum and mop, reset and stage the unit, report damages.',''],
-['bnb-ln','str','Linen & Towel Laundry','LOAD',15,30,20,'Wash, dry and fold linens and towels.','Per load.'],
+['bnb-ln','str','Linen & Towel Laundry','LOAD',15,30,20,'Wash, dry and fold linens and towels.','Por carga.'],
 ['bnb-rs','str','Restock Guest Supplies (labor)','EA',10,25,15,'Restock toiletries, paper goods and kitchen basics (supplies billed separately).',''],
-['bnb-ss','str','Seasonal Home Open / Close (Snowbird)','VISIT',250,450,320,'Prepare a seasonal home for arrival or departure: dust and clean all rooms, kitchen and bathrooms, linens, fridge clean-out, check windows and doors.','Season opening / closing.'],
-['pc-sf','post','Post-Construction Clean','SF',0.25,0.50,0.35,'Remove construction dust and debris, clean windows and tracks, wipe cabinets inside and out, clean fixtures, vacuum and mop all floors.','After remodel or new build.'],
+['bnb-ss','str','Seasonal Home Open / Close (Snowbird)','VISIT',250,450,320,'Prepare a seasonal home for arrival or departure: dust and clean all rooms, kitchen and bathrooms, linens, fridge clean-out, check windows and doors.','Abrir / fechar casa de temporada.'],
+['pc-sf','post','Post-Construction Clean','SF',0.25,0.50,0.35,'Remove construction dust and debris, clean windows and tracks, wipe cabinets inside and out, clean fixtures, vacuum and mop all floors.','Depois de reforma ou obra nova.'],
 ['pc-rg','post','Rough Clean (during construction)','LS',150,350,220,'Sweep, vacuum and remove debris during construction phases.',''],
-['cm-sf','com','Office / Commercial Clean','SF',0.08,0.20,0.12,'Clean offices, restrooms and break rooms, empty trash, dust surfaces, vacuum and mop floors.','Sales tax may apply to commercial cleaning.'],
+['cm-sf','com','Office / Commercial Clean','SF',0.08,0.20,0.12,'Clean offices, restrooms and break rooms, empty trash, dust surfaces, vacuum and mop floors.','Limpeza comercial pode ter imposto.'],
 ['cm-hr','com','Commercial Cleaning – per cleaner','HR',30,50,38,'Commercial cleaning billed hourly per cleaner.',''],
 ['ad-ov','addon','Inside Oven','EA',25,50,35,'Clean the inside of the oven, racks and door glass.',''],
 ['ad-fr','addon','Inside Refrigerator','EA',25,50,35,'Empty, clean and sanitize the inside of the refrigerator and freezer.',''],
 ['ad-cb','addon','Inside Kitchen Cabinets','EA',30,70,45,'Wipe the inside of kitchen cabinets and drawers (must be empty).',''],
-['ad-wn','addon','Interior Windows','EA',5,10,7,'Clean interior window glass, sills and tracks.','Per window.'],
-['ad-bl','addon','Blinds','EA',5,15,8,'Dust and wipe blinds.','Per set.'],
+['ad-wn','addon','Interior Windows','EA',5,10,7,'Clean interior window glass, sills and tracks.','Por janela.'],
+['ad-bl','addon','Blinds','EA',5,15,8,'Dust and wipe blinds.','Por persiana.'],
 ['ad-bb','addon','Baseboards – Whole House','LS',40,90,60,'Hand-wipe all baseboards.',''],
 ['ad-ld','addon','Laundry – Wash & Fold','LOAD',15,30,20,'Wash, dry and fold one load of laundry.',''],
 ['ad-ds','addon','Dishes','EA',15,30,20,'Wash and put away dishes.',''],
-['ad-bd','addon','Bed Linen Change','EA',8,15,10,'Change bed linens and make bed.','Per bed.'],
+['ad-bd','addon','Bed Linen Change','EA',8,15,10,'Change bed linens and make bed.','Por cama.'],
 ['ad-pt','addon','Pet Hair Surcharge','EA',15,40,25,'Extra time for heavy pet hair removal.',''],
 ['ad-gr','addon','Garage Sweep','EA',30,70,45,'Sweep and tidy the garage floor.',''],
 ['ad-lp','addon','Lanai / Patio Clean','EA',40,90,60,'Sweep and wipe lanai or patio furniture and floor.',''],
@@ -248,14 +248,14 @@ const DEFAULT_SETTINGS = {
 const S = {clients:{},jobs:{},docs:{},services:{},settings:JSON.parse(JSON.stringify(DEFAULT_SETTINGS)),
   view:'painel',docTab:'estimate',edit:null,docId:null,clientId:null,calMonth:null,calSel:null,catQ:'',catC:'',cliQ:'',loaded:false,offline:false};
 let db=null, dl=true;
-const KINDS = {estimate:{pt:'Quote',pre:'QT',en:'QUOTE'},contract:{pt:'Agreement',pre:'SA',en:'SERVICE AGREEMENT'},invoice:{pt:'Invoice',pre:'INV',en:'INVOICE'}};
+const KINDS = {estimate:{pt:'Orçamento',pre:'QT',en:'QUOTE'},contract:{pt:'Contrato',pre:'SA',en:'SERVICE AGREEMENT'},invoice:{pt:'Invoice',pre:'INV',en:'INVOICE'}};
 const STATUS = {
-  estimate:{draft:'Draft',sent:'Sent',approved:'Approved',declined:'Declined'},
-  contract:{draft:'Draft',sent:'Sent',signed:'Signed',done:'Completed',cancelled:'Cancelled'},
-  invoice:{draft:'Draft',sent:'Sent',partial:'Partially paid',paid:'Paid',overdue:'Overdue'}
+  estimate:{draft:'Rascunho',sent:'Enviado',approved:'Aprovado',declined:'Recusado'},
+  contract:{draft:'Rascunho',sent:'Enviado',signed:'Assinado',done:'Concluído',cancelled:'Cancelado'},
+  invoice:{draft:'Rascunho',sent:'Enviada',partial:'Pago parcial',paid:'Paga',overdue:'Vencida'}
 };
-const CTYPES = ['Homeowner','Airbnb / Vacation Rental','Property Manager','Realtor','Commercial / Office','Builder / Contractor','Other'];
-const JTYPES = {visit:'Walkthrough / Quote',service:'Cleaning',followup:'Follow-up',other:'Other'};
+const CTYPES = ['Homeowner (casa)','Airbnb / Temporada','Property Manager','Corretor (Realtor)','Comercial / Escritório','Construtora','Outro'];
+const JTYPES = {visit:'Visita / Orçamento',service:'Limpeza',followup:'Follow-up',other:'Outro'};
 
 /* ============ UTIL ============ */
 const $ = s=>document.querySelector(s);
@@ -265,7 +265,7 @@ const uid = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 const today = ()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const addDays=(ds,n)=>{const d=new Date(ds+'T12:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};
 const fmtD = ds=>{if(!ds)return '';const d=new Date(ds+'T12:00');return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
-const fmtDpt = ds=>{if(!ds)return '';const d=new Date(ds+'T12:00');return d.toLocaleDateString('en-US',{day:'2-digit',month:'short',year:'numeric'})};
+const fmtDpt = ds=>{if(!ds)return '';const d=new Date(ds+'T12:00');return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'})};
 const clone = o=>JSON.parse(JSON.stringify(o));
 const clientName = id=>S.clients[id]?.name||'—';
 const docCli = d=>S.clients[d.clientId]||d.walkin||{};
@@ -299,14 +299,14 @@ function lastUser(){try{return localStorage.getItem('ecrm_user')||''}catch(e){re
 async function save(coll,id,data){
   if(!USER) return;
   const {error}=await sb.from('eva_records').upsert({coll,id,data,updated_by:USER.id,updated_at:new Date().toISOString()},{onConflict:'coll,id'});
-  if(error) toast('Error saving: '+error.message);
+  if(error) toast('Erro ao salvar: '+error.message);
 }
 async function put(coll,obj){ obj=clone(obj); S[coll][obj.id]=obj; render(); await save(coll,obj.id,obj); }
 async function del(coll,id){
   delete S[coll][id]; render();
   if(!USER) return;
   const {error}=await sb.from('eva_records').delete().match({coll,id});
-  if(error) toast('Error deleting');
+  if(error) toast('Erro ao excluir');
 }
 async function putSettings(){ render(); await save('settings','main',clone(S.settings)); }
 async function nextNumber(kind){
@@ -328,16 +328,16 @@ function showLogin(msg){
   let el=document.getElementById('login');
   if(!el){el=document.createElement('div');el.id='login';el.className='login';document.body.appendChild(el)}
   el.innerHTML=`<form class="box" id="lf"><img class="ic" src="/eva-crm/ecrm-icon-512.png?v=1" alt="Eva's CRM"><div class="tg">Eva's Expert Cleaning Services</div>
-  <input type="text" name="email" placeholder="Username or email" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required value="${esc(lastUser())}">
-  <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
-  <div class="err">${esc(msg||'')}</div><button class="btn a">Sign in</button></form>`;
-  el.querySelector('#lf').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const b=e.target.querySelector('button');b.disabled=true;b.textContent='Signing in…';
+  <input type="text" name="email" placeholder="Usuário ou e-mail" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required value="${esc(lastUser())}">
+  <input type="password" name="password" placeholder="Senha" autocomplete="current-password" required>
+  <div class="err">${esc(msg||'')}</div><button class="btn a">Entrar</button></form>`;
+  el.querySelector('#lf').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const b=e.target.querySelector('button');b.disabled=true;b.textContent='Entrando…';
     const login=f.get('email').trim().toLowerCase();
     const email=login.includes('@')?login:USERNAMES[login];
-    if(!email){showLogin('User not found.');return}
+    if(!email){showLogin('Usuário não encontrado.');return}
     const {data,error}=await sb.auth.signInWithPassword({email,password:f.get('password')});
     if(!error){try{localStorage.setItem('ecrm_user',login)}catch(x){}}
-    if(error){showLogin(error.message==='Invalid login credentials'?'Wrong username or password.':error.message);return}
+    if(error){showLogin(error.message==='Invalid login credentials'?'Usuário ou senha incorretos.':error.message);return}
     el.remove();await startApp(data.user);};
 }
 async function logout(){await sb.auth.signOut();location.reload()}
@@ -362,7 +362,7 @@ const ICONS={
  servicos:'<path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>',
  config:'<path d="M19.4 13a7.8 7.8 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.3 7.3 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.3 7.3 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.8 7.8 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.3 7.3 0 0 0 1.7 1L11 21h4l.4-2.9a7.3 7.3 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 3.5-3.5 3.5 3.5 0 0 1-3.5 3.5z"/>'
 };
-const VIEWS={painel:'Home',leads:'Leads',clientes:'Clients',agenda:'Schedule',documentos:'Documents',avulso:'Quick Inv.',servicos:'Services',config:'Settings'};
+const VIEWS={painel:'Painel',leads:'Leads',clientes:'Clientes',agenda:'Agenda',documentos:'Documentos',avulso:'Avulso',servicos:'Serviços',config:'Config.'};
 function go(v){S.view=v;S.edit=null;S.docId=null;S.clientId=null;try{history.replaceState(null,'','#'+v)}catch(e){location.hash=v} render();window.scrollTo(0,0)}
 function renderNav(){
   const nl=newLeads().length;
@@ -374,8 +374,8 @@ function render(){
   renderNav();
   const m=$('#main');
   let h=`<div class="mtop"><img src="${LOGO_EVA}" alt="Eva's Expert Cleaning Services"></div>`;
-  if(S.offline) h+=`<div class="banner">⚠️ No connection to the internet or database. Changes made now may not be saved. <a href="#" onclick="event.preventDefault();loadAll()">Try again</a></div>`;
-  else if(!S.loaded && S.slow) h+=`<div class="banner">Still loading your data… check your connection.</div>`;
+  if(S.offline) h+=`<div class="banner">⚠️ Sem conexão com a internet ou com o banco de dados. O que você fizer agora pode não ser salvo. <a href="#" onclick="event.preventDefault();loadAll()">Tentar de novo</a></div>`;
+  else if(!S.loaded && S.slow) h+=`<div class="banner">Ainda carregando seus dados… verifique sua conexão.</div>`;
   if(S.view==='painel') h+=vPainel();
   else if(S.view==='leads') h+=vLeads();
   else if(S.view==='avulso') h+= S.edit? vEditor(): vAvulso();
@@ -407,43 +407,43 @@ function vPainel(){
   const t=today(), wk=addDays(t,7);
   const up=Object.values(S.jobs).filter(j=>j.date>=t&&j.date<=wk&&j.status!=='done').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
   const recent=docs.sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0,6);
-  return `<div class="row spread"><div><h1>Home</h1><p class="sub">${esc(S.settings.company)} · ${fmtDpt(t)}</p></div>
-  <div class="row"><button class="btn" onclick="editClient()">+ Client</button><button class="btn" onclick="editJob()">+ Schedule</button><button class="btn a" onclick="newDoc('estimate')">+ New Quote</button></div></div>
-  ${pushState()!=='on'&&pushState()!=='denied'?`<div class="card row spread" style="margin-bottom:14px"><div><b>Get notified when a new lead arrives</b><div class="small muted">Turn on notifications on this device.</div></div>${pushBtn()}</div>`:''}
-  ${newLeads().length?`<div class="card" style="margin-bottom:14px;border-color:var(--amber)"><div class="row spread"><b style="font-family:var(--serif);font-size:17px">🔔 ${newLeads().length} new lead(s) from the website</b><button class="btn sm ghost" onclick="go('leads')">View all →</button></div>${newLeads().sort((a,b)=>(b.leadDate||'').localeCompare(a.leadDate||'')).slice(0,3).map(leadCard).join('')}</div>`:''}
+  return `<div class="row spread"><div><h1>Painel</h1><p class="sub">${esc(S.settings.company)} · ${fmtDpt(t)}</p></div>
+  <div class="row"><button class="btn" onclick="editClient()">+ Cliente</button><button class="btn" onclick="editJob()">+ Agendar</button><button class="btn a" onclick="newDoc('estimate')">+ Novo Orçamento</button></div></div>
+  ${pushState()!=='on'&&pushState()!=='denied'?`<div class="card row spread" style="margin-bottom:14px"><div><b>Receba um aviso quando chegar lead</b><div class="small muted">Ative as notificações neste aparelho.</div></div>${pushBtn()}</div>`:''}
+  ${newLeads().length?`<div class="card" style="margin-bottom:14px;border-color:var(--amber)"><div class="row spread"><b style="font-family:var(--serif);font-size:17px">🔔 ${newLeads().length} lead(s) novo(s) do site</b><button class="btn sm ghost" onclick="go('leads')">Ver todos →</button></div>${newLeads().sort((a,b)=>(b.leadDate||'').localeCompare(a.leadDate||'')).slice(0,3).map(leadCard).join('')}</div>`:''}
   <div class="grid kpis">
-    <div class="card kpi"><div class="l">Clients</div><div class="v">${Object.keys(S.clients).length}</div><div class="s">total</div></div>
-    <div class="card kpi"><div class="l">Open quotes</div><div class="v">${money(sum(openEst))}</div><div class="s">${openEst.length} quote(s)</div></div>
-    <div class="card kpi"><div class="l">Active agreements</div><div class="v">${money(sum(activeCtr))}</div><div class="s">${activeCtr.length} agreement(s)</div></div>
-    <div class="card kpi"><div class="l">Receivable</div><div class="v">${money(recv)}</div><div class="s" style="color:${overdue.length?'var(--bad)':''}">${overdue.length} overdue</div></div>
+    <div class="card kpi"><div class="l">Clientes</div><div class="v">${Object.keys(S.clients).length}</div><div class="s">cadastrados</div></div>
+    <div class="card kpi"><div class="l">Orçamentos em aberto</div><div class="v">${money(sum(openEst))}</div><div class="s">${openEst.length} orçamento(s)</div></div>
+    <div class="card kpi"><div class="l">Contratos ativos</div><div class="v">${money(sum(activeCtr))}</div><div class="s">${activeCtr.length} contrato(s)</div></div>
+    <div class="card kpi"><div class="l">A receber</div><div class="v">${money(recv)}</div><div class="s" style="color:${overdue.length?'var(--bad)':''}">${overdue.length} vencida(s)</div></div>
   </div>
   <div class="grid two" style="margin-top:14px">
-    <div class="card"><div class="row spread" style="margin-bottom:8px"><b>Next 7 days</b><button class="btn sm ghost" onclick="go('agenda')">View schedule →</button></div>
-      ${up.length?`<table>${up.map(j=>`<tr class="click" onclick="editJob('${j.id}')"><td style="width:110px"><b>${fmtDpt(j.date)}</b><div class="small muted">${esc(j.time||'')}</div></td><td>${esc(j.title||JTYPES[j.type])}<div class="small muted">${esc(clientName(j.clientId))}${j.address?' · '+esc(j.address):''}</div></td><td><span class="tag ${j.type==='service'?'t-scheduled':'t-sent'}">${JTYPES[j.type]||''}</span></td></tr>`).join('')}</table>`:'<div class="empty">Nothing scheduled in the next 7 days.</div>'}
+    <div class="card"><div class="row spread" style="margin-bottom:8px"><b>Próximos 7 dias</b><button class="btn sm ghost" onclick="go('agenda')">Ver agenda →</button></div>
+      ${up.length?`<table>${up.map(j=>`<tr class="click" onclick="editJob('${j.id}')"><td style="width:110px"><b>${fmtDpt(j.date)}</b><div class="small muted">${esc(j.time||'')}</div></td><td>${esc(j.title||JTYPES[j.type])}<div class="small muted">${esc(clientName(j.clientId))}${j.address?' · '+esc(j.address):''}</div></td><td><span class="tag ${j.type==='service'?'t-scheduled':'t-sent'}">${JTYPES[j.type]||''}</span></td></tr>`).join('')}</table>`:'<div class="empty">Nada agendado nos próximos 7 dias.</div>'}
     </div>
-    <div class="card"><div class="row spread" style="margin-bottom:8px"><b>Recent documents</b><button class="btn sm ghost" onclick="go('documentos')">View all →</button></div>
-      ${recent.length?`<table>${recent.map(d=>`<tr class="click" onclick="openDoc('${d.id}')"><td><b>${esc(d.number)}</b><div class="small muted">${KINDS[d.kind].pt}</div></td><td>${esc(docCliName(d))}<div class="small muted">${esc(d.title||'')}</div></td><td class="num">${money(totals(d).total)}<div>${tag(d.kind,effStatus(d))}</div></td></tr>`).join('')}</table>`:'<div class="empty">No documents yet. Start with a quote.</div>'}
+    <div class="card"><div class="row spread" style="margin-bottom:8px"><b>Documentos recentes</b><button class="btn sm ghost" onclick="go('documentos')">Ver todos →</button></div>
+      ${recent.length?`<table>${recent.map(d=>`<tr class="click" onclick="openDoc('${d.id}')"><td><b>${esc(d.number)}</b><div class="small muted">${KINDS[d.kind].pt}</div></td><td>${esc(docCliName(d))}<div class="small muted">${esc(d.title||'')}</div></td><td class="num">${money(totals(d).total)}<div>${tag(d.kind,effStatus(d))}</div></td></tr>`).join('')}</table>`:'<div class="empty">Nenhum documento ainda. Comece com um orçamento.</div>'}
     </div>
   </div>`;
 }
 
 /* ---------- Leads ---------- */
-const LSTAT={new:'New',contacted:'Contacted',quoted:'Quote sent',won:'Won',lost:'Lost'};
+const LSTAT={new:'Novo',contacted:'Contatado',quoted:'Orçamento enviado',won:'Fechado',lost:'Perdido'};
 const LCLS={new:'t-overdue',contacted:'t-sent',quoted:'t-partial',won:'t-done',lost:'t-draft'};
 function newLeads(){return Object.values(S.clients).filter(c=>c.lead&&c.leadStatus==='new')}
 function leadCard(c){
   const tel=(c.phone||'').replace(/[^0-9+]/g,'');
-  return `<div class="lead"><div class="row spread"><div><label style="display:inline;margin:0;cursor:pointer"><input type="checkbox" style="width:auto;margin-right:6px;vertical-align:middle" ${S.leadSel.has(c.id)?'checked':''} onchange="toggleLeadSel('${c.id}',this.checked)"></label><b style="font-size:15px">${esc(c.name)}</b> <span class="tag ${LCLS[c.leadStatus]||''}">${LSTAT[c.leadStatus]||''}</span><div class="small muted">${c.leadDate?new Date(c.leadDate).toLocaleString('en-US',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):''} · ${esc(c.source||'')}</div></div>
+  return `<div class="lead"><div class="row spread"><div><label style="display:inline;margin:0;cursor:pointer"><input type="checkbox" style="width:auto;margin-right:6px;vertical-align:middle" ${S.leadSel.has(c.id)?'checked':''} onchange="toggleLeadSel('${c.id}',this.checked)"></label><b style="font-size:15px">${esc(c.name)}</b> <span class="tag ${LCLS[c.leadStatus]||''}">${LSTAT[c.leadStatus]||''}</span><div class="small muted">${c.leadDate?new Date(c.leadDate).toLocaleString('pt-BR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):''} · ${esc(c.source||'')}</div></div>
   <div class="small" style="text-align:right">${c.phone?`<a href="tel:${esc(tel)}">${esc(c.phone)}</a>`:''}<div>${esc(c.email||'')}</div></div></div>
   <div style="margin-top:6px">${c.service?`<span class="tag">${esc(c.service)}</span> `:''}${c.city?`<span class="small muted">📍 ${esc(c.city)}</span>`:''}</div>
   ${c.project?`<p class="small" style="white-space:pre-wrap;margin:6px 0 0">${esc(c.project)}</p>`:''}
   <div class="row" style="margin-top:10px;gap:6px">
-   ${c.leadStatus==='new'?`<button class="btn sm p" onclick="setLead('${c.id}','contacted')">Mark contacted</button>`:''}
-   <button class="btn sm" onclick="editJob(null,'${c.id}');setLead('${c.id}','contacted',true)">Schedule visit</button>
-   <button class="btn sm a" onclick="setLead('${c.id}','quoted',true);newDoc('estimate','${c.id}')">Create quote</button>
-   <button class="btn sm ghost" onclick="S.view='clientes';S.clientId='${c.id}';render()">View client</button>
+   ${c.leadStatus==='new'?`<button class="btn sm p" onclick="setLead('${c.id}','contacted')">Marcar contatado</button>`:''}
+   <button class="btn sm" onclick="editJob(null,'${c.id}');setLead('${c.id}','contacted',true)">Agendar visita</button>
+   <button class="btn sm a" onclick="setLead('${c.id}','quoted',true);newDoc('estimate','${c.id}')">Criar orçamento</button>
+   <button class="btn sm ghost" onclick="S.view='clientes';S.clientId='${c.id}';render()">Ver cliente</button>
    <select class="btn sm" style="width:auto" onchange="setLead('${c.id}',this.value)">${Object.entries(LSTAT).map(([k,v])=>`<option value="${k}" ${c.leadStatus===k?'selected':''}>${v}</option>`).join('')}</select>
-   <button class="btn sm ghost d" onclick="askDelLeads(['${c.id}'])">🗑 Delete</button>
+   <button class="btn sm ghost d" onclick="askDelLeads(['${c.id}'])">🗑 Apagar</button>
   </div></div>`;
 }
 function setLead(id,st,onlyIfNew){const c=S.clients[id];if(!c)return;if(onlyIfNew&&c.leadStatus!=='new')return;const x=clone(c);x.leadStatus=st;put('clients',x)}
@@ -452,11 +452,11 @@ function vLeads(){
   let list=Object.values(S.clients).filter(c=>c.lead);
   if(f==='open') list=list.filter(c=>['new','contacted','quoted'].includes(c.leadStatus));
   list.sort((a,b)=>(b.leadDate||'').localeCompare(a.leadDate||''));
-  return `<div class="row spread"><div><h1>Leads</h1><p class="sub">Cleaning requests from the website form (zeferinosusa.com/cleaning) arrive here instantly</p></div>
-  <div class="row">${pushBtn()}<span class="small muted">${esc(S.leadMsg||'')}</span><button class="btn a" ${S.importing?'disabled':''} onclick="importLeads(true)">${S.importing?'Checking…':'Refresh leads'}</button></div></div>
-  <div class="tabs">${[['open','Open'],['all','All']].map(([k,v])=>`<button class="${f===k?'on':''}" onclick="S.leadF='${k}';render()">${v}</button>`).join('')}</div>
-  ${list.length?`<div class="row" style="margin-bottom:6px"><button class="btn sm" onclick="${list.every(c=>S.leadSel.has(c.id))?'S.leadSel.clear()':`[${list.map(c=>`'${c.id}'`).join(',')}].forEach(i=>S.leadSel.add(i))`};render()">${list.every(c=>S.leadSel.has(c.id))?'Unselect all':'Select all'}</button>${S.leadSel.size?`<button class="btn sm d" onclick="askDelLeads([...S.leadSel])">🗑 Delete selected (${S.leadSel.size})</button><button class="btn sm ghost" onclick="S.leadSel.clear();render()">Clear selection</button>`:''}</div>`:''}
-  ${list.length?list.map(leadCard).join(''):'<div class="card empty">No leads yet. When someone fills out the cleaning form on the website, they show up here.</div>'}`;
+  return `<div class="row spread"><div><h1>Leads</h1><p class="sub">Pedidos do formulário de limpeza do site (zeferinosusa.com/cleaning) entram aqui na hora</p></div>
+  <div class="row">${pushBtn()}<span class="small muted">${esc(S.leadMsg||'')}</span><button class="btn a" ${S.importing?'disabled':''} onclick="importLeads(true)">${S.importing?'Verificando…':'Atualizar leads'}</button></div></div>
+  <div class="tabs">${[['open','Em aberto'],['all','Todos']].map(([k,v])=>`<button class="${f===k?'on':''}" onclick="S.leadF='${k}';render()">${v}</button>`).join('')}</div>
+  ${list.length?`<div class="row" style="margin-bottom:6px"><button class="btn sm" onclick="${list.every(c=>S.leadSel.has(c.id))?'S.leadSel.clear()':`[${list.map(c=>`'${c.id}'`).join(',')}].forEach(i=>S.leadSel.add(i))`};render()">${list.every(c=>S.leadSel.has(c.id))?'Desmarcar todos':'Selecionar todos'}</button>${S.leadSel.size?`<button class="btn sm d" onclick="askDelLeads([...S.leadSel])">🗑 Apagar selecionados (${S.leadSel.size})</button><button class="btn sm ghost" onclick="S.leadSel.clear();render()">Limpar seleção</button>`:''}</div>`:''}
+  ${list.length?list.map(leadCard).join(''):'<div class="card empty">Nenhum lead aqui ainda. Quando alguém preencher o formulário do site, ele aparece nesta tela.</div>'}`;
 }
 function parseForm(txt){
   const map={name:'name',nome:'name','full name':'name',phone:'phone',telefone:'phone',email:'email','e-mail':'email',city:'city',cidade:'city',address:'address','endereço':'address',service:'service','serviço':'service',servico:'service','project details':'project',details:'project',message:'project',mensagem:'project',project:'project'};
@@ -487,28 +487,28 @@ async function importLeads(manual){
     for(const l of data||[]){
       const id='lead-'+l.id;
       if(!S.clients[id]){
-        await put('clients',{id,name:l.name||'(no name)',phone:l.phone||'',email:l.email||'',city:l.city||'',state:'FL',address:'',service:l.service||'',project:l.details||'',source:'Website (cleaning form)',type:'Homeowner',lead:true,leadStatus:'new',leadDate:l.created_at,updatedAt:new Date().toISOString()});
+        await put('clients',{id,name:l.name||'(sem nome)',phone:l.phone||'',email:l.email||'',city:l.city||'',state:'FL',address:'',service:l.service||'',project:l.details||'',source:'Site (formulário de limpeza)',type:'Homeowner',lead:true,leadStatus:'new',leadDate:l.created_at,updatedAt:new Date().toISOString()});
         added++;
       }
       await sb.from('leads').update({status:'imported'}).eq('id',l.id);
     }
-    S.leadMsg='Checked at '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-    if(added){toast(added+' new lead(s) from the website!');try{navigator.vibrate&&navigator.vibrate(200)}catch(e){}}
-    else if(manual)toast('No new leads');
-  }catch(e){S.leadMsg='Couldn’t check for leads right now';if(manual)toast(S.leadMsg)}
+    S.leadMsg='Verificado às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    if(added){toast(added+' lead(s) novo(s) do site!');try{navigator.vibrate&&navigator.vibrate(200)}catch(e){}}
+    else if(manual)toast('Nenhum lead novo');
+  }catch(e){S.leadMsg='Não foi possível verificar os leads agora';if(manual)toast(S.leadMsg)}
   S.importing=false;render();
 }
 
 /* ---------- Invoice avulsa ---------- */
 function walkinFields(d){const w=d.walkin||{};const F=(k,l,t='text')=>`<div class="f"><label>${l}</label><input type="${t}" data-w="${k}" value="${esc(w[k]||'')}"></div>`;
-  return `<div class="banner small" style="margin:4px 0 12px">Quick invoice: this client is <b>not</b> added to your Clients list.</div><div class="fg">${F('name','Client name *')}${F('company','Company (optional)')}${F('phone','Phone','tel')}${F('email','E-mail','email')}${F('address','Address')}${F('city','City')}${F('state','State')}${F('zip','ZIP')}</div>`}
+  return `<div class="banner small" style="margin:4px 0 12px">Invoice avulsa: o cliente <b>não</b> entra no cadastro de clientes.</div><div class="fg">${F('name','Nome do cliente *')}${F('company','Empresa (opcional)')}${F('phone','Telefone','tel')}${F('email','E-mail','email')}${F('address','Endereço')}${F('city','Cidade')}${F('state','Estado')}${F('zip','ZIP')}</div>`}
 function newAvulso(){const st=S.settings;newDoc('invoice',null,{lines:[],taxRate:st.taxRate,depositPct:0,discount:0,avulso:true,walkin:{state:'FL'}});S.view='avulso';render()}
 function vAvulso(){
   const list=Object.values(S.docs).filter(d=>d.avulso).sort((a,b)=>(b.number||'').localeCompare(a.number||''));
   const open=list.filter(d=>d.status!=='paid'&&d.status!=='draft').reduce((s,d)=>s+totals(d).balance,0);
-  return `<div class="row spread"><div><h1>Quick Invoice</h1><p class="sub">For one-time clients, without adding them to Clients</p></div><button class="btn a" onclick="newAvulso()">+ New quick invoice</button></div>
-  <div class="grid kpis" style="margin-bottom:14px"><div class="card kpi"><div class="l">Quick invoices</div><div class="v">${list.length}</div></div><div class="card kpi"><div class="l">Receivable</div><div class="v">${money(open)}</div></div></div>
-  <div class="card">${list.length?docTable(list):'<div class="empty">No quick invoices yet. Tap “+ New quick invoice”.</div>'}</div>`;
+  return `<div class="row spread"><div><h1>Invoice avulsa</h1><p class="sub">Para clientes de um serviço só, sem precisar cadastrar</p></div><button class="btn a" onclick="newAvulso()">+ Nova invoice avulsa</button></div>
+  <div class="grid kpis" style="margin-bottom:14px"><div class="card kpi"><div class="l">Invoices avulsas</div><div class="v">${list.length}</div></div><div class="card kpi"><div class="l">A receber</div><div class="v">${money(open)}</div></div></div>
+  <div class="card">${list.length?docTable(list):'<div class="empty">Nenhuma invoice avulsa ainda. Toque em “+ Nova invoice avulsa”.</div>'}</div>`;
 }
 
 /* ---------- Apagar leads ---------- */
@@ -518,64 +518,64 @@ function askDelLeads(ids){
   ids=ids.filter(id=>S.clients[id]); if(!ids.length)return;
   const withDocs=ids.filter(id=>Object.values(S.docs).some(d=>d.clientId===id)).length;
   window._delIds=ids;
-  modal(`<h2>Delete ${ids.length} lead${ids.length>1?'s':''}?</h2><p class="muted">${ids.length===1?esc(S.clients[ids[0]].name)+' will be deleted.':'The selected leads will be deleted.'} This can’t be undone.</p>${withDocs?`<p class="small" style="color:var(--warn)">${withDocs} of them have quotes/agreements/invoices — those documents stay saved.</p>`:''}<div class="row" style="justify-content:flex-end"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn p" style="background:var(--bad);border-color:var(--bad)" onclick="doDelLeads()">Apagar</button></div>`);
+  modal(`<h2>Apagar ${ids.length} lead${ids.length>1?'s':''}?</h2><p class="muted">${ids.length===1?esc(S.clients[ids[0]].name)+' será apagado.':'Os leads selecionados serão apagados.'} Isso não pode ser desfeito.</p>${withDocs?`<p class="small" style="color:var(--warn)">${withDocs} deles tem orçamento/contrato/invoice — esses documentos continuam salvos.</p>`:''}<div class="row" style="justify-content:flex-end"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn p" style="background:var(--bad);border-color:var(--bad)" onclick="doDelLeads()">Apagar</button></div>`);
 }
-async function doDelLeads(){const ids=window._delIds||[];closeModal();for(const id of ids){S.leadSel.delete(id);await del('clients',id)}toast(ids.length+' lead(s) deleted')}
+async function doDelLeads(){const ids=window._delIds||[];closeModal();for(const id of ids){S.leadSel.delete(id);await del('clients',id)}toast(ids.length+' lead(s) apagado(s)')}
 
 /* ---------- Clientes ---------- */
 function vClientes(){
   const q=S.cliQ.toLowerCase();
   const list=Object.values(S.clients).filter(c=>!q||[c.name,c.company,c.phone,c.email,c.address,c.city].join(' ').toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
-  return `<div class="row spread"><div><h1>Clients</h1><p class="sub">Homeowners, Airbnb hosts, property managers and businesses</p></div><button class="btn a" onclick="editClient()">+ New client</button></div>
-  <div class="card"><input placeholder="Search by name, phone, email, city…" value="${esc(S.cliQ)}" oninput="S.cliQ=this.value;clearTimeout(window._cq);window._cq=setTimeout(()=>{render();const i=document.querySelector('.card input');i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)" style="margin-bottom:12px">
-  ${list.length?`<table><thead><tr><th>Name</th><th class="hide-m">Type</th><th>Contact</th><th class="hide-m">Address</th><th class="num hide-m">Billed</th></tr></thead><tbody>
-  ${list.map(c=>{const inv=Object.values(S.docs).filter(d=>d.clientId===c.id&&d.kind==='invoice');return `<tr class="click" onclick="S.clientId='${c.id}';render()"><td><b>${esc(c.name)}</b>${c.lead&&c.leadStatus==='new'?' <span class="tag t-overdue">New lead</span>':''}${c.company?`<div class="small muted">${esc(c.company)}</div>`:''}</td><td class="hide-m"><span class="tag">${esc(c.type||'')}</span></td><td>${esc(c.phone||'')}<div class="small muted">${esc(c.email||'')}</div></td><td class="hide-m">${esc([c.address,c.city].filter(Boolean).join(', '))}</td><td class="num hide-m">${money(inv.reduce((s,d)=>s+totals(d).total,0))}</td></tr>`}).join('')}
-  </tbody></table>`:`<div class="empty">${q?'No clients found.':'No clients yet.'}</div>`}</div>`;
+  return `<div class="row spread"><div><h1>Clientes</h1><p class="sub">Casas, Airbnb, property managers e empresas</p></div><button class="btn a" onclick="editClient()">+ Novo cliente</button></div>
+  <div class="card"><input placeholder="Buscar por nome, telefone, e-mail, cidade…" value="${esc(S.cliQ)}" oninput="S.cliQ=this.value;clearTimeout(window._cq);window._cq=setTimeout(()=>{render();const i=document.querySelector('.card input');i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)" style="margin-bottom:12px">
+  ${list.length?`<table><thead><tr><th>Nome</th><th class="hide-m">Tipo</th><th>Contato</th><th class="hide-m">Endereço</th><th class="num hide-m">Faturado</th></tr></thead><tbody>
+  ${list.map(c=>{const inv=Object.values(S.docs).filter(d=>d.clientId===c.id&&d.kind==='invoice');return `<tr class="click" onclick="S.clientId='${c.id}';render()"><td><b>${esc(c.name)}</b>${c.lead&&c.leadStatus==='new'?' <span class="tag t-overdue">Lead novo</span>':''}${c.company?`<div class="small muted">${esc(c.company)}</div>`:''}</td><td class="hide-m"><span class="tag">${esc(c.type||'')}</span></td><td>${esc(c.phone||'')}<div class="small muted">${esc(c.email||'')}</div></td><td class="hide-m">${esc([c.address,c.city].filter(Boolean).join(', '))}</td><td class="num hide-m">${money(inv.reduce((s,d)=>s+totals(d).total,0))}</td></tr>`}).join('')}
+  </tbody></table>`:`<div class="empty">${q?'Nenhum cliente encontrado.':'Nenhum cliente cadastrado ainda.'}</div>`}</div>`;
 }
 function vClient(){
   const c=S.clients[S.clientId]; if(!c){S.clientId=null;return vClientes()}
   const docs=Object.values(S.docs).filter(d=>d.clientId===c.id).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const jobs=Object.values(S.jobs).filter(j=>j.clientId===c.id).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const bal=docs.filter(d=>d.kind==='invoice'&&d.status!=='paid'&&d.status!=='draft').reduce((s,d)=>s+totals(d).balance,0);
-  return `<button class="btn sm ghost" onclick="S.clientId=null;render()">← Clients</button>
+  return `<button class="btn sm ghost" onclick="S.clientId=null;render()">← Clientes</button>
   <div class="row spread" style="margin:8px 0 16px"><div><h1>${esc(c.name)}</h1><p class="sub" style="margin:0">${esc(c.type||'')}${c.company?' · '+esc(c.company):''}</p></div>
-  <div class="row"><button class="btn" onclick="editClient('${c.id}')">Edit</button><button class="btn" onclick="editJob(null,'${c.id}')">+ Schedule</button><button class="btn a" onclick="newDoc('estimate','${c.id}')">+ Estimate</button></div></div>
+  <div class="row"><button class="btn" onclick="editClient('${c.id}')">Editar</button><button class="btn" onclick="editJob(null,'${c.id}')">+ Agendar</button><button class="btn a" onclick="newDoc('estimate','${c.id}')">+ Estimate</button></div></div>
   <div class="grid two">
-   <div class="card"><b>Contact</b>
+   <div class="card"><b>Contato</b>
     <table style="margin-top:8px">
-     <tr><td class="muted" style="width:110px">Phone</td><td>${esc(c.phone||'—')}</td></tr>
+     <tr><td class="muted" style="width:110px">Telefone</td><td>${esc(c.phone||'—')}</td></tr>
      <tr><td class="muted">E-mail</td><td>${esc(c.email||'—')}</td></tr>
-     <tr><td class="muted">Address</td><td>${esc([c.address,c.city,c.state,c.zip].filter(Boolean).join(', ')||'—')}</td></tr>
-     <tr><td class="muted">Source</td><td>${esc(c.source||'—')}</td></tr>
-     <tr><td class="muted">Balance due</td><td><b style="color:${bal>0?'var(--bad)':''}">${money(bal)}</b></td></tr>
+     <tr><td class="muted">Endereço</td><td>${esc([c.address,c.city,c.state,c.zip].filter(Boolean).join(', ')||'—')}</td></tr>
+     <tr><td class="muted">Origem</td><td>${esc(c.source||'—')}</td></tr>
+     <tr><td class="muted">Saldo devedor</td><td><b style="color:${bal>0?'var(--bad)':''}">${money(bal)}</b></td></tr>
     </table>
     ${c.notes?`<p class="small" style="white-space:pre-wrap;margin-top:10px">${esc(c.notes)}</p>`:''}
-    ${c.lead?`<div class="lead"><b>Website request</b> <span class="tag ${LCLS[c.leadStatus]||''}">${LSTAT[c.leadStatus]||''}</span><div class="small">${esc(c.service||'')}</div>${c.project?`<p class="small" style="white-space:pre-wrap;margin:4px 0 0">${esc(c.project)}</p>`:''}</div>`:''}
+    ${c.lead?`<div class="lead"><b>Pedido do site</b> <span class="tag ${LCLS[c.leadStatus]||''}">${LSTAT[c.leadStatus]||''}</span><div class="small">${esc(c.service||'')}</div>${c.project?`<p class="small" style="white-space:pre-wrap;margin:4px 0 0">${esc(c.project)}</p>`:''}</div>`:''}
    </div>
-   <div class="card"><b>Appointments</b>
-    ${jobs.length?`<table style="margin-top:8px">${jobs.map(j=>`<tr class="click" onclick="editJob('${j.id}')"><td style="width:110px">${fmtDpt(j.date)}<div class="small muted">${esc(j.time||'')}</div></td><td>${esc(j.title||JTYPES[j.type])}</td><td>${j.status==='done'?'<span class="tag t-done">Done</span>':'<span class="tag t-scheduled">Scheduled</span>'}</td></tr>`).join('')}</table>`:'<div class="empty">No appointments.</div>'}
+   <div class="card"><b>Agendamentos</b>
+    ${jobs.length?`<table style="margin-top:8px">${jobs.map(j=>`<tr class="click" onclick="editJob('${j.id}')"><td style="width:110px">${fmtDpt(j.date)}<div class="small muted">${esc(j.time||'')}</div></td><td>${esc(j.title||JTYPES[j.type])}</td><td>${j.status==='done'?'<span class="tag t-done">Feito</span>':'<span class="tag t-scheduled">Agendado</span>'}</td></tr>`).join('')}</table>`:'<div class="empty">Sem agendamentos.</div>'}
    </div>
   </div>
-  <div class="card" style="margin-top:14px"><b>Quotes, agreements & invoices</b>
-   ${docs.length?docTable(docs):'<div class="empty">No documents for this client.</div>'}
+  <div class="card" style="margin-top:14px"><b>Orçamentos, contratos e invoices</b>
+   ${docs.length?docTable(docs):'<div class="empty">Nenhum documento para este cliente.</div>'}
   </div>`;
 }
 function editClient(id){
   const c=id?clone(S.clients[id]):{id:uid(),type:'Homeowner',state:'FL',city:'Naples'};
-  modal(`<h2>${id?'Edit client':'New client'}</h2>
+  modal(`<h2>${id?'Editar cliente':'Novo cliente'}</h2>
   <form id="cf"><div class="fg">
-   <div class="f"><label>Name *</label><input name="name" required value="${esc(c.name||'')}"></div>
-   <div class="f"><label>Company (if business)</label><input name="company" value="${esc(c.company||'')}"></div>
-   <div class="f"><label>Type</label><select name="type">${CTYPES.map(t=>`<option ${c.type===t?'selected':''}>${t}</option>`).join('')}</select></div>
-   <div class="f"><label>Phone</label><input name="phone" type="tel" value="${esc(c.phone||'')}"></div>
+   <div class="f"><label>Nome *</label><input name="name" required value="${esc(c.name||'')}"></div>
+   <div class="f"><label>Empresa (se for comercial)</label><input name="company" value="${esc(c.company||'')}"></div>
+   <div class="f"><label>Tipo</label><select name="type">${CTYPES.map(t=>`<option ${c.type===t?'selected':''}>${t}</option>`).join('')}</select></div>
+   <div class="f"><label>Telefone</label><input name="phone" type="tel" value="${esc(c.phone||'')}"></div>
    <div class="f"><label>E-mail</label><input name="email" type="email" value="${esc(c.email||'')}"></div>
-   <div class="f"><label>Lead source</label><input name="source" placeholder="Google, Facebook, Nextdoor, referral…" value="${esc(c.source||'')}"></div>
+   <div class="f"><label>Origem do lead</label><input name="source" placeholder="Nextdoor, Meta Ads, indicação…" value="${esc(c.source||'')}"></div>
   </div>
-  <div class="f"><label>Address</label><input name="address" value="${esc(c.address||'')}"></div>
-  <div class="fg"><div class="f"><label>City</label><input name="city" value="${esc(c.city||'')}"></div><div class="f"><label>State</label><input name="state" value="${esc(c.state||'')}"></div><div class="f"><label>ZIP</label><input name="zip" value="${esc(c.zip||'')}"></div></div>
-  <div class="f"><label>Notes</label><textarea name="notes">${esc(c.notes||'')}</textarea></div>
-  <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="confirmDel('clients','${id}','this client')">Delete</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn p">Save</button></div></div></form>`);
-  $('#cf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);for(const[k,v]of f)c[k]=v.trim();c.updatedAt=new Date().toISOString();put('clients',c);closeModal();toast('Client saved')};
+  <div class="f"><label>Endereço</label><input name="address" value="${esc(c.address||'')}"></div>
+  <div class="fg"><div class="f"><label>Cidade</label><input name="city" value="${esc(c.city||'')}"></div><div class="f"><label>Estado</label><input name="state" value="${esc(c.state||'')}"></div><div class="f"><label>ZIP</label><input name="zip" value="${esc(c.zip||'')}"></div></div>
+  <div class="f"><label>Observações</label><textarea name="notes">${esc(c.notes||'')}</textarea></div>
+  <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="confirmDel('clients','${id}','este cliente')">Excluir</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Salvar</button></div></div></form>`);
+  $('#cf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);for(const[k,v]of f)c[k]=v.trim();c.updatedAt=new Date().toISOString();put('clients',c);closeModal();toast('Cliente salvo')};
 }
 
 /* ---------- Agenda ---------- */
@@ -591,30 +591,30 @@ function vAgenda(){
     cells+=`<div class="d ${d.getMonth()!==mo-1?'o':''} ${ds===t?'t':''} ${ds===S.calSel?'sel':''}" onclick="S.calSel='${ds}';render()"><b>${d.getDate()}</b>${evs.slice(0,3).map(j=>`<span class="ev ${j.status==='done'?'done':j.type==='service'?'svc':''}">${esc(j.time||'')} ${esc(clientName(j.clientId)!=='—'?clientName(j.clientId):j.title||'')}</span>`).join('')}${evs.length>3?`<span class="small muted">+${evs.length-3}</span>`:''}</div>`;
   }
   const dayJobs=jobs.filter(j=>j.date===S.calSel).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
-  const mName=first.toLocaleDateString('en-US',{month:'long',year:'numeric'});
-  return `<div class="row spread"><div><h1>Schedule</h1><p class="sub">Cleanings, walkthroughs and follow-ups</p></div><button class="btn a" onclick="editJob(null,null,S.calSel)">+ Schedule</button></div>
+  const mName=first.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  return `<div class="row spread"><div><h1>Agenda</h1><p class="sub">Limpezas, visitas de orçamento e follow-ups</p></div><button class="btn a" onclick="editJob(null,null,S.calSel)">+ Agendar</button></div>
   <div class="grid two" style="grid-template-columns:2fr 1fr">
   <div class="card"><div class="row spread" style="margin-bottom:10px"><button class="btn sm" onclick="shiftMonth(-1)">‹</button><b style="text-transform:capitalize">${mName}</b><button class="btn sm" onclick="shiftMonth(1)">›</button></div>
-   <div class="cal">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="h">${x}</div>`).join('')}${cells}</div></div>
+   <div class="cal">${['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].map(x=>`<div class="h">${x}</div>`).join('')}${cells}</div></div>
   <div class="card"><b>${fmtDpt(S.calSel)}</b>
-   ${dayJobs.length?dayJobs.map(j=>`<div class="card" style="margin-top:10px;padding:12px;cursor:pointer" onclick="editJob('${j.id}')"><div class="row spread"><b>${esc(j.time||'All day')}</b><span class="tag ${j.status==='done'?'t-done':j.type==='service'?'t-scheduled':'t-sent'}">${j.status==='done'?'Done':JTYPES[j.type]}</span></div><div style="margin-top:4px">${esc(j.title||'')}</div><div class="small muted">${esc(clientName(j.clientId))}${j.address?' · '+esc(j.address):''}</div></div>`).join(''):'<div class="empty">Nothing on this day.</div>'}
-   <button class="btn" style="margin-top:12px;width:100%" onclick="editJob(null,null,S.calSel)">+ Schedule on this day</button>
+   ${dayJobs.length?dayJobs.map(j=>`<div class="card" style="margin-top:10px;padding:12px;cursor:pointer" onclick="editJob('${j.id}')"><div class="row spread"><b>${esc(j.time||'Dia todo')}</b><span class="tag ${j.status==='done'?'t-done':j.type==='service'?'t-scheduled':'t-sent'}">${j.status==='done'?'Feito':JTYPES[j.type]}</span></div><div style="margin-top:4px">${esc(j.title||'')}</div><div class="small muted">${esc(clientName(j.clientId))}${j.address?' · '+esc(j.address):''}</div></div>`).join(''):'<div class="empty">Nada neste dia.</div>'}
+   <button class="btn" style="margin-top:12px;width:100%" onclick="editJob(null,null,S.calSel)">+ Agendar neste dia</button>
   </div></div>`;
 }
 function shiftMonth(n){const [y,m]=S.calMonth.split('-').map(Number);const d=new Date(y,m-1+n,1);S.calMonth=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');render()}
-function clientOptions(sel){return `<option value="">— select —</option>`+Object.values(S.clients).sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(c=>`<option value="${c.id}" ${c.id===sel?'selected':''}>${esc(c.name)}${c.company?' ('+esc(c.company)+')':''}</option>`).join('')}
+function clientOptions(sel){return `<option value="">— selecione —</option>`+Object.values(S.clients).sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(c=>`<option value="${c.id}" ${c.id===sel?'selected':''}>${esc(c.name)}${c.company?' ('+esc(c.company)+')':''}</option>`).join('')}
 function editJob(id,clientId,date){
   const j=id?clone(S.jobs[id]):{id:uid(),type:'service',date:date||today(),time:'09:00',clientId:clientId||'',status:'scheduled'};
   if(!id&&j.clientId){const c=S.clients[j.clientId];if(c)j.address=[c.address,c.city].filter(Boolean).join(', ')}
-  modal(`<h2>${id?'Edit appointment':'New appointment'}</h2><form id="jf">
-  <div class="fg"><div class="f"><label>Client</label><select name="clientId" onchange="const c=S.clients[this.value];if(c&&!this.form.address.value)this.form.address.value=[c.address,c.city].filter(Boolean).join(', ')">${clientOptions(j.clientId)}</select></div>
-  <div class="f"><label>Type</label><select name="type">${Object.entries(JTYPES).map(([k,v])=>`<option value="${k}" ${j.type===k?'selected':''}>${v}</option>`).join('')}</select></div></div>
-  <div class="f"><label>Title</label><input name="title" placeholder="e.g. Biweekly clean – 3 bed / 2 bath" value="${esc(j.title||'')}"></div>
-  <div class="fg"><div class="f"><label>Date</label><input type="date" name="date" required value="${esc(j.date)}"></div><div class="f"><label>Time</label><input type="time" name="time" value="${esc(j.time||'')}"></div><div class="f"><label>Repeat</label><select name="repeat">${[['','Does not repeat'],['7','Weekly'],['14','Every 2 weeks'],['28','Every 4 weeks'],['m','Monthly']].map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select></div><div class="f"><label>Number of visits</label><input type="number" name="times" min="2" max="52" value="12"></div></div>
-  <div class="f"><label>Service address</label><input name="address" value="${esc(j.address||'')}"></div>
-  <div class="f"><label>Notes</label><textarea name="notes">${esc(j.notes||'')}</textarea></div>
-  <div class="f"><label><input type="checkbox" name="done" style="width:auto" ${j.status==='done'?'checked':''}> Completed</label></div>
-  <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="confirmDel('jobs','${id}','this appointment')">Delete</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn p">Save</button></div></div></form>`);
+  modal(`<h2>${id?'Editar agendamento':'Novo agendamento'}</h2><form id="jf">
+  <div class="fg"><div class="f"><label>Cliente</label><select name="clientId" onchange="const c=S.clients[this.value];if(c&&!this.form.address.value)this.form.address.value=[c.address,c.city].filter(Boolean).join(', ')">${clientOptions(j.clientId)}</select></div>
+  <div class="f"><label>Tipo</label><select name="type">${Object.entries(JTYPES).map(([k,v])=>`<option value="${k}" ${j.type===k?'selected':''}>${v}</option>`).join('')}</select></div></div>
+  <div class="f"><label>Título</label><input name="title" placeholder="Ex.: Limpeza quinzenal – 3 quartos / 2 banheiros" value="${esc(j.title||'')}"></div>
+  <div class="fg"><div class="f"><label>Data</label><input type="date" name="date" required value="${esc(j.date)}"></div><div class="f"><label>Hora</label><input type="time" name="time" value="${esc(j.time||'')}"></div><div class="f"><label>Repetir</label><select name="repeat">${[['','Não repete'],['7','Toda semana'],['14','A cada 2 semanas'],['28','A cada 4 semanas'],['m','Todo mês']].map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select></div><div class="f"><label>Quantas visitas</label><input type="number" name="times" min="2" max="52" value="12"></div></div>
+  <div class="f"><label>Endereço da limpeza</label><input name="address" value="${esc(j.address||'')}"></div>
+  <div class="f"><label>Observações</label><textarea name="notes">${esc(j.notes||'')}</textarea></div>
+  <div class="f"><label><input type="checkbox" name="done" style="width:auto" ${j.status==='done'?'checked':''}> Concluído</label></div>
+  <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="confirmDel('jobs','${id}','este agendamento')">Excluir</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Salvar</button></div></div></form>`);
   $('#jf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);
     for(const k of ['clientId','type','title','date','time','address','notes']) j[k]=(f.get(k)||'').trim();
     j.status=f.get('done')?'done':'scheduled';
@@ -626,7 +626,7 @@ function editJob(id,clientId,date){
         if(rep==='m'){const x=new Date(j.date+'T12:00');x.setMonth(x.getMonth()+k);d=x.toISOString().slice(0,10)} else d=addDays(j.date,(+rep)*k);
         extra.push({...j,id:g+'-'+k,date:d,status:'scheduled'})}
     }
-    put('jobs',j); extra.forEach(x=>put('jobs',x)); closeModal(); toast(extra.length?(extra.length+1)+' visits scheduled':'Appointment saved')};
+    put('jobs',j); extra.forEach(x=>put('jobs',x)); closeModal(); toast(extra.length?(extra.length+1)+' limpezas agendadas':'Agendamento salvo')};
 }
 
 /* ---------- Serviços ---------- */
@@ -635,53 +635,53 @@ function vServicos(){
   const all=services().filter(s=>(!S.catC||s.c===S.catC)&&(!q||[s.n,s.d,s.pt].join(' ').toLowerCase().includes(q)));
   const by={}; all.forEach(s=>{(by[s.c]=by[s.c]||[]).push(s)});
   const hidden=CATALOG.filter(s=>S.services[s.id]?.hidden);
-  return `<div class="row spread"><div><h1>Services & Prices</h1><p class="sub">Catalog used in quotes. The description appears on the client’s document.</p></div><button class="btn a" onclick="editSvc()">+ New service</button></div>
-  <div class="banner">Default prices are <b>reference prices per visit</b> for the Naples / Southwest Florida area, based on 2026 cost guides. Adjust “Your price” to what you actually charge — it is saved and used in quotes.</div>
+  return `<div class="row spread"><div><h1>Serviços e preços</h1><p class="sub">Catálogo usado nos orçamentos. A descrição em inglês vai no documento do cliente.</p></div><button class="btn a" onclick="editSvc()">+ Novo serviço</button></div>
+  <div class="banner">Os preços padrão são <b>referência por visita</b> para a região de Naples / Sudoeste da Flórida, baseados em guias de preço de 2026. Ajuste o “Seu preço” para o que vocês cobram — ele fica salvo e é o valor que entra no orçamento.</div>
   <div class="card">
-  <div class="row" style="margin-bottom:12px"><input style="flex:2;min-width:200px" placeholder="Search services…" value="${esc(S.catQ)}" oninput="S.catQ=this.value;clearTimeout(window._sq);window._sq=setTimeout(()=>{render();const i=document.getElementById('sq');i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)" id="sq">
-  <select style="flex:1;min-width:180px" onchange="S.catC=this.value;render()"><option value="">All categories</option>${Object.entries(CATS).map(([k,v])=>`<option value="${k}" ${S.catC===k?'selected':''}>${v}</option>`).join('')}</select></div>
-  <div style="overflow-x:auto"><table><thead><tr><th>Service</th><th class="hide-m">Description / scope (on the quote)</th><th>Unit</th><th class="num hide-m">SWFL range</th><th class="num">Your price</th><th></th></tr></thead><tbody>
-  ${Object.keys(CATS).filter(k=>by[k]).map(k=>`<tr class="cat-h"><td colspan="6">${CATS[k]} <span class="muted small">(${by[k].length})</span></td></tr>`+by[k].map(s=>`<tr><td><b>${esc(s.n)}</b><div class="small muted">${esc(s.pt||'')}</div></td><td class="hide-m small">${esc(s.d)}</td><td>${esc(s.u)}</td><td class="num hide-m small muted">${s.lo!=null&&s.hi!=null?money(s.lo)+' – '+money(s.hi):'—'}</td><td class="num"><input class="price-in" type="number" step="0.01" value="${s.p}" onchange="setPrice('${s.id}',this.value)"></td><td><button class="btn sm ghost" onclick="editSvc('${s.id}')">Edit</button></td></tr>`).join('')).join('')}
+  <div class="row" style="margin-bottom:12px"><input style="flex:2;min-width:200px" placeholder="Buscar serviço…" value="${esc(S.catQ)}" oninput="S.catQ=this.value;clearTimeout(window._sq);window._sq=setTimeout(()=>{render();const i=document.getElementById('sq');i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)" id="sq">
+  <select style="flex:1;min-width:180px" onchange="S.catC=this.value;render()"><option value="">Todas as categorias</option>${Object.entries(CATS).map(([k,v])=>`<option value="${k}" ${S.catC===k?'selected':''}>${v}</option>`).join('')}</select></div>
+  <div style="overflow-x:auto"><table><thead><tr><th>Serviço</th><th class="hide-m">Descrição / escopo (vai no orçamento)</th><th>Unid.</th><th class="num hide-m">Faixa SWFL</th><th class="num">Seu preço</th><th></th></tr></thead><tbody>
+  ${Object.keys(CATS).filter(k=>by[k]).map(k=>`<tr class="cat-h"><td colspan="6">${CATS[k]} <span class="muted small">(${by[k].length})</span></td></tr>`+by[k].map(s=>`<tr><td><b>${esc(s.n)}</b><div class="small muted">${esc(s.pt||'')}</div></td><td class="hide-m small">${esc(s.d)}</td><td>${esc(s.u)}</td><td class="num hide-m small muted">${s.lo!=null&&s.hi!=null?money(s.lo)+' – '+money(s.hi):'—'}</td><td class="num"><input class="price-in" type="number" step="0.01" value="${s.p}" onchange="setPrice('${s.id}',this.value)"></td><td><button class="btn sm ghost" onclick="editSvc('${s.id}')">Editar</button></td></tr>`).join('')).join('')}
   </tbody></table></div>
-  ${!all.length?'<div class="empty">No services found.</div>':''}
-  ${hidden.length?`<p class="small muted" style="margin-top:14px">Hidden services: ${hidden.map(s=>`<a href="#servicos" onclick="event.preventDefault();unhide('${s.id}')">${esc(s.n)}</a>`).join(' · ')}</p>`:''}
+  ${!all.length?'<div class="empty">Nenhum serviço encontrado.</div>':''}
+  ${hidden.length?`<p class="small muted" style="margin-top:14px">Serviços ocultos: ${hidden.map(s=>`<a href="#servicos" onclick="event.preventDefault();unhide('${s.id}')">${esc(s.n)}</a>`).join(' · ')}</p>`:''}
   </div>`;
 }
-function setPrice(id,v){const base=CATALOG.find(s=>s.id===id);const o=clone(S.services[id]||{id});o.p=+v||0;if(base)o.id=id;put('services',o);toast('Price updated')}
+function setPrice(id,v){const base=CATALOG.find(s=>s.id===id);const o=clone(S.services[id]||{id});o.p=+v||0;if(base)o.id=id;put('services',o);toast('Preço atualizado')}
 function unhide(id){const o=clone(S.services[id]);delete o.hidden;put('services',o)}
 function editSvc(id){
   const base=id?CATALOG.find(s=>s.id===id):null;
   const s=id?clone(svc(id)||S.services[id]):{id:'cu-'+uid(),custom:true,c:'custom',u:'EA',p:0};
   delete s.base;
-  modal(`<h2>${id?'Edit service':'New service'}</h2><form id="sf">
-  <div class="f"><label>Name (appears on the document)</label><input name="n" required value="${esc(s.n||'')}"></div>
-  <div class="f"><label>Internal note (only you see it)</label><input name="pt" value="${esc(s.pt||'')}"></div>
-  <div class="f"><label>Description / scope (appears on the quote)</label><textarea name="d">${esc(s.d||'')}</textarea></div>
-  <div class="fg"><div class="f"><label>Category</label><select name="c" ${base?'disabled':''}>${Object.entries(CATS).map(([k,v])=>`<option value="${k}" ${s.c===k?'selected':''}>${v}</option>`).join('')}</select></div>
-  <div class="f"><label>Unit</label><select name="u">${Object.entries(UNITS).map(([k,v])=>`<option value="${k}" ${s.u===k?'selected':''}>${v}</option>`).join('')}</select></div>
-  <div class="f"><label>Your price</label><input type="number" step="0.01" name="p" value="${s.p}"></div></div>
-  ${base?`<p class="small muted">SWFL reference: ${money(base.lo)} – ${money(base.hi)} por ${base.u}. <a href="#servicos" onclick="event.preventDefault();resetSvc('${id}')">Restore default</a></p>`:''}
-  <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="hideSvc('${id}')">${base?'Hide':'Delete'}</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn p">Save</button></div></div></form>`);
+  modal(`<h2>${id?'Editar serviço':'Novo serviço'}</h2><form id="sf">
+  <div class="f"><label>Nome (inglês – aparece no documento)</label><input name="n" required value="${esc(s.n||'')}"></div>
+  <div class="f"><label>Observação interna (só vocês veem)</label><input name="pt" value="${esc(s.pt||'')}"></div>
+  <div class="f"><label>Descrição / escopo (inglês – aparece no orçamento)</label><textarea name="d">${esc(s.d||'')}</textarea></div>
+  <div class="fg"><div class="f"><label>Categoria</label><select name="c" ${base?'disabled':''}>${Object.entries(CATS).map(([k,v])=>`<option value="${k}" ${s.c===k?'selected':''}>${v}</option>`).join('')}</select></div>
+  <div class="f"><label>Unidade</label><select name="u">${Object.entries(UNITS).map(([k,v])=>`<option value="${k}" ${s.u===k?'selected':''}>${v}</option>`).join('')}</select></div>
+  <div class="f"><label>Seu preço (labor)</label><input type="number" step="0.01" name="p" value="${s.p}"></div></div>
+  ${base?`<p class="small muted">Referência SWFL: ${money(base.lo)} – ${money(base.hi)} por ${base.u}. <a href="#servicos" onclick="event.preventDefault();resetSvc('${id}')">Restaurar padrão</a></p>`:''}
+  <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="hideSvc('${id}')">${base?'Ocultar':'Excluir'}</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Salvar</button></div></div></form>`);
   $('#sf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);
     const o=base?{id,...(S.services[id]||{})}:{...s};
     for(const k of ['n','pt','d','u']) o[k]=(f.get(k)||'').trim(); o.p=+f.get('p')||0;
     if(!base){o.c=f.get('c');o.custom=true}
-    put('services',o);closeModal();toast('Service saved')};
+    put('services',o);closeModal();toast('Serviço salvo')};
 }
 function hideSvc(id){const base=CATALOG.find(s=>s.id===id);if(base){put('services',{...(S.services[id]||{}),id,hidden:true})}else del('services',id);closeModal()}
-function resetSvc(id){del('services',id);closeModal();toast('Default restored')}
+function resetSvc(id){del('services',id);closeModal();toast('Padrão restaurado')}
 
 /* ---------- Documentos ---------- */
 function docTable(list){
-  return `<div style="overflow-x:auto"><table><thead><tr><th>Number</th><th>Client / job</th><th class="hide-m">Date</th><th class="num">Total</th><th>Status</th></tr></thead><tbody>
-  ${list.map(d=>{const t=totals(d);return `<tr class="click" onclick="openDoc('${d.id}')"><td><b>${esc(d.number)}</b><div class="small muted">${KINDS[d.kind].pt}${d.avulso?' · quick':''}</div></td><td>${esc(docCliName(d))}<div class="small muted">${esc(d.title||'')}</div></td><td class="hide-m">${fmtDpt(d.date)}</td><td class="num">${money(t.total)}${d.kind==='invoice'&&t.paid>0&&t.balance>0.005?`<div class="small muted">saldo ${money(t.balance)}</div>`:''}</td><td>${tag(d.kind,effStatus(d))}</td></tr>`}).join('')}</tbody></table></div>`;
+  return `<div style="overflow-x:auto"><table><thead><tr><th>Número</th><th>Cliente / projeto</th><th class="hide-m">Data</th><th class="num">Total</th><th>Status</th></tr></thead><tbody>
+  ${list.map(d=>{const t=totals(d);return `<tr class="click" onclick="openDoc('${d.id}')"><td><b>${esc(d.number)}</b><div class="small muted">${KINDS[d.kind].pt}${d.avulso?' · avulsa':''}</div></td><td>${esc(docCliName(d))}<div class="small muted">${esc(d.title||'')}</div></td><td class="hide-m">${fmtDpt(d.date)}</td><td class="num">${money(t.total)}${d.kind==='invoice'&&t.paid>0&&t.balance>0.005?`<div class="small muted">saldo ${money(t.balance)}</div>`:''}</td><td>${tag(d.kind,effStatus(d))}</td></tr>`}).join('')}</tbody></table></div>`;
 }
 function vDocs(){
   const k=S.docTab;
   const list=Object.values(S.docs).filter(d=>d.kind===k).sort((a,b)=>(b.number||'').localeCompare(a.number||''));
-  return `<div class="row spread"><div><h1>Documents</h1><p class="sub">Quote → Service Agreement → Invoice</p></div><button class="btn a" onclick="newDoc('${k}')">+ New ${KINDS[k].pt}</button></div>
+  return `<div class="row spread"><div><h1>Documentos</h1><p class="sub">Orçamento (Quote) → Contrato (Service Agreement) → Invoice</p></div><button class="btn a" onclick="newDoc('${k}')">+ Novo ${KINDS[k].pt}</button></div>
   <div class="tabs">${Object.entries(KINDS).map(([kk,v])=>`<button class="${k===kk?'on':''}" onclick="S.docTab='${kk}';render()">${v.pt}s <span class="muted">(${Object.values(S.docs).filter(d=>d.kind===kk).length})</span></button>`).join('')}</div>
-  <div class="card">${list.length?docTable(list):`<div class="empty">No ${KINDS[k].pt.toLowerCase()}s yet.</div>`}</div>`;
+  <div class="card">${list.length?docTable(list):`<div class="empty">Nenhum ${KINDS[k].pt.toLowerCase()} ainda.</div>`}</div>`;
 }
 async function newDoc(kind,clientId,from){
   const st=S.settings, t=today();
@@ -700,53 +700,53 @@ function openDoc(id){S.view='documentos';S.docId=id;S.edit=null;S.clientId=null;
 
 function vEditor(){
   const d=S.edit, k=d.kind;
-  return `<button class="btn sm ghost" onclick="S.edit=null;render()">← Cancel</button>
-  <div class="row spread" style="margin:8px 0 16px"><h1>${KINDS[k].pt}${d.avulso?' (quick)':''} ${esc(d.number)}</h1><div class="row"><button class="btn" onclick="S.edit=null;render()">Cancel</button><button class="btn" onclick="previewPdf(S.edit)">👁 Preview</button><button class="btn p" onclick="saveEdit()">Save</button></div></div>
+  return `<button class="btn sm ghost" onclick="S.edit=null;render()">← Cancelar</button>
+  <div class="row spread" style="margin:8px 0 16px"><h1>${KINDS[k].pt}${d.avulso?' avulsa':''} ${esc(d.number)}</h1><div class="row"><button class="btn" onclick="S.edit=null;render()">Cancelar</button><button class="btn" onclick="previewPdf(S.edit)">👁 Prévia</button><button class="btn p" onclick="saveEdit()">Salvar</button></div></div>
   <div class="card"><div class="fg">
-   ${d.avulso?'':`<div class="f"><label>Client *</label><div class="row" style="flex-wrap:nowrap"><select id="e-client" onchange="S.edit.clientId=this.value;const c=S.clients[this.value];if(c&&!S.edit.jobAddress){S.edit.jobAddress=[c.address,c.city,c.state,c.zip].filter(Boolean).join(', ');document.getElementById('e-addr').value=S.edit.jobAddress}">${clientOptions(d.clientId)}</select><button class="btn sm" title="New client" onclick="editClient()">+</button></div></div>`}
-   <div class="f"><label>Job / title</label><input data-e="title" value="${esc(d.title||'')}" placeholder="e.g. Biweekly cleaning – 3BR/2BA"></div>
-   <div class="f"><label>Date</label><input type="date" data-e="date" value="${esc(d.date)}"></div>
-   ${k==='estimate'?`<div class="f"><label>Valid until</label><input type="date" data-e="validUntil" value="${esc(d.validUntil||'')}"></div>`:''}
-   ${k==='invoice'?`<div class="f"><label>Due date</label><input type="date" data-e="dueDate" value="${esc(d.dueDate||'')}"></div>`:''}
-   ${k==='contract'?`<div class="f"><label>Start date</label><input type="date" data-e="startDate" value="${esc(d.startDate||'')}"></div><div class="f"><label>End date (optional)</label><input type="date" data-e="endDate" value="${esc(d.endDate||'')}"></div>`:''}
+   ${d.avulso?'':`<div class="f"><label>Cliente *</label><div class="row" style="flex-wrap:nowrap"><select id="e-client" onchange="S.edit.clientId=this.value;const c=S.clients[this.value];if(c&&!S.edit.jobAddress){S.edit.jobAddress=[c.address,c.city,c.state,c.zip].filter(Boolean).join(', ');document.getElementById('e-addr').value=S.edit.jobAddress}">${clientOptions(d.clientId)}</select><button class="btn sm" title="Novo cliente" onclick="editClient()">+</button></div></div>`}
+   <div class="f"><label>Projeto / título</label><input data-e="title" value="${esc(d.title||'')}" placeholder="Ex.: Limpeza quinzenal – 3BR/2BA"></div>
+   <div class="f"><label>Data</label><input type="date" data-e="date" value="${esc(d.date)}"></div>
+   ${k==='estimate'?`<div class="f"><label>Válido até</label><input type="date" data-e="validUntil" value="${esc(d.validUntil||'')}"></div>`:''}
+   ${k==='invoice'?`<div class="f"><label>Vencimento</label><input type="date" data-e="dueDate" value="${esc(d.dueDate||'')}"></div>`:''}
+   ${k==='contract'?`<div class="f"><label>Início previsto</label><input type="date" data-e="startDate" value="${esc(d.startDate||'')}"></div><div class="f"><label>Conclusão prevista</label><input type="date" data-e="endDate" value="${esc(d.endDate||'')}"></div>`:''}
   </div>
   ${d.avulso?walkinFields(d):''}
-  <div class="f"><label>Service address</label><input id="e-addr" data-e="jobAddress" value="${esc(d.jobAddress||'')}"></div>
-  ${k==='invoice'&&d.sourceNumber?`<p class="small muted">Reference: ${esc(d.sourceNumber)}</p>`:''}
+  <div class="f"><label>Endereço da limpeza</label><input id="e-addr" data-e="jobAddress" value="${esc(d.jobAddress||'')}"></div>
+  ${k==='invoice'&&d.sourceNumber?`<p class="small muted">Referente a ${esc(d.sourceNumber)}</p>`:''}
   </div>
 
   <div class="card" style="margin-top:14px">
-   <div class="row spread" style="margin-bottom:10px"><b>Items</b><div class="row"><button class="btn a sm" onclick="pickSvc()">+ From catalog</button><button class="btn sm" onclick="addLine('labor')">+ Custom item</button><button class="btn sm" onclick="addLine('material')">+ Supplies</button></div></div>
-   ${d.lines.length?`<table class="lines"><thead><tr><th>Description</th><th style="width:80px">Qty</th><th style="width:80px">Unit</th><th style="width:100px">Price</th><th class="num" style="width:100px">Amount</th><th style="width:30px"></th></tr></thead><tbody>
-   ${d.lines.map((l,i)=>{const s=l.sid?CATALOG.find(x=>x.id===l.sid):null;return `<tr><td class="wide"><div class="row" style="flex-wrap:nowrap;gap:6px">${l.type==='material'?'<span class="tag t-partial">Material</span>':''}<input data-li="${i}" data-f="name" value="${esc(l.name)}" style="font-weight:600"></div><textarea data-li="${i}" data-f="desc" placeholder="Scope / details" style="margin-top:4px">${esc(l.desc||'')}</textarea></td>
+   <div class="row spread" style="margin-bottom:10px"><b>Itens</b><div class="row"><button class="btn a sm" onclick="pickSvc()">+ Do catálogo</button><button class="btn sm" onclick="addLine('labor')">+ Item livre</button><button class="btn sm" onclick="addLine('material')">+ Produtos/Material</button></div></div>
+   ${d.lines.length?`<table class="lines"><thead><tr><th>Descrição</th><th style="width:80px">Qtd</th><th style="width:80px">Unid.</th><th style="width:100px">Preço</th><th class="num" style="width:100px">Valor</th><th style="width:30px"></th></tr></thead><tbody>
+   ${d.lines.map((l,i)=>{const s=l.sid?CATALOG.find(x=>x.id===l.sid):null;return `<tr><td class="wide"><div class="row" style="flex-wrap:nowrap;gap:6px">${l.type==='material'?'<span class="tag t-partial">Material</span>':''}<input data-li="${i}" data-f="name" value="${esc(l.name)}" style="font-weight:600"></div><textarea data-li="${i}" data-f="desc" placeholder="Escopo / detalhes" style="margin-top:4px">${esc(l.desc||'')}</textarea></td>
     <td><input type="number" step="0.01" data-li="${i}" data-f="qty" value="${l.qty}"></td>
     <td><select data-li="${i}" data-f="unit">${Object.keys(UNITS).map(u=>`<option ${l.unit===u?'selected':''}>${u}</option>`).join('')}</select></td>
     <td><input type="number" step="0.01" data-li="${i}" data-f="rate" value="${l.rate}">${s?`<div class="small muted" style="margin-top:2px">${money(s.lo)}–${money(s.hi)}</div>`:''}</td>
     <td class="num"><b id="amt-${i}"></b></td>
     <td><div style="display:flex;flex-direction:column;gap:2px"><button class="btn sm ghost" title="Subir" onclick="mvLine(${i},-1)">↑</button><button class="btn sm ghost d" title="Remover" onclick="rmLine(${i})">✕</button></div></td></tr>`}).join('')}
-   </tbody></table>`:'<div class="empty">Add services from the catalog — price and description fill in automatically.</div>'}
+   </tbody></table>`:'<div class="empty">Adicione serviços do catálogo — preço e descrição entram automaticamente.</div>'}
    <div class="row" style="margin-top:14px;align-items:flex-start">
     <div style="flex:1;min-width:220px" class="fg">
-     <div class="f"><label>Sales tax on supplies/materials (%)</label><input type="number" step="0.01" data-e="taxRate" value="${d.taxRate}"></div>
-     <div class="f"><label>Discount ($)</label><input type="number" step="0.01" data-e="discount" value="${d.discount||0}"></div>
-     ${k!=='invoice'?`<div class="f"><label>Deposit (%)</label><input type="number" step="1" data-e="depositPct" value="${d.depositPct}"></div>`:''}
+     <div class="f"><label>Imposto sobre produtos/material (%)</label><input type="number" step="0.01" data-e="taxRate" value="${d.taxRate}"></div>
+     <div class="f"><label>Desconto ($)</label><input type="number" step="0.01" data-e="discount" value="${d.discount||0}"></div>
+     ${k!=='invoice'?`<div class="f"><label>Depósito (%)</label><input type="number" step="1" data-e="depositPct" value="${d.depositPct}"></div>`:''}
     </div>
     <div class="tot" id="tot"></div>
    </div>
   </div>
 
-  ${k==='contract'?`<div class="card" style="margin-top:14px"><b>Agreement terms</b>
-   <div class="f" style="margin-top:10px"><label>Payment terms (one per line)</label><textarea data-e="schedule" rows="4">${esc(d.schedule||'')}</textarea></div>
-   <div class="fg"><div class="f"><label>Satisfaction guarantee</label><input data-e="warranty" value="${esc(d.warranty||'')}"></div></div>
-   <div class="f"><label>Exclusions / what is NOT included</label><textarea data-e="exclusions" placeholder="e.g. Exterior windows, carpet shampoo, biohazards.">${esc(d.exclusions||'')}</textarea></div>
-   <div class="f"><label>Frequency</label><select onchange="S.edit.frequency=this.value">${['','one-time','weekly','biweekly','every 4 weeks','monthly'].map(v=>`<option value="${v}" ${(d.frequency||'')===v?'selected':''}>${v||'— select —'}</option>`).join('')}</select></div>
-   <p class="small muted">Standard clauses (cancellations & lockouts, satisfaction guarantee, exclusions, pets & valuables, damage, termination, Florida law) are added to the PDF automatically. Have a Florida attorney review this template once.</p>
+  ${k==='contract'?`<div class="card" style="margin-top:14px"><b>Termos do contrato</b>
+   <div class="f" style="margin-top:10px"><label>Cronograma de pagamento (uma etapa por linha)</label><textarea data-e="schedule" rows="4">${esc(d.schedule||'')}</textarea></div>
+   <div class="fg"><div class="f"><label>Garantia de satisfação</label><input data-e="warranty" value="${esc(d.warranty||'')}"></div></div>
+   <div class="f"><label>Exclusões / o que NÃO está incluído</label><textarea data-e="exclusions" placeholder="Ex.: Exterior windows, carpet shampoo, biohazards.">${esc(d.exclusions||'')}</textarea></div>
+   <div class="f"><label>Frequência (aparece no contrato)</label><select onchange="S.edit.frequency=this.value">${['','one-time','weekly','biweekly','every 4 weeks','monthly'].map(v=>`<option value="${v}" ${(d.frequency||'')===v?'selected':''}>${{'':'— selecione —','one-time':'Uma vez (one-time)','weekly':'Semanal (weekly)','biweekly':'Quinzenal (biweekly)','every 4 weeks':'A cada 4 semanas','monthly':'Mensal (monthly)'}[v]}</option>`).join('')}</select></div>
+   <p class="small muted">As cláusulas padrão (cancelamento com 24h, taxa de lockout, garantia de satisfação, exclusões, pets e objetos de valor, danos, rescisão, lei da Flórida) entram automaticamente no PDF, em inglês. Vale pedir a um advogado da Flórida para revisar o modelo uma vez.</p>
   </div>`:''}
   <div class="card" style="margin-top:14px">
-   <div class="f"><label>Notes for the client</label><textarea data-e="notes">${esc(d.notes||'')}</textarea></div>
-   <div class="f"><label>${k==='contract'?'Additional terms':'Terms / conditions'}</label><textarea data-e="terms" rows="3">${esc(d.terms||'')}</textarea></div>
+   <div class="f"><label>Observações para o cliente (inglês)</label><textarea data-e="notes">${esc(d.notes||'')}</textarea></div>
+   <div class="f"><label>Termos / condições ${k==='contract'?'adicionais':''} (inglês)</label><textarea data-e="terms" rows="3">${esc(d.terms||'')}</textarea></div>
   </div>
-  <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="S.edit=null;render()">Cancel</button><button class="btn" onclick="previewPdf(S.edit)">👁 Preview PDF</button><button class="btn p" onclick="saveEdit()">Save ${KINDS[k].pt}</button></div>`;
+  <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="S.edit=null;render()">Cancelar</button><button class="btn" onclick="previewPdf(S.edit)">👁 Prévia do PDF</button><button class="btn p" onclick="saveEdit()">Salvar ${KINDS[k].pt}</button></div>`;
 }
 document.addEventListener('input',e=>{
   if(!S.edit) return; const el=e.target;
@@ -759,13 +759,13 @@ function updTotals(){
   const d=S.edit; if(!d) return;
   d.lines.forEach((l,i)=>{const el=document.getElementById('amt-'+i);if(el)el.textContent=money((+l.qty||0)*(+l.rate||0))});
   const t=totals(d), el=$('#tot'); if(!el) return;
-  el.innerHTML=`<div><span>Services</span><span>${money(t.labor)}</span></div>${t.mat?`<div><span>Supplies</span><span>${money(t.mat)}</span></div><div><span>Tax (${d.taxRate}%)</span><span>${money(t.tax)}</span></div>`:''}${t.disc?`<div><span>Discount</span><span>-${money(t.disc)}</span></div>`:''}<div class="big"><span>Total</span><span>${money(t.total)}</span></div>${d.kind!=='invoice'&&d.depositPct?`<div class="muted"><span>Deposit ${d.depositPct}%</span><span>${money(t.deposit)}</span></div>`:''}`;
+  el.innerHTML=`<div><span>Mão de obra</span><span>${money(t.labor)}</span></div>${t.mat?`<div><span>Materiais</span><span>${money(t.mat)}</span></div><div><span>Imposto (${d.taxRate}%)</span><span>${money(t.tax)}</span></div>`:''}${t.disc?`<div><span>Desconto</span><span>-${money(t.disc)}</span></div>`:''}<div class="big"><span>Total</span><span>${money(t.total)}</span></div>${d.kind!=='invoice'&&d.depositPct?`<div class="muted"><span>Depósito ${d.depositPct}%</span><span>${money(t.deposit)}</span></div>`:''}`;
 }
-function addLine(type,s){S.edit.lines.push(s?{sid:s.id,name:s.n,desc:s.d,unit:s.u,qty:1,rate:s.p,type:'labor'}:{name:type==='material'?'Supplies':'',desc:'',unit:type==='material'?'LS':'EA',qty:1,rate:0,type});render()}
+function addLine(type,s){S.edit.lines.push(s?{sid:s.id,name:s.n,desc:s.d,unit:s.u,qty:1,rate:s.p,type:'labor'}:{name:type==='material'?'Materials':'',desc:'',unit:type==='material'?'LS':'EA',qty:1,rate:0,type});render()}
 function rmLine(i){S.edit.lines.splice(i,1);render()}
 function mvLine(i,dir){const L=S.edit.lines,j=i+dir;if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];render()}
 function pickSvc(){
-  modal(`<h2>Add from catalog</h2><input id="pq" placeholder="Search: deep clean, move-out, oven, Airbnb…" autofocus style="margin-bottom:10px"><div class="picker-list" id="pl"></div><div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeModal()">Close</button></div>`,true);
+  modal(`<h2>Adicionar do catálogo</h2><input id="pq" placeholder="Buscar: deep clean, move-out, forno, Airbnb…" autofocus style="margin-bottom:10px"><div class="picker-list" id="pl"></div><div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeModal()">Fechar</button></div>`,true);
   const draw=()=>{const q=$('#pq').value.toLowerCase();const all=services().filter(s=>!q||[s.n,s.d,s.pt].join(' ').toLowerCase().includes(q));
     let h='';for(const k of Object.keys(CATS)){const g=all.filter(s=>s.c===k);if(!g.length)continue;h+=`<div class="pick" style="background:#f8f9fb;cursor:default;font-weight:700;color:var(--navy)">${CATS[k]}</div>`+g.map(s=>`<div class="pick" onclick="addLine('labor',svc('${s.id}'));toast('Adicionado: ${esc(s.n).replace(/'/g,'')}')"><div><div class="n">${esc(s.n)}</div><div class="small muted">${esc(s.pt||s.d)}</div></div><div class="r"><b>${money(s.p)}</b> / ${s.u}${s.lo!=null?`<div class="muted">${money(s.lo)}–${money(s.hi)}</div>`:''}</div></div>`).join('')}
     $('#pl').innerHTML=h||'<div class="empty">Nada encontrado.</div>'};
@@ -773,9 +773,9 @@ function pickSvc(){
 }
 async function saveEdit(){
   const d=S.edit;
-  if(d.avulso){ d.clientId=''; if(!(d.walkin&&d.walkin.name&&d.walkin.name.trim())){toast('Enter the client’s name');return} }
-  else { d.clientId=$('#e-client').value; if(!d.clientId){toast('Select the client');return} }
-  if(!d.lines.length){toast('Add at least one item');return}
+  if(d.avulso){ d.clientId=''; if(!(d.walkin&&d.walkin.name&&d.walkin.name.trim())){toast('Escreva o nome do cliente');return} }
+  else { d.clientId=$('#e-client').value; if(!d.clientId){toast('Selecione o cliente');return} }
+  if(!d.lines.length){toast('Adicione pelo menos um item');return}
   if(d.number==='(novo)') d.number=await nextNumber(d.kind);
   d.updatedAt=new Date().toISOString();
   const id=d.id; S.edit=null; S.docId=id; S.view='documentos'; S.docTab=d.kind; await put('docs',d); toast(KINDS[d.kind].pt+' salvo');
@@ -789,11 +789,11 @@ function vDocView(){
   return `<button class="btn sm ghost" onclick="S.docId=null;render()">← ${KINDS[k].pt}s</button>
   <div class="row spread" style="margin:8px 0 16px"><div><h1>${KINDS[k].pt} ${esc(d.number)} ${tag(k,st)}</h1><p class="sub" style="margin:0">${esc(docCliName(d))}${d.title?' · '+esc(d.title):''}</p></div>
    <div class="row">
-    <button class="btn" onclick="S.edit=clone(S.docs['${d.id}']);S.docId=null;render()">Edit</button>
-    ${dl?`<button class="btn p" onclick="downloadPdf('${d.id}')">Download PDF</button>`:''}
-    <button class="btn a" onclick="previewPdf(S.docs['${d.id}'])">👁 Preview PDF</button>
-    <button class="btn" onclick="copyEmail('${d.id}')">Copy email</button>
-    <button class="btn" onclick="docMenu('${d.id}')">More…</button>
+    <button class="btn" onclick="S.edit=clone(S.docs['${d.id}']);S.docId=null;render()">Editar</button>
+    ${dl?`<button class="btn p" onclick="downloadPdf('${d.id}')">Baixar PDF</button>`:''}
+    <button class="btn a" onclick="previewPdf(S.docs['${d.id}'])">👁 Prévia do PDF</button>
+    <button class="btn" onclick="copyEmail('${d.id}')">Copiar e-mail</button>
+    <button class="btn" onclick="docMenu('${d.id}')">Mais…</button>
    </div></div>
   <div class="grid two" style="grid-template-columns:1fr 300px">
    <div>${docPreviewHtml(d)}</div>
@@ -801,15 +801,15 @@ function vDocView(){
     <div class="card"><b>Status</b>
      <select style="margin-top:8px" onchange="setStatus('${d.id}',this.value)">${Object.entries(STATUS[k]).map(([kk,v])=>`<option value="${kk}" ${d.status===kk?'selected':''}>${v}</option>`).join('')}</select>
     </div>
-    <div class="card"><b>Next step</b><div class="grid" style="margin-top:10px;gap:8px">
-     ${k==='estimate'?`<button class="btn a" onclick="convert('${d.id}','contract')">Create agreement</button><button class="btn" onclick="convert('${d.id}','invoice')">Create invoice</button><button class="btn" onclick="depositInvoice('${d.id}')">Deposit invoice (${d.depositPct||0}%)</button>`:''}
-     ${k==='contract'?`<button class="btn a" onclick="depositInvoice('${d.id}')">Deposit invoice (${d.depositPct||0}%)</button><button class="btn" onclick="convert('${d.id}','invoice')">Invoice for full amount</button><button class="btn" onclick="progressInvoice('${d.id}')">Progress invoice (%)</button>`:''}
-     ${k==='invoice'?`<button class="btn a" onclick="addPayment('${d.id}')">Record payment</button>`:''}
-     <button class="btn" onclick="scheduleFrom('${d.id}')">Schedule cleaning</button>
+    <div class="card"><b>Próximo passo</b><div class="grid" style="margin-top:10px;gap:8px">
+     ${k==='estimate'?`<button class="btn a" onclick="convert('${d.id}','contract')">Gerar contrato</button><button class="btn" onclick="convert('${d.id}','invoice')">Gerar invoice</button><button class="btn" onclick="depositInvoice('${d.id}')">Invoice do depósito (${d.depositPct||0}%)</button>`:''}
+     ${k==='contract'?`<button class="btn a" onclick="depositInvoice('${d.id}')">Invoice do depósito (${d.depositPct||0}%)</button><button class="btn" onclick="convert('${d.id}','invoice')">Invoice do valor total</button><button class="btn" onclick="progressInvoice('${d.id}')">Invoice de etapa (%)</button>`:''}
+     ${k==='invoice'?`<button class="btn a" onclick="addPayment('${d.id}')">Registrar pagamento</button>`:''}
+     <button class="btn" onclick="scheduleFrom('${d.id}')">Agendar limpeza</button>
     </div></div>
-    ${k==='invoice'?`<div class="card"><b>Payments</b>${(d.payments||[]).length?`<table style="margin-top:6px">${d.payments.map((p,i)=>`<tr><td>${fmtDpt(p.date)}<div class="small muted">${esc(p.method||'')}</div></td><td class="num">${money(p.amount)}</td><td><button class="btn sm ghost d" onclick="rmPayment('${d.id}',${i})">✕</button></td></tr>`).join('')}</table>`:'<p class="small muted">No payments recorded.</p>'}
-     <div class="tot" style="margin-top:6px"><div><span>Paid</span><span>${money(t.paid)}</span></div><div class="big"><span>Balance</span><span>${money(t.balance)}</span></div></div></div>`:''}
-    ${(src||kids.length)?`<div class="card"><b>Linked</b><div style="margin-top:6px">${src?`<div class="small">Source: <a href="#documentos" onclick="event.preventDefault();openDoc('${src.id}')">${esc(src.number)}</a></div>`:''}${kids.map(x=>`<div class="small"><a href="#documentos" onclick="event.preventDefault();openDoc('${x.id}')">${esc(x.number)}</a> · ${KINDS[x.kind].pt} · ${money(totals(x).total)}</div>`).join('')}</div></div>`:''}
+    ${k==='invoice'?`<div class="card"><b>Pagamentos</b>${(d.payments||[]).length?`<table style="margin-top:6px">${d.payments.map((p,i)=>`<tr><td>${fmtDpt(p.date)}<div class="small muted">${esc(p.method||'')}</div></td><td class="num">${money(p.amount)}</td><td><button class="btn sm ghost d" onclick="rmPayment('${d.id}',${i})">✕</button></td></tr>`).join('')}</table>`:'<p class="small muted">Nenhum pagamento registrado.</p>'}
+     <div class="tot" style="margin-top:6px"><div><span>Pago</span><span>${money(t.paid)}</span></div><div class="big"><span>Saldo</span><span>${money(t.balance)}</span></div></div></div>`:''}
+    ${(src||kids.length)?`<div class="card"><b>Vinculados</b><div style="margin-top:6px">${src?`<div class="small">Origem: <a href="#documentos" onclick="event.preventDefault();openDoc('${src.id}')">${esc(src.number)}</a></div>`:''}${kids.map(x=>`<div class="small"><a href="#documentos" onclick="event.preventDefault();openDoc('${x.id}')">${esc(x.number)}</a> · ${KINDS[x.kind].pt} · ${money(totals(x).total)}</div>`).join('')}</div></div>`:''}
    </div>
   </div>`;
 }
@@ -817,29 +817,29 @@ function setStatus(id,v){const d=clone(S.docs[id]);d.status=v;d.updatedAt=new Da
 function convert(id,kind){newDoc(kind,null,S.docs[id])}
 function depositInvoice(id){
   const s=S.docs[id],t=totals(s),pct=+s.depositPct||0;
-  if(!pct){toast('Set the deposit % first');return}
+  if(!pct){toast('Defina o % de depósito primeiro');return}
   newDoc('invoice',null,{...clone(s),lines:[{name:`Deposit (${pct}%) – ${s.number}`,desc:`Deposit per ${s.kind==='contract'?'service agreement':'quote'} ${s.number}${s.title?' – '+s.title:''}. Total ${money(t.total)}.`,unit:'LS',qty:1,rate:Math.round(t.deposit*100)/100,type:'labor'}],taxRate:0,discount:0});
 }
 function progressInvoice(id){
   const s=S.docs[id],t=totals(s);
-  modal(`<h2>Progress invoice</h2><p class="muted">Agreement ${esc(s.number)} – total ${money(t.total)}</p><form id="pf"><div class="fg"><div class="f"><label>Percent (%)</label><input type="number" name="pct" value="40" step="1" required></div><div class="f"><label>Stage description</label><input name="desc" value="Progress payment"></div></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn p">Create invoice</button></div></form>`);
+  modal(`<h2>Invoice de etapa</h2><p class="muted">Contrato ${esc(s.number)} – total ${money(t.total)}</p><form id="pf"><div class="fg"><div class="f"><label>Percentual (%)</label><input type="number" name="pct" value="40" step="1" required></div><div class="f"><label>Descrição da etapa</label><input name="desc" value="Progress payment"></div></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Criar invoice</button></div></form>`);
   $('#pf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);const p=+f.get('pct')||0;
     newDoc('invoice',null,{...clone(s),lines:[{name:`${f.get('desc')} (${p}%)`,desc:`Per contract ${s.number}${s.title?' – '+s.title:''}. Total ${money(t.total)}.`,unit:'LS',qty:1,rate:Math.round(t.total*p)/100,type:'labor'}],taxRate:0,discount:0})};
 }
 function addPayment(id){
   const d=S.docs[id],t=totals(d);
-  modal(`<h2>Record payment</h2><form id="pyf"><div class="fg"><div class="f"><label>Amount</label><input type="number" step="0.01" name="amount" value="${t.balance.toFixed(2)}" required></div><div class="f"><label>Date</label><input type="date" name="date" value="${today()}"></div><div class="f"><label>Method</label><select name="method"><option>Zelle</option><option>Check</option><option>Cash</option><option>Card</option><option>ACH / Transfer</option><option>Other</option></select></div></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn p">Save</button></div></form>`);
-  $('#pyf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);const x=clone(S.docs[id]);x.payments=x.payments||[];x.payments.push({amount:+f.get('amount')||0,date:f.get('date'),method:f.get('method')});const tt=totals(x);x.status=tt.balance<=0.005?'paid':'partial';x.updatedAt=new Date().toISOString();put('docs',x);closeModal();toast('Payment recorded')};
+  modal(`<h2>Registrar pagamento</h2><form id="pyf"><div class="fg"><div class="f"><label>Valor</label><input type="number" step="0.01" name="amount" value="${t.balance.toFixed(2)}" required></div><div class="f"><label>Data</label><input type="date" name="date" value="${today()}"></div><div class="f"><label>Forma</label><select name="method"><option>Zelle</option><option>Check</option><option>Cash</option><option>Card</option><option>ACH / Transfer</option><option>Outro</option></select></div></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Salvar</button></div></form>`);
+  $('#pyf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);const x=clone(S.docs[id]);x.payments=x.payments||[];x.payments.push({amount:+f.get('amount')||0,date:f.get('date'),method:f.get('method')});const tt=totals(x);x.status=tt.balance<=0.005?'paid':'partial';x.updatedAt=new Date().toISOString();put('docs',x);closeModal();toast('Pagamento registrado')};
 }
 function rmPayment(id,i){const x=clone(S.docs[id]);x.payments.splice(i,1);const tt=totals(x);x.status=tt.paid<=0?'sent':tt.balance<=0.005?'paid':'partial';put('docs',x)}
 function scheduleFrom(id){const d=S.docs[id];S.view='agenda';editJob(null,d.clientId,d.startDate&&d.startDate>=today()?d.startDate:today());setTimeout(()=>{const f=$('#jf');if(f){f.type.value='service';f.title.value=(d.title||'Job')+' – '+d.number;f.address.value=d.jobAddress||''}},0);render()}
 function docMenu(id){
   const d=S.docs[id];
   modal(`<h2>${esc(d.number)}</h2><div class="grid" style="gap:8px">
-   <button class="btn" onclick="closeModal();newDoc('${d.kind}',null,S.docs['${id}'])">Duplicate</button>
-   ${dl?`<button class="btn" onclick="closeModal();downloadHtml('${id}')">Download as web page (.html)</button>`:''}
-   <button class="btn d" onclick="confirmDel('docs','${id}','${esc(d.number)}')">Delete</button>
-   <button class="btn" onclick="closeModal()">Close</button></div>`);
+   <button class="btn" onclick="closeModal();newDoc('${d.kind}',null,S.docs['${id}'])">Duplicar</button>
+   ${dl?`<button class="btn" onclick="closeModal();downloadHtml('${id}')">Baixar como página (.html)</button>`:''}
+   <button class="btn d" onclick="confirmDel('docs','${id}','${esc(d.number)}')">Excluir</button>
+   <button class="btn" onclick="closeModal()">Fechar</button></div>`);
 }
 
 /* ---------- Texto do documento (inglês) ---------- */
@@ -852,7 +852,7 @@ function contractClauses(d){
    ['3. Payment',(sched.length?sched.join('; ')+'. ':'')+'Payments not received within 7 days of the due date may incur a late fee of $25 and service may be paused until the balance is paid.'],
    ['4. Schedule & Access',`Service begins on or about ${fmtD(d.startDate)||'a mutually agreed date'}. Client will provide access to the home (key, code or someone present) and inform the Company of any alarm system. Utilities (water and electricity) must be on.`],
    ['5. Cancellations & Lockouts','Client agrees to give at least 24 hours notice to cancel or reschedule. Late cancellations, or visits where the cleaner cannot enter the home, may be charged a lockout fee of up to 50% of the visit price.'],
-   ['6. Satisfaction Guarantee',`${d.warranty||s.warranty||'24-hour satisfaction guarantee'}: if any area is not cleaned to Client’s satisfaction, Client must notify the Company within 24 hours and the Company will re-clean that area at no charge.`],
+   ['6. Satisfaction Guarantee',`${d.warranty||s.warranty||'24-hour satisfaction guarantee'}: if any area is not cleaned to Client's satisfaction, Client must notify the Company within 24 hours and the Company will re-clean that area at no charge.`],
    ['7. Exclusions & Safety',d.exclusions||'Services do not include: biohazards (bodily fluids, mold, pest infestations), exterior windows or work above a standard step ladder, moving heavy furniture, carpet shampooing, or cleaning that requires special equipment, unless listed.'],
    ['8. Pets & Valuables','Client will secure pets during the visit and inform the Company of any pet concerns. Money, jewelry and valuables should be put away; the Company is not responsible for items left out.'],
    ['9. Breakage & Damage','The Company carries '+(s.insurance||'general liability insurance')+'. Any damage must be reported within 24 hours. The Company is not responsible for normal wear, improperly secured items or pre-existing damage.'],
@@ -893,12 +893,12 @@ function emailText(d){
   if(d.kind==='contract') body+=`Please find attached Service Agreement #${d.number}${d.title?' for '+d.title:''} in the amount of ${money(t.total)}.${d.depositPct?` A ${d.depositPct}% deposit (${money(t.deposit)}) is due upon signing.`:''}\n\nPlease review, sign and return it. Let us know if you have any questions.`;
   if(d.kind==='invoice') body+=`Please find attached Invoice #${d.number}${d.title?' for '+d.title:''}. Balance due: ${money(t.balance)}, due by ${fmtD(d.dueDate)}.\n\n${s.payInfo||''}`;
   body+=`\n\nThank you,\n${s.company}${s.phone?'\n'+s.phone:''}${s.email?'\n'+s.email:''}${s.website?'\n'+s.website:''}`;
-  return {subject:`${K.pt==='Agreement'?'Service Agreement':K.pt} #${d.number}${d.title?' – '+d.title:''} | ${s.company}`,body};
+  return {subject:`${({estimate:'Quote',contract:'Service Agreement',invoice:'Invoice'})[d.kind]} #${d.number}${d.title?' – '+d.title:''} | ${s.company}`,body};
 }
 async function copyEmail(id){
   const e=emailText(S.docs[id]);
-  modal(`<h2>Email text</h2><div class="f"><label>Subject</label><input id="em-s" value="${esc(e.subject)}" readonly></div><div class="f"><label>Message</label><textarea id="em-b" rows="10" readonly>${esc(e.body)}</textarea></div><div class="row" style="justify-content:flex-end"><button class="btn" onclick="closeModal()">Close</button><button class="btn p" onclick="cp()">Copy</button></div>`);
-  window.cp=async()=>{try{await navigator.clipboard.writeText($('#em-s').value+'\n\n'+$('#em-b').value);toast('Copied')}catch(x){$('#em-b').select();toast('Select and copy manually')}};
+  modal(`<h2>Texto do e-mail</h2><div class="f"><label>Assunto</label><input id="em-s" value="${esc(e.subject)}" readonly></div><div class="f"><label>Mensagem</label><textarea id="em-b" rows="10" readonly>${esc(e.body)}</textarea></div><div class="row" style="justify-content:flex-end"><button class="btn" onclick="closeModal()">Fechar</button><button class="btn p" onclick="cp()">Copiar</button></div>`);
+  window.cp=async()=>{try{await navigator.clipboard.writeText($('#em-s').value+'\n\n'+$('#em-b').value);toast('Copiado')}catch(x){$('#em-b').select();toast('Selecione e copie manualmente')}};
 }
 
 /* ---------- PDF ---------- */
@@ -941,7 +941,7 @@ function buildPdf(d){
     alternateRowStyles:{fillColor:[253,241,245]}});
   y=pdf.lastAutoTable.finalY+14;
   const rows=[[t.mat?'Labor':'Subtotal',money(t.labor)]];
-  if(t.mat){rows.push(['Supplies',money(t.mat)]);rows.push([`Sales tax (${d.taxRate}%)`,money(t.tax)])}
+  if(t.mat){rows.push(['Materials',money(t.mat)]);rows.push([`Sales tax (${d.taxRate}%)`,money(t.tax)])}
   if(t.disc)rows.push(['Discount','-'+money(t.disc)]);
   rows.push(['TOTAL',money(t.total)]);
   if(d.kind==='invoice'){if(t.paid)rows.push(['Paid','-'+money(t.paid)]);rows.push(['BALANCE DUE',money(t.balance)])}
@@ -976,15 +976,15 @@ async function getPdfjs(){
 }
 async function previewPdf(d){
   if(!d)return;
-  if(!window.jspdf){toast('PDF generator didn’t load. Reload the page.');return}
-  if(!d.lines||!d.lines.length){toast('Add at least one item to see the preview');return}
+  if(!window.jspdf){toast('Gerador de PDF não carregou. Recarregue a página.');return}
+  if(!d.lines||!d.lines.length){toast('Adicione pelo menos um item para ver a prévia');return}
   const saved=!!S.docs[d.id]&&d.number!=='(novo)';
-  modal(`<h2>Preview – ${KINDS[d.kind].pt}${d.avulso?' (quick)':''} ${esc(d.number==='(novo)'?'(number assigned when saved)':d.number)}</h2>
-  <p class="small muted" style="margin-top:-8px">This is exactly how the client will see the PDF.</p>
-  <div id="pv" style="background:#f4e4eb;border-radius:10px;padding:10px;max-height:70vh;overflow:auto;text-align:center"><div class="empty">Generating preview…</div></div>
+  modal(`<h2>Prévia – ${KINDS[d.kind].pt}${d.avulso?' avulsa':''} ${esc(d.number==='(novo)'?'(número sai ao salvar)':d.number)}</h2>
+  <p class="small muted" style="margin-top:-8px">É assim que o cliente vai ver o arquivo PDF.</p>
+  <div id="pv" style="background:#f4e4eb;border-radius:10px;padding:10px;max-height:70vh;overflow:auto;text-align:center"><div class="empty">Gerando prévia…</div></div>
   <div class="row" style="justify-content:flex-end;margin-top:12px;gap:8px">
-   <button class="btn" onclick="closeModal()">${saved?'Close':'Back to edit'}</button>
-   ${saved?`<button class="btn" onclick="closeModal();copyEmail('${d.id}')">Copy email</button><button class="btn p" onclick="downloadPdf('${d.id}')">Download PDF</button>`:`<button class="btn p" onclick="closeModal();saveEdit()">Looks good — Save</button>`}
+   <button class="btn" onclick="closeModal()">${saved?'Fechar':'Voltar e editar'}</button>
+   ${saved?`<button class="btn" onclick="closeModal();copyEmail('${d.id}')">Copiar e-mail</button><button class="btn p" onclick="downloadPdf('${d.id}')">Baixar PDF</button>`:`<button class="btn p" onclick="closeModal();saveEdit()">Está certo — Salvar</button>`}
   </div>`,true);
   try{
     const bytes=buildPdf(d).output('arraybuffer');
@@ -1007,20 +1007,20 @@ async function previewPdf(d){
 }
 async function downloadPdf(id){
   const d=S.docs[id];
-  if(!window.jspdf){toast('PDF generator didn’t load. Try reloading the page.');return}
+  if(!window.jspdf){toast('Gerador de PDF não carregou. Tente recarregar a página.');return}
   try{
     const pdf=buildPdf(d); const blob=pdf.output('blob');
     const c=docCli(d);
     const name=`${KINDS[d.kind].en.charAt(0)+KINDS[d.kind].en.slice(1).toLowerCase()} ${d.number}${c?' - '+c.name:''}.pdf`.replace(/[\\/:*?"<>|]/g,'');
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);
     if(d.status==='draft'){setStatus(id,'sent')}
-    toast('PDF saved');
-  }catch(e){ if(e&&e.code==='declined')return; toast('Couldn’t download: '+(e.message||e.code||e)) }
+    toast('PDF salvo');
+  }catch(e){ if(e&&e.code==='declined')return; toast('Não foi possível baixar: '+(e.message||e.code||e)) }
 }
 async function downloadHtml(id){
   const d=S.docs[id];
   const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(d.number)}</title><style>${document.querySelector('style').textContent}body{background:#fff;padding:20px}</style></head><body>${docPreviewHtml(d)}</body></html>`;
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));a.download=`${d.number}.html`;a.click();toast('File saved')
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));a.download=`${d.number}.html`;a.click();toast('Arquivo salvo')
 }
 
 /* ---------- Configurações ---------- */
@@ -1028,37 +1028,37 @@ function vConfig(){
   const s=S.settings;
   const F=(k,l,type='text',ph='')=>`<div class="f"><label>${l}</label><input type="${type}" ${type==='number'?'step="0.01"':''} data-s="${k}" value="${esc(s[k]??'')}" placeholder="${esc(ph)}"></div>`;
   const T=(k,l,r=3)=>`<div class="f"><label>${l}</label><textarea data-s="${k}" rows="${r}">${esc(s[k]??'')}</textarea></div>`;
-  return `<h1>Settings</h1><p class="sub">Company info and defaults used on documents</p>
-  <div class="card"><b>Company</b><div class="fg" style="margin-top:10px">
-   ${F('company','Business name')}${F('legal','Legal name (on agreements)')}${F('phone','Phone','tel')}${F('email','E-mail','email')}${F('address','Address')}${F('website','Website')}${F('license','License / registration (optional)','text','e.g. Collier County BTR #')}${F('insurance','Insurance (agreement text)')}
+  return `<h1>Configurações</h1><p class="sub">Dados da empresa e padrões que aparecem nos documentos</p>
+  <div class="card"><b>Empresa</b><div class="fg" style="margin-top:10px">
+   ${F('company','Nome comercial')}${F('legal','Razão social (no contrato)')}${F('phone','Telefone','tel')}${F('email','E-mail','email')}${F('address','Endereço')}${F('website','Site')}${F('license','Licença / registro (opcional)','text','Ex.: Collier County BTR #')}${F('insurance','Seguro (texto no contrato)')}
   </div></div>
-  <div class="card" style="margin-top:14px"><b>Defaults</b><div class="fg" style="margin-top:10px">
-   ${F('taxRate','Sales tax on supplies/materials (%)','number')}${F('depositPct','Default deposit (%)','number')}${F('validDays','Quote valid for (days)','number')}${F('dueDays','Invoice due in (days)','number')}${F('warranty','Satisfaction guarantee')}
+  <div class="card" style="margin-top:14px"><b>Padrões</b><div class="fg" style="margin-top:10px">
+   ${F('taxRate','Imposto sobre produtos/material (%)','number')}${F('depositPct','Depósito padrão (%)','number')}${F('validDays','Validade do orçamento (dias)','number')}${F('dueDays','Prazo da invoice (dias)','number')}${F('warranty','Garantia de satisfação')}
   </div>
-  ${T('payInfo','Payment instructions (shown on invoice)',2)}
-  ${T('schedule','Default payment terms for agreements (one per line)',3)}
-  ${T('estTerms','Default quote terms',3)}
-  ${T('invTerms','Default invoice terms',2)}
+  ${T('payInfo','Instruções de pagamento (aparece na invoice)',2)}
+  ${T('schedule','Cronograma de pagamento padrão do contrato (uma etapa por linha)',3)}
+  ${T('estTerms','Termos padrão do orçamento',3)}
+  ${T('invTerms','Termos padrão da invoice',2)}
   </div>
-  <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn p" onclick="saveConfig()">Save settings</button></div>
-  <div class="card" style="margin-top:14px"><div class="row spread"><div><b>Account</b><div class="small muted">${esc(USER?.email||'')}</div></div><div class="row">${pushBtn()}<button class="btn" onclick="installApp()">📲 Install app</button><button class="btn d" onclick="logout()">Sign out</button></div></div></div>
-  <div class="card" style="margin-top:14px"><b>Numbering</b><p class="small muted">Next numbers: ${Object.entries(KINDS).map(([k,v])=>`${v.pre}-${s.next?.[k]||1001}`).join(' · ')}</p></div>`;
+  <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn p" onclick="saveConfig()">Salvar configurações</button></div>
+  <div class="card" style="margin-top:14px"><div class="row spread"><div><b>Conta</b><div class="small muted">${esc(USER?.email||'')}</div></div><div class="row">${pushBtn()}<button class="btn" onclick="installApp()">📲 Instalar app</button><button class="btn d" onclick="logout()">Sair</button></div></div></div>
+  <div class="card" style="margin-top:14px"><b>Numeração</b><p class="small muted">Próximos números: ${Object.entries(KINDS).map(([k,v])=>`${v.pre}-${s.next?.[k]||1001}`).join(' · ')}</p></div>`;
 }
 function saveConfig(){
   document.querySelectorAll('[data-s]').forEach(el=>{const k=el.dataset.s;S.settings[k]=el.type==='number'?(+el.value||0):el.value});
-  putSettings();toast('Settings saved');
+  putSettings();toast('Configurações salvas');
 }
 
 /* ---------- Modal ---------- */
 function modal(html,wide){ $('#modalRoot').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal ${wide?'wide':''}">${html}</div></div>`; const f=$('#modalRoot input:not([readonly]),#modalRoot select');if(f&&!('ontouchstart' in window))f.focus()}
 function closeModal(){ $('#modalRoot').innerHTML='' }
 function confirmDel(coll,id,label){
-  modal(`<h2>Delete ${esc(label)}?</h2><p class="muted">This can’t be undone.</p><div class="row" style="justify-content:flex-end"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn p" style="background:var(--bad);border-color:var(--bad)" onclick="closeModal();doDel('${coll}','${id}')">Delete</button></div>`);
+  modal(`<h2>Excluir ${esc(label)}?</h2><p class="muted">Essa ação não pode ser desfeita.</p><div class="row" style="justify-content:flex-end"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn p" style="background:var(--bad);border-color:var(--bad)" onclick="closeModal();doDel('${coll}','${id}')">Excluir</button></div>`);
 }
 function doDel(coll,id){
   if(coll==='clients'&&S.clientId===id)S.clientId=null;
   if(coll==='docs'&&S.docId===id)S.docId=null;
-  del(coll,id);toast('Deleted');
+  del(coll,id);toast('Excluído');
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
@@ -1069,35 +1069,35 @@ function pushState(){if(!pushSupported())return 'unsupported';return Notificatio
 function b64u(s){const p='='.repeat((4-s.length%4)%4);const b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from([...b].map(c=>c.charCodeAt(0)))}
 async function syncPush(ask){
   if(!pushSupported()||!USER)return false;
-  if(Notification.permission!=='granted'){ if(!ask)return false; const p=await Notification.requestPermission(); if(p!=='granted'){toast('Notifications are blocked. Allow them in Settings → Notifications → Eva\'s CRM');render();return false} }
+  if(Notification.permission!=='granted'){ if(!ask)return false; const p=await Notification.requestPermission(); if(p!=='granted'){toast('Notificações bloqueadas. Libere em Ajustes → Notificações → Eva\'s CRM');render();return false} }
   const reg=await navigator.serviceWorker.ready;
   let sub=await reg.pushManager.getSubscription();
   if(!sub) sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(VAPID_PUBLIC)});
   const {error}=await sb.from('push_subs').upsert({endpoint:sub.endpoint,owner:USER.id,sub:sub.toJSON(),app:'eva'},{onConflict:'endpoint'});
-  if(error){if(ask)toast('Couldn’t enable: '+error.message);return false}
+  if(error){if(ask)toast('Erro ao ativar: '+error.message);return false}
   S.pushOn=true;render();return true;
 }
 async function enablePush(){
   if(!pushSupported()){
-    if(isIOS&&!standalone){modal(`<h2>Turn on notifications</h2><p>On iPhone, notifications only work when the CRM is opened from its <b>Home Screen icon</b>.</p><p class="muted">Open the app from the Eva's CRM icon and tap “Turn on notifications” again.</p><div class="row" style="justify-content:flex-end"><button class="btn p" onclick="closeModal()">Ok</button></div>`)}
-    else toast('This device/browser doesn’t support notifications. Use the app installed from Safari (iPhone) or Chrome.');
+    if(isIOS&&!standalone){modal(`<h2>Ativar notificações</h2><p>No iPhone, as notificações só funcionam com o CRM aberto pelo <b>ícone na tela de início</b>.</p><p class="muted">Abra o app pelo ícone Eva's CRM e toque de novo em “Ativar notificações”.</p><div class="row" style="justify-content:flex-end"><button class="btn p" onclick="closeModal()">Ok</button></div>`)}
+    else toast('Este aparelho/navegador não aceita notificações. Use o app instalado pelo Safari (iPhone) ou Chrome.');
     return;
   }
-  try{ if(await syncPush(true)) toast('🔔 Notifications enabled on this device!') }catch(e){toast('Couldn’t enable: '+(e.message||e))}
+  try{ if(await syncPush(true)) toast('🔔 Notificações ativadas neste aparelho!') }catch(e){toast('Não foi possível ativar: '+(e.message||e))}
 }
-function pushBtn(){const st=pushState();return st==='on'?`<span class="tag t-done">🔔 Notifications on</span>`:`<button class="btn a" onclick="enablePush()">🔔 Turn on notifications</button>`}
+function pushBtn(){const st=pushState();return st==='on'?`<span class="tag t-done">🔔 Notificações ativas</span>`:`<button class="btn a" onclick="enablePush()">🔔 Ativar notificações</button>`}
 
 /* ---------- Instalar (PWA) ---------- */
 let deferredPrompt=null;
 const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;showInstallBtn()});
-function showInstallBtn(){if(standalone||document.getElementById('instBtn'))return;const b=document.createElement('button');b.id='instBtn';b.className='btn a install';b.textContent='📲 Install app';b.onclick=installApp;document.body.appendChild(b)}
+function showInstallBtn(){if(standalone||document.getElementById('instBtn'))return;const b=document.createElement('button');b.id='instBtn';b.className='btn a install';b.textContent='📲 Instalar app';b.onclick=installApp;document.body.appendChild(b)}
 async function installApp(){
-  if(deferredPrompt){deferredPrompt.prompt();const r=await deferredPrompt.userChoice;deferredPrompt=null;if(r.outcome==='accepted'){document.getElementById('instBtn')?.remove();toast('App installed!')}return}
-  if(standalone){toast('The app is already installed');return}
+  if(deferredPrompt){deferredPrompt.prompt();const r=await deferredPrompt.userChoice;deferredPrompt=null;if(r.outcome==='accepted'){document.getElementById('instBtn')?.remove();toast('App instalado!')}return}
+  if(standalone){toast('O app já está instalado');return}
   const mac=/Macintosh/.test(navigator.userAgent)&&!isIOS, safari=/Safari/.test(navigator.userAgent)&&!/Chrome|CriOS|Edg/.test(navigator.userAgent);
-  modal(`<h2>Install Eva's CRM</h2>${isIOS?`<ol><li>Tap Safari's <b>Share</b> button (square with ↑ arrow).</li><li>Tap <b>“Add to Home Screen”</b>.</li><li>Tap <b>Add</b>.</li></ol><p class="small muted">Must be in Safari.</p>`:mac&&safari?`<ol><li>In the menu, click <b>File → Add to Dock</b>.</li><li>Click <b>Add</b>.</li></ol>`:`<ol><li>Click Chrome's <b>⋮</b> menu.</li><li>Click <b>“Install Eva's CRM”</b> (or “Cast, save and share → Install page as app”).</li></ol>`}<div class="row" style="justify-content:flex-end"><button class="btn p" onclick="closeModal()">Ok</button></div>`);
+  modal(`<h2>Instalar Eva's CRM</h2>${isIOS?`<ol><li>Toque no botão <b>Compartilhar</b> (quadrado com seta ↑) do Safari.</li><li>Toque em <b>“Adicionar à Tela de Início”</b>.</li><li>Toque em <b>Adicionar</b>.</li></ol><p class="small muted">Precisa estar no Safari.</p>`:mac&&safari?`<ol><li>No menu, clique em <b>Arquivo → Adicionar ao Dock</b>.</li><li>Clique em <b>Adicionar</b>.</li></ol>`:`<ol><li>Clique nos <b>3 pontinhos ⋮</b> do Chrome.</li><li>Clique em <b>“Instalar Eva's CRM”</b> (ou “Transmitir, salvar e compartilhar → Instalar página como app”).</li></ol>`}<div class="row" style="justify-content:flex-end"><button class="btn p" onclick="closeModal()">Ok</button></div>`);
 }
 if(isIOS&&!standalone)setTimeout(showInstallBtn,1500);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/eva-crm/sw.js',{scope:'/eva-crm/'}).catch(()=>{});
