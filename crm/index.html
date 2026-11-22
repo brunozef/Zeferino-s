@@ -35,6 +35,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .brand .zl{width:64px;margin:0 auto 10px;border-radius:4px}
 .brand span{display:block;font-size:10px;color:var(--amber-l);letter-spacing:2.5px;text-transform:uppercase;margin-top:8px}
 .mtop{display:none}
+.mout{display:none}
 .badge{background:#c0392b;color:#fff;border-radius:999px;font-size:10px;padding:1px 6px;margin-left:auto}
 .nav{padding:10px 8px;display:flex;flex-direction:column;gap:2px}
 .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#d9d2c5;text-decoration:none;font-weight:500}
@@ -139,6 +140,8 @@ tr.click:hover td{background:#fafbfc}
   .side{position:fixed;bottom:0;top:auto;left:0;right:0;width:100%;height:auto;z-index:40;flex-direction:row}
   .brand,.side .foot{display:none}
   .mtop{display:flex;align-items:center;justify-content:center;gap:10px;background:#161514;padding:10px;margin:-16px -12px 16px}
+  .mtop{position:relative}
+  .mout{display:block;position:absolute;right:10px;top:50%;transform:translateY(-50%);border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600}
   .mtop img{height:26px}
   .badge{position:absolute;margin-left:18px;margin-top:-4px}
   .nav a{position:relative}
@@ -158,7 +161,7 @@ tr.click:hover td{background:#fafbfc}
   <aside class="side">
     <div class="brand"><img class="zl" id="lz" alt=""><img id="lw" alt="Zeferino's"><span>Precision Finish · CRM</span></div>
     <nav class="nav" id="nav"></nav>
-    <div class="foot">Dados salvos automaticamente<br><a href="#" style="color:#b8956a" onclick="event.preventDefault();logout()">Sair</a></div>
+    <div class="foot">Dados salvos automaticamente<br><button class="btn sm" style="margin-top:8px;width:100%" onclick="askLogout()">🚪 Sair da conta</button></div>
   </aside>
   <main class="main" id="main"></main>
 </div>
@@ -386,6 +389,7 @@ function showLogin(msg){
     if(error){showLogin(error.message==='Invalid login credentials'?'Usuário ou senha incorretos.':error.message);return}
     el.remove();await startApp(data.user);};
 }
+function askLogout(){modal(`<h2>Sair da conta?</h2><p class="muted">Você vai precisar do usuário e da senha para entrar de novo.</p><div class="row" style="justify-content:flex-end"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn p" onclick="logout()">Sair</button></div>`)}
 async function logout(){await sb.auth.signOut();location.reload()}
 async function startApp(user){
   USER=user; await loadAll(); importLeads(false); syncPush(false).catch(()=>{});
@@ -419,7 +423,7 @@ function renderNav(){
 function render(){
   renderNav();
   const m=$('#main');
-  let h=`<div class="mtop"><img src="${LOGO_Z}" alt=""><img src="${LOGO_WORD}" alt="Zeferino's"></div>`;
+  let h=`<div class="mtop"><img src="${LOGO_Z}" alt=""><img src="${LOGO_WORD}" alt="Zeferino's"><button class="mout" onclick="askLogout()">🚪 Sair</button></div>`;
   if(S.offline) h+=`<div class="banner">⚠️ Sem conexão com a internet ou com o banco de dados. O que você fizer agora pode não ser salvo. <a href="#" onclick="event.preventDefault();loadAll()">Tentar de novo</a></div>`;
   else if(!S.loaded && S.slow) h+=`<div class="banner">Ainda carregando seus dados… verifique sua conexão.</div>`;
   if(S.view==='painel') h+=vPainel();
@@ -1088,7 +1092,7 @@ function vConfig(){
   ${T('invTerms','Termos padrão da invoice',2)}
   </div>
   <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn p" onclick="saveConfig()">Salvar configurações</button></div>
-  <div class="card" style="margin-top:14px"><div class="row spread"><div><b>Conta</b><div class="small muted">${esc(USER?.email||'')}</div></div><div class="row">${pushBtn()}<button class="btn" onclick="installApp()">📲 Instalar app</button><button class="btn d" onclick="logout()">Sair</button></div></div></div>
+  <div class="card" style="margin-top:14px"><div class="row spread"><div><b>Conta</b><div class="small muted">${esc(USER?.email||'')}</div></div><div class="row">${pushBtn()}<button class="btn" onclick="installApp()">📲 Instalar app</button><button class="btn d" onclick="askLogout()">Sair da conta</button></div></div></div>
   <div class="card" style="margin-top:14px"><b>Numeração</b><p class="small muted">Próximos números: ${Object.entries(KINDS).map(([k,v])=>`${v.pre}-${s.next?.[k]||1001}`).join(' · ')}</p></div>`;
 }
 function saveConfig(){
