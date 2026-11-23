@@ -491,7 +491,7 @@ async function importLeads(manual){
     for(const l of data||[]){
       const id='lead-'+l.id;
       if(!S.clients[id]){
-        await put('clients',{id,name:l.name||'(sem nome)',phone:l.phone||'',email:l.email||'',city:l.city||'',state:'FL',address:'',service:l.service||'',project:l.details||'',source:'Site (formulário de limpeza)',type:'Homeowner',lead:true,leadStatus:'new',leadDate:l.created_at,updatedAt:new Date().toISOString()});
+        await put('clients',{id,name:l.name||'(sem nome)',phone:l.phone||'',email:l.email||'',city:l.city||'',state:'FL',address:'',service:l.service||'',project:l.details||'',source:/^Facebook/.test(l.service||'')?'Facebook (anúncio)':'Site (formulário de limpeza)',type:'Homeowner',lead:true,leadStatus:'new',leadDate:l.created_at,updatedAt:new Date().toISOString()});
         added++;
       }
       await sb.from('leads').update({status:'imported'}).eq('id',l.id);
