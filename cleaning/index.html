@@ -200,6 +200,23 @@ footer a:hover{color:#fff}
   .cross{grid-template-columns:1fr}
 }
 </style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1800695024307524');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1800695024307524&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -386,7 +403,7 @@ const body=JSON.stringify({name:g('Name').slice(0,190),phone:g('Phone'),email:g(
 async function sendLead(e){e.preventDefault();const f=e.target,b=document.querySelector('#leadSubmit');if(!f.botcheck||!f.botcheck.checked)crmLead(new FormData(f),'cleaning');b.disabled=true;b.textContent='Sending…';
 try{const cp=new FormData(f);cp.set('access_key','14784ad0-2f80-48e4-be6f-91205cb402f9');cp.set('subject','[Copy] New EVA\'S CLEANING request - zeferinosusa.com/cleaning');fetch(f.action,{method:'POST',headers:{Accept:'application/json'},body:cp}).catch(()=>{});
 const r=await fetch(f.action,{method:'POST',headers:{Accept:'application/json'},body:new FormData(f)});const j=await r.json().catch(()=>({}));
-if(r.ok&&j.success!==false){f.reset();sentMsg();b.textContent='Sent';setTimeout(()=>{b.disabled=false;b.textContent='Send request'},4000)}else{throw new Error(j.message||'error')}}
+if(r.ok&&j.success!==false){f.reset();sentMsg();try{fbq('track','Lead',{content_name:'Cleaning estimate'})}catch(_){}b.textContent='Sent';setTimeout(()=>{b.disabled=false;b.textContent='Send request'},4000)}else{throw new Error(j.message||'error')}}
 catch(err){b.disabled=false;b.textContent='Send request';showToast('Sorry, the request could not be sent. Please call Eva at (239) 994-8187.')}
 return false}
 if(new URLSearchParams(location.search).get('sent'))sentMsg();

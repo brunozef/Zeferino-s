@@ -703,6 +703,23 @@ body.menu-open .fab-estimate{opacity:0!important;pointer-events:none}
 </style>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1800695024307524');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1800695024307524&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -1502,7 +1519,7 @@ async function sendLead(e){
     const r=await fetch(f.action,{method:'POST',headers:{Accept:'application/json'},body:new FormData(f)});
     const j=await r.json().catch(()=>({}));
     if(!r.ok||j.success===false)throw new Error(j.message||'error');
-    f.reset();sentMsg();btn.textContent='Sent';setTimeout(()=>{btn.disabled=false;btn.textContent='Send request'},4000);
+    f.reset();sentMsg();try{fbq('track','Lead',{content_name:'Carpentry estimate'})}catch(_){}btn.textContent='Sent';setTimeout(()=>{btn.disabled=false;btn.textContent='Send request'},4000);
   }catch(err){btn.disabled=false;btn.textContent='Send request';showToast('Sorry, the request could not be sent. Please call (239) 324-1224.')}
   return false;
 }
