@@ -21,8 +21,9 @@ export async function saveAndNotify(lead) {
   const h = { apikey: key, 'Content-Type': 'application/json' };
   if (key.startsWith('eyJ')) h.Authorization = 'Bearer ' + key; // chave antiga service_role
 
-  const ins = await fetch(`${SB}/rest/v1/leads`, { method: 'POST', headers: { ...h, Prefer: 'return=minimal' }, body: JSON.stringify(lead) });
+  const ins = await fetch(`${SB}/rest/v1/leads?select=id`, { method: 'POST', headers: { ...h, Prefer: 'return=representation' }, body: JSON.stringify(lead) });
   if (!ins.ok) return { ok: false, error: 'db_' + ins.status };
+  const leadId = await ins.json().then(r => r && r[0] && r[0].id).catch(() => null);
 
   let sent = 0;
   const vp = (process.env.VAPID_PRIVATE_KEY || '').trim();
@@ -35,7 +36,7 @@ export async function saveAndNotify(lead) {
       const payload = JSON.stringify({
         title: lead.source === 'cleaning' ? '🧼 New cleaning lead: ' + (lead.name || 'website') : '🔔 Novo lead: ' + (lead.name || 'cliente do site'),
         body: [lead.service, lead.city].filter(Boolean).join(' – ') + (lead.phone ? '\n' + lead.phone : ''),
-        url: lead.source === 'cleaning' ? '/eva-crm/#leads' : '/crm/#leads'
+        url: lead.source === 'cleaning' ? (leadId && lead.phone ? `/eva-crm/#sms-${leadId}` : '/eva-crm/#leads') : '/crm/#leads'
       });
       await Promise.all(subs.map(async x => {
         try { await webpush.sendNotification(x.sub, payload, { TTL: 86400, urgency: 'high' }); sent++; }

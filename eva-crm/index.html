@@ -355,7 +355,7 @@ function showLogin(msg){
 function askLogout(){modal(`<h2>Sair da conta?</h2><p class="muted">Você vai precisar do usuário e da senha para entrar de novo.</p><div class="row" style="justify-content:flex-end"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn p" onclick="logout()">Sair</button></div>`)}
 async function logout(){await sb.auth.signOut();location.reload()}
 async function startApp(user){
-  USER=user; await loadAll(); importLeads(false); syncPush(false).catch(()=>{});
+  USER=user; await loadAll(); if(!(await smsFromNotification()))importLeads(false); syncPush(false).catch(()=>{});
   setInterval(()=>{if(document.visibilityState==='visible'){loadAll();importLeads(false)}},60000);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-(S.lastSync||0)>15000){loadAll();importLeads(false)}});
 }
@@ -485,13 +485,26 @@ function saveContact(id){const c=S.clients[id];if(!c)return;
 function smsText(c){const first=((c.name||'').trim().split(/\s+/)[0]||'there');const n=first.charAt(0).toUpperCase()+first.slice(1).toLowerCase();
   return `Hi ${n}, this is Eva from Eva's Expert Cleaning Services. Thank you for your request! I'd be happy to schedule a visit to provide your free estimate. Which day and time work best for you this week? Looking forward to hearing from you.`}
 function whoAmI(){const e=(USER&&USER.email||'').toLowerCase();return e.startsWith('evas')?'Eva':e.startsWith('zeferinos')?'Bruno':(e.split('@')[0]||'')}
-function sendLeadSms(id){const c=S.clients[id];if(!c||!c.phone)return;closeModal();
-  let tel=(c.phone||'').replace(/[^0-9+]/g,'');if(/^\d{10}$/.test(tel))tel='+1'+tel;
-  const x=clone(c);x.smsAt=new Date().toISOString();x.smsBy=whoAmI();if(x.leadStatus==='new')x.leadStatus='contacted';put('clients',x);
-  const sep=/iPhone|iPad|Macintosh/.test(navigator.userAgent)?'&':'?';
-  location.href='sms:'+tel+sep+'body='+encodeURIComponent(smsText(c));}
+function smsHref(c){let tel=(c.phone||'').replace(/[^0-9+]/g,'');if(/^\d{10}$/.test(tel))tel='+1'+tel;
+  const sep=/iPhone|iPad|Macintosh/.test(navigator.userAgent)?'&':'?';return 'sms:'+tel+sep+'body='+encodeURIComponent(smsText(c))}
+function markSms(id){const c=S.clients[id];if(!c||c.smsAt)return;const x=clone(c);x.smsAt=new Date().toISOString();x.smsBy=whoAmI();if(x.leadStatus==='new')x.leadStatus='contacted';put('clients',x)}
+function sendLeadSms(id){const c=S.clients[id];if(!c||!c.phone)return;closeModal();markSms(id);location.href=smsHref(c)}
+/* Toque na notificação (#sms-<id>): abre o Mensagens direto com o texto pronto.
+   Se o celular não deixar abrir sozinho, mostra a janela com o botão. */
+async function smsFromNotification(){const m=(location.hash||'').match(/^#sms-(\d+)$/);if(!m)return false;
+  try{history.replaceState(null,'','#leads')}catch(e){}S.view='leads';
+  const id='lead-'+m[1];
+  for(let i=0;i<10&&!S.clients[id];i++){await importLeads(false);if(!S.clients[id])await new Promise(r=>setTimeout(r,800))}
+  const c=S.clients[id];render();
+  if(!c||!c.phone||!isEva())return true;
+  if(c.smsAt){toast('SMS já enviado'+(c.smsBy?' por '+c.smsBy:''));return true}
+  let left=false;const onHide=()=>{if(document.visibilityState==='hidden'){left=true;markSms(id)}};
+  document.addEventListener('visibilitychange',onHide);
+  try{location.href=smsHref(c)}catch(e){}
+  setTimeout(()=>{document.removeEventListener('visibilitychange',onHide);if(!left)promptLeadSms(id)},1500);
+  return true}
 function isEva(){return whoAmI()==='Eva'}
-function smsCheck(){if(!isEva()||document.querySelector('.modal-bg'))return;
+function smsCheck(){if(!isEva()||document.querySelector('.modal-bg')||/^#sms-/.test(location.hash||''))return;
   const lim=Date.now()-3*864e5;
   const c=Object.values(S.clients).filter(c=>c.lead&&c.phone&&!c.smsAt&&c.leadStatus==='new'&&new Date(c.leadDate||0).getTime()>lim&&!(S.smsSkip||new Set()).has(c.id)).sort((a,b)=>(b.leadDate||'').localeCompare(a.leadDate||''))[0];
   if(c)promptLeadSms(c.id)}
