@@ -42,14 +42,13 @@ export default async function handler(req, res) {
       teamId: TEAM_ID,
       since: start.toISOString(),
       until: now.toISOString(),
-      filter,
-      limit: '1000'
+      filter
     });
     qs.append('by', 'hour');
     const r = await fetch('https://api.vercel.com/v1/query/web-analytics/visits/aggregate?' + qs, {
       headers: { Authorization: 'Bearer ' + token }
     });
-    if (!r.ok) throw new Error('vercel ' + r.status);
+    if (!r.ok) throw new Error('vercel ' + r.status + ' ' + (await r.text()).slice(0, 300));
     const rows = (await r.json()).data || [];
 
     // Group hourly rows into Florida days
