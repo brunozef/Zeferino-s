@@ -483,7 +483,7 @@ function saveContact(id){const c=S.clients[id];if(!c)return;
   toast('Abrindo contato… toque em “Criar novo contato”');}
 /* ---------- SMS de retorno ao lead (abre o app Mensagens já com o texto) ---------- */
 function smsText(c){const first=((c.name||'').trim().split(/\s+/)[0]||'there');const n=first.charAt(0).toUpperCase()+first.slice(1).toLowerCase();
-  return `Hi ${n}! This is Eva's Expert Cleaning Services 🧼 Thank you for requesting a free estimate! What day and time work best for us to come by and give you your free estimate? Just reply with your preferred date and time. Thank you!`}
+  return `Hi ${n}! 😊 This is Eva from Eva's Expert Cleaning. I just saw your request – thank you so much for reaching out! I'd love to stop by and give you a free estimate. What day and time work best for you this week? Talk soon! 💕`}
 function whoAmI(){const e=(USER&&USER.email||'').toLowerCase();return e.startsWith('evas')?'Eva':e.startsWith('zeferinos')?'Bruno':(e.split('@')[0]||'')}
 function sendLeadSms(id){const c=S.clients[id];if(!c||!c.phone)return;closeModal();
   let tel=(c.phone||'').replace(/[^0-9+]/g,'');if(/^\d{10}$/.test(tel))tel='+1'+tel;
