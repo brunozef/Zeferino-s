@@ -398,6 +398,34 @@ function effStatus(d){
   return d.status||'draft';
 }
 
+/* ---------- Visitas no site (Vercel Analytics, via /api/visits) ---------- */
+const VISITS_SITE='cleaning', VISITS_LABEL='zeferinosusa.com/cleaning';
+function loadVisits(){
+  if(S.visitsLoading)return; S.visitsLoading=true;
+  fetch('/api/visits?site='+VISITS_SITE,{cache:'no-store'})
+    .then(r=>r.json().then(j=>({ok:r.ok,j})))
+    .then(({ok,j})=>{S.visits=(ok&&j.ok)?j:{err:j.error||'erro'}})
+    .catch(()=>{S.visits={err:'offline'}})
+    .finally(()=>{S.visitsLoading=false;S.visitsAt=Date.now();if(S.view==='painel')render()});
+}
+function visitsCard(){
+  if((!S.visits||Date.now()-(S.visitsAt||0)>600000)&&!S.visitsLoading) setTimeout(loadVisits,0);
+  const v=S.visits;
+  const head=`<div class="row spread" style="margin-bottom:10px"><b style="font-family:var(--serif);font-size:17px">🌐 Visitas no site</b><span class="small muted">${VISITS_LABEL}</span></div>`;
+  if(!v||!v.days&&!v.err) return `<div class="card" style="margin-top:14px">${head}<div class="small muted">Carregando…</div></div>`;
+  if(v.err) return `<div class="card" style="margin-top:14px">${head}<div class="small muted">${v.err==='not_configured'?'Falta ligar o app ao Vercel Analytics.':'Não foi possível carregar as visitas agora. Tente de novo mais tarde.'}</div></div>`;
+  const n=x=>Number(x||0).toLocaleString('pt-BR');
+  const dm=ds=>new Date(ds+'T12:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
+  const box=(l,d)=>`<div><div class="small muted">${l}</div><div style="font-family:var(--serif);font-size:24px;font-weight:700;margin-top:4px">${n(d.visitors)}</div><div class="small muted">${n(d.pageviews)} página(s) vista(s)</div></div>`;
+  const last=v.days.slice(-14), mx=Math.max(1,...last.map(d=>d.visitors));
+  const bars=last.map(d=>`<div title="${dm(d.date)}: ${d.visitors} visita(s)" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;height:100%"><span style="font-size:10px;color:var(--mute)">${d.visitors||''}</span><div style="width:100%;max-width:22px;height:${Math.max(2,Math.round(d.visitors/mx*56))}px;background:${d.visitors?'var(--amber)':'var(--line)'};border-radius:3px 3px 0 0"></div></div>`).join('');
+  return `<div class="card" style="margin-top:14px">${head}
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">${box('Hoje',v.today)}${box('Ontem',v.yesterday)}${box('Últimos 7 dias',v.last7)}${box('Últimos 30 dias',v.last30)}</div>
+    <div style="display:flex;gap:4px;align-items:flex-end;height:80px;margin-top:16px">${bars}</div>
+    <div class="row spread small muted" style="margin-top:4px"><span>${dm(last[0].date)}</span><span>últimos 14 dias</span><span>hoje</span></div>
+  </div>`;
+}
+
 /* ---------- Painel ---------- */
 function vPainel(){
   const docs=Object.values(S.docs);
@@ -421,6 +449,7 @@ function vPainel(){
     <div class="card kpi"><div class="l">Contratos ativos</div><div class="v">${money(sum(activeCtr))}</div><div class="s">${activeCtr.length} contrato(s)</div></div>
     <div class="card kpi"><div class="l">A receber</div><div class="v">${money(recv)}</div><div class="s" style="color:${overdue.length?'var(--bad)':''}">${overdue.length} vencida(s)</div></div>
   </div>
+  ${visitsCard()}
   <div class="grid two" style="margin-top:14px">
     <div class="card"><div class="row spread" style="margin-bottom:8px"><b>Próximos 7 dias</b><button class="btn sm ghost" onclick="go('agenda')">Ver agenda →</button></div>
       ${up.length?`<table>${up.map(j=>`<tr class="click" onclick="editJob('${j.id}')"><td style="width:110px"><b>${fmtDpt(j.date)}</b><div class="small muted">${esc(j.time||'')}</div></td><td>${esc(j.title||JTYPES[j.type])}<div class="small muted">${esc(clientName(j.clientId))}${j.address?' · '+esc(j.address):''}</div></td><td><span class="tag ${j.type==='service'?'t-scheduled':'t-sent'}">${JTYPES[j.type]||''}</span></td></tr>`).join('')}</table>`:'<div class="empty">Nada agendado nos próximos 7 dias.</div>'}
