@@ -86,11 +86,19 @@ export default async function handler(req, res) {
   }
   const prev = await fetch(`${SB}/rest/v1/eva_records?select=data&coll=eq._fb&id=eq.page_tokens`, { headers: h }).then(r => r.ok ? r.json() : []).catch(() => []);
   const merged = { ...((prev[0] && prev[0].data) || {}), ...tokens };
+  // updated_by é uuid (e pode ser obrigatório): reaproveita o de um registro existente
+  const any = await fetch(`${SB}/rest/v1/eva_records?select=updated_by&updated_by=not.is.null&limit=1`, { headers: h }).then(r => r.ok ? r.json() : []).catch(() => []);
+  const row = { coll: '_fb', id: 'page_tokens', data: merged, updated_at: new Date().toISOString() };
+  if (any[0] && any[0].updated_by) row.updated_by = any[0].updated_by;
   const save = await fetch(`${SB}/rest/v1/eva_records?on_conflict=coll,id`, {
     method: 'POST',
     headers: { ...h, Prefer: 'resolution=merge-duplicates,return=minimal' },
-    body: JSON.stringify({ coll: '_fb', id: 'page_tokens', data: merged, updated_at: new Date().toISOString() })
+    body: JSON.stringify(row)
   });
-  if (!save.ok) return res.status(502).json({ ok: false, message: 'Não consegui salvar no banco (' + save.status + ').' });
+  if (!save.ok) {
+    const t = await save.text().catch(() => '');
+    console.error('fb-connect save', save.status, t);
+    return res.status(502).json({ ok: false, message: 'Não consegui salvar no banco (' + save.status + '). ' + t.slice(0, 200) });
+  }
   return res.status(200).json({ ok: true, pages: out.map(({ name, subscribed }) => ({ name, subscribed })) });
 }
