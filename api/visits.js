@@ -37,19 +37,29 @@ export default async function handler(req, res) {
     const todayEt = etDay(now);
     const start = etMidnight(etDay(new Date(etMidnight(todayEt).getTime() - (DAYS - 1) * 86400e3 + 12 * 3600e3)));
 
-    const qs = new URLSearchParams({
-      projectId: PROJECT_ID,
-      teamId: TEAM_ID,
-      since: start.toISOString(),
-      until: now.toISOString(),
-      filter
-    });
-    qs.append('by', 'hour');
-    const r = await fetch('https://api.vercel.com/v1/query/web-analytics/visits/aggregate?' + qs, {
-      headers: { Authorization: 'Bearer ' + token }
-    });
-    if (!r.ok) throw new Error('vercel ' + r.status + ' ' + (await r.text()).slice(0, 300));
-    const rows = (await r.json()).data || [];
+    // Vercel allows at most 168 hours per hourly query, so ask in 7-day chunks
+    const CHUNK = 160 * 3600e3;
+    const ranges = [];
+    for (let t = start.getTime(); t < now.getTime(); t += CHUNK) {
+      ranges.push([new Date(t), new Date(Math.min(t + CHUNK - 1000, now.getTime()))]);
+    }
+    const parts = await Promise.all(ranges.map(async ([since, until]) => {
+      const qs = new URLSearchParams({
+        projectId: PROJECT_ID,
+        teamId: TEAM_ID,
+        since: since.toISOString(),
+        until: until.toISOString(),
+        filter,
+        by: 'hour'
+      });
+      const r = await fetch('https://api.vercel.com/v1/query/web-analytics/visits/aggregate?' + qs, {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      if (!r.ok) throw new Error('vercel ' + r.status + ' ' + (await r.text()).slice(0, 300));
+      return (await r.json()).data || [];
+    }));
+    const seen = new Set();
+    const rows = parts.flat().filter(row => row.timestamp && !seen.has(row.timestamp) && seen.add(row.timestamp));
 
     // Group hourly rows into Florida days
     const byDay = {};
