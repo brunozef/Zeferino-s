@@ -490,11 +490,16 @@ function sendLeadSms(id){const c=S.clients[id];if(!c||!c.phone)return;closeModal
   const x=clone(c);x.smsAt=new Date().toISOString();x.smsBy=whoAmI();if(x.leadStatus==='new')x.leadStatus='contacted';put('clients',x);
   const sep=/iPhone|iPad|Macintosh/.test(navigator.userAgent)?'&':'?';
   location.href='sms:'+tel+sep+'body='+encodeURIComponent(smsText(c));}
+function isEva(){return whoAmI()==='Eva'}
+function smsCheck(){if(!isEva()||document.querySelector('.modal-bg'))return;
+  const lim=Date.now()-3*864e5;
+  const c=Object.values(S.clients).filter(c=>c.lead&&c.phone&&!c.smsAt&&c.leadStatus==='new'&&new Date(c.leadDate||0).getTime()>lim&&!(S.smsSkip||new Set()).has(c.id)).sort((a,b)=>(b.leadDate||'').localeCompare(a.leadDate||''))[0];
+  if(c)promptLeadSms(c.id)}
 function promptLeadSms(id){const c=S.clients[id];if(!c||!c.phone||c.smsAt)return;
   modal(`<h2 style="margin-top:0">🧼 Novo lead: ${esc(c.name)}</h2><p class="small muted" style="margin:0 0 6px">${esc(c.phone)}${c.city?' · '+esc(c.city):''}</p>
   <p class="small">Mandar agora o SMS de retorno pedindo o melhor dia e horário para a estimativa?</p>
   <div class="card small" style="white-space:pre-wrap;background:#fdf2f7">${esc(smsText(c))}</div>
-  <div class="row" style="margin-top:12px;gap:8px"><button class="btn a" onclick="sendLeadSms('${c.id}')">💬 Mandar SMS</button><button class="btn ghost" onclick="closeModal()">Depois</button></div>`)}
+  <div class="row" style="margin-top:12px;gap:8px"><button class="btn a" onclick="sendLeadSms('${c.id}')">💬 Mandar SMS</button><button class="btn ghost" onclick="(S.smsSkip=S.smsSkip||new Set()).add('${c.id}');closeModal()">Depois</button></div>`)}
 function leadCard(c){
   const tel=(c.phone||'').replace(/[^0-9+]/g,'');
   return `<div class="lead"><div class="row spread"><div><label style="display:inline;margin:0;cursor:pointer"><input type="checkbox" style="width:auto;margin-right:6px;vertical-align:middle" ${S.leadSel.has(c.id)?'checked':''} onchange="toggleLeadSel('${c.id}',this.checked)"></label><b style="font-size:15px">${esc(c.name)}</b> <span class="tag ${LCLS[c.leadStatus]||''}">${LSTAT[c.leadStatus]||''}</span><div class="small muted">${c.leadDate?new Date(c.leadDate).toLocaleString('pt-BR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):''} · ${esc(c.source||'')}</div></div>
@@ -503,7 +508,7 @@ function leadCard(c){
   ${c.project?`<p class="small" style="white-space:pre-wrap;margin:6px 0 0">${esc(c.project)}</p>`:''}
   ${c.smsAt?`<div class="small" style="margin-top:6px;color:#1f6b3a">📩 SMS enviado${c.smsBy?' por '+esc(c.smsBy):''} · ${new Date(c.smsAt).toLocaleString('pt-BR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</div>`:''}
   <div class="row" style="margin-top:10px;gap:6px">
-   ${c.phone?`<button class="btn sm ${c.smsAt?'':'a'}" onclick="sendLeadSms('${c.id}')">💬 ${c.smsAt?'Mandar SMS de novo':'Mandar SMS'}</button>`:''}
+   ${c.phone&&isEva()?`<button class="btn sm ${c.smsAt?'':'a'}" onclick="sendLeadSms('${c.id}')">💬 ${c.smsAt?'Mandar SMS de novo':'Mandar SMS'}</button>`:''}${c.phone&&!isEva()&&!c.smsAt?`<span class="small muted" style="align-self:center">⏳ Aguardando SMS da Eva</span>`:''}
    ${c.leadStatus==='new'?`<button class="btn sm p" onclick="setLead('${c.id}','contacted')">Marcar contatado</button>`:''}
    <button class="btn sm" onclick="editJob(null,'${c.id}');setLead('${c.id}','contacted',true)">Agendar visita</button>
    <button class="btn sm a" onclick="setLead('${c.id}','quoted',true);newDoc('estimate','${c.id}')">Criar orçamento</button>
@@ -546,13 +551,13 @@ function gmailErr(e){
 }
 let mcp=true;
 async function importLeads(manual){
-  if(!USER||S.importing)return; S.importing=true; if(S.view==='leads')render(); let firstNew=null;
+  if(!USER||S.importing)return; S.importing=true; if(S.view==='leads')render();
   try{
     const {data,error}=await sb.from('leads').select('*').eq('status','new').eq('source','cleaning').order('created_at',{ascending:true}).limit(100);
     if(error) throw error;
     let added=0;
     for(const l of data||[]){
-      const id='lead-'+l.id;if(!S.clients[id]&&l.phone&&!firstNew)firstNew=id;
+      const id='lead-'+l.id;
       if(!S.clients[id]){
         await put('clients',{id,name:l.name||'(sem nome)',phone:l.phone||'',email:l.email||'',city:l.city||'',state:'FL',address:'',service:l.service||'',project:l.details||'',source:/^Facebook/.test(l.service||'')?'Facebook (anúncio)':'Site (formulário de limpeza)',type:'Homeowner',lead:true,leadStatus:'new',leadDate:l.created_at,updatedAt:new Date().toISOString()});
         added++;
@@ -564,7 +569,7 @@ async function importLeads(manual){
     else if(manual)toast('Nenhum lead novo');
   }catch(e){S.leadMsg='Não foi possível verificar os leads agora';if(manual)toast(S.leadMsg)}
   S.importing=false;render();
-  if(firstNew&&!document.querySelector('.modal-bg'))promptLeadSms(firstNew);
+  smsCheck();
 }
 
 /* ---------- Invoice avulsa ---------- */
