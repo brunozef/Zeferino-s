@@ -56,7 +56,12 @@ function fromFieldData(fd) {
   const take = list => { for (const k of list) if (m[k]) { used.add(k); return m[k]; } return ''; };
   let name = take(PICK.name);
   if (!name) name = [take(PICK.first), take(PICK.last)].filter(Boolean).join(' ');
-  const phone = take(PICK.phone), email = take(PICK.email), city = take(PICK.city);
+  let phone = take(PICK.phone);
+  if (!phone) { // perguntas personalizadas, ex.: "What's the best cell # to send your quote?"
+    const k = Object.keys(m).find(k => /phone|cell|celular|telefone|whats/.test(k) && !used.has(k));
+    if (k) { used.add(k); phone = m[k]; }
+  }
+  const email = take(PICK.email), city = take(PICK.city);
   const extra = Object.entries(m).filter(([k]) => !used.has(k)).map(([k, v]) => `${k.replace(/_/g, ' ').replace(/\?$/, '')}: ${v}`);
   return { name, phone, email, city, extra };
 }
