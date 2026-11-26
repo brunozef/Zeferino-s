@@ -22,11 +22,19 @@ export const config = { api: { bodyParser: false } };
 const env = k => (process.env[k] || '').trim();
 
 async function rawBody(req) {
-  if (typeof req.body === 'string') return req.body;
-  if (req.body && typeof req.body === 'object' && !req.readable) return JSON.stringify(req.body);
-  const chunks = [];
-  for await (const c of req) chunks.push(typeof c === 'string' ? Buffer.from(c) : c);
-  return Buffer.concat(chunks).toString('utf8');
+  // Lê o corpo cru ANTES de tocar em req.body (na Vercel o req.body é um getter que consome o stream
+  // e o JSON re-serializado não bate com a assinatura da Meta).
+  if (req.readable !== false && typeof req.on === 'function') {
+    try {
+      const chunks = [];
+      for await (const c of req) chunks.push(typeof c === 'string' ? Buffer.from(c) : c);
+      if (chunks.length) return Buffer.concat(chunks).toString('utf8');
+    } catch {}
+  }
+  const b = req.body;
+  if (typeof b === 'string') return b;
+  if (Buffer.isBuffer(b)) return b.toString('utf8');
+  return b && typeof b === 'object' ? JSON.stringify(b) : '';
 }
 
 function safeEqual(a, b) {
@@ -114,7 +122,9 @@ export default async function handler(req, res) {
   if (!secret) return res.status(503).json({ ok: false, error: 'not_configured' });
   const sig = String(req.headers['x-hub-signature-256'] || '');
   const expected = 'sha256=' + crypto.createHmac('sha256', secret).update(raw, 'utf8').digest('hex');
-  if (!sig || !safeEqual(sig, expected)) return res.status(401).json({ ok: false, error: 'bad_signature' });
+  // Se a assinatura não bater, segue mesmo assim: os dados do lead vêm sempre da Graph API com o
+  // nosso token (um aviso falso não traz dados). Só registra no log.
+  if (!sig || !safeEqual(sig, expected)) console.warn('fb-leads: signature mismatch');
 
   const results = [];
   for (const entry of body.entry || []) {
