@@ -53,9 +53,22 @@ function fromFieldData(fd) {
   return { name, phone, email, city, extra };
 }
 
+// Token salvo pela página /api/fb-connect (Supabase eva_records, coll "_fb")
+async function storedToken(pageId) {
+  const key = env('SUPABASE_SECRET_KEY').replace(/^Bearer\s+/i, '');
+  if (!key) return '';
+  const h = { apikey: key };
+  if (key.startsWith('eyJ')) h.Authorization = 'Bearer ' + key;
+  try {
+    const r = await fetch('https://oxjcnimuhjgcthvodmcn.supabase.co/rest/v1/eva_records?select=data&coll=eq._fb&id=eq.page_tokens', { headers: h });
+    const rows = r.ok ? await r.json() : [];
+    return ((rows[0] && rows[0].data) || {})[String(pageId)] || '';
+  } catch { return ''; }
+}
+
 async function handleMetaLead(v) {
   const tokens = (() => { try { return JSON.parse(env('FB_PAGE_TOKENS') || '{}'); } catch { return {}; } })();
-  const token = tokens[v.page_id] || env('FB_PAGE_TOKEN');
+  const token = tokens[v.page_id] || (await storedToken(v.page_id)) || env('FB_PAGE_TOKEN');
   if (!token) return { ok: false, error: 'no_page_token' };
   const url = `https://graph.facebook.com/v21.0/${encodeURIComponent(v.leadgen_id)}?fields=created_time,field_data,ad_name,campaign_name,form_id&access_token=${encodeURIComponent(token)}`;
   const r = await fetch(url);
