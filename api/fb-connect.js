@@ -89,7 +89,7 @@ export default async function handler(req, res) {
   const save = await fetch(`${SB}/rest/v1/eva_records?on_conflict=coll,id`, {
     method: 'POST',
     headers: { ...h, Prefer: 'resolution=merge-duplicates,return=minimal' },
-    body: JSON.stringify({ coll: '_fb', id: 'page_tokens', data: merged, updated_by: 'fb-connect', updated_at: new Date().toISOString() })
+    body: JSON.stringify({ coll: '_fb', id: 'page_tokens', data: merged, updated_at: new Date().toISOString() })
   });
   if (!save.ok) return res.status(502).json({ ok: false, message: 'Não consegui salvar no banco (' + save.status + ').' });
   return res.status(200).json({ ok: true, pages: out.map(({ name, subscribed }) => ({ name, subscribed })) });
