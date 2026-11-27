@@ -81,6 +81,8 @@ tr.click:hover td{background:#fafbfc}
 .chips{display:flex;flex-wrap:wrap;gap:8px}.chips input{position:absolute;opacity:0;pointer-events:none}
 .chips label{display:inline-block;color:var(--ink);margin:0;padding:10px 16px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer;font-weight:600;font-size:14px;user-select:none}
 .chips input:checked+label{background:var(--amber);border-color:var(--amber);color:#fff}
+.printonly{display:none}
+@media print{.side,.mtop,.noprint,.modal-bg,.toast,#qsBtn,.install{display:none!important}.printonly{display:block}.main{padding:0!important}body{background:#fff}.card{break-inside:avoid;box-shadow:none}}
 .tag{display:inline-block;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:#eef0f4;color:#475467;white-space:nowrap}
 .t-draft{background:#eef0f4;color:#475467}.t-sent{background:#e6effa;color:var(--info)}
 .t-approved,.t-paid,.t-signed,.t-done{background:#e3f4ea;color:var(--ok)}
@@ -160,8 +162,8 @@ tr.click:hover td{background:#fafbfc}
 }
 @media(max-width:760px){
   /* barra de baixo maior: 2 fileiras de 4 botões, ícones e letras maiores */
-  .nav{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
-  .nav a{font-size:13.5px;font-weight:600;padding:9px 2px;gap:4px;min-height:60px}
+  .nav{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+  .nav a{font-size:12px;font-weight:600;padding:9px 1px;gap:4px;min-height:60px;min-width:0;letter-spacing:-.2px}
   .nav svg{width:26px;height:26px}
   .nav .badge{position:absolute;top:4px;right:calc(50% - 26px);margin:0;font-size:11px}
   .main{padding-bottom:170px}
@@ -261,11 +263,12 @@ const DEFAULT_SETTINGS = {
   invTerms:"Thank you for choosing Eva's Expert Cleaning Services! Payment is due by the due date shown.",
   schedule:"Payment due at the end of each cleaning visit",
   next:{estimate:1001,contract:1001,invoice:1001},
-  leadsSeen:[]
+  leadsSeen:[],
+  repassePct:70, dayRates:{'3':120,'4':140}
 };
 
 /* ============ ESTADO ============ */
-const S = {clients:{},jobs:{},docs:{},services:{},settings:JSON.parse(JSON.stringify(DEFAULT_SETTINGS)),
+const S = {clients:{},jobs:{},docs:{},services:{},helpers:{},expenses:{},settings:JSON.parse(JSON.stringify(DEFAULT_SETTINGS)),
   view:'painel',docTab:'estimate',edit:null,docId:null,clientId:null,calMonth:null,calSel:null,catQ:'',catC:'',cliQ:'',loaded:false,offline:false};
 let db=null, dl=true;
 const KINDS = {estimate:{pt:'Orçamento',pre:'QT',en:'QUOTE'},contract:{pt:'Contrato',pre:'SA',en:'SERVICE AGREEMENT'},invoice:{pt:'Invoice',pre:'INV',en:'INVOICE'}};
@@ -338,9 +341,9 @@ async function nextNumber(kind){
 async function loadAll(){
   const {data,error}=await sb.from('eva_records').select('coll,id,data');
   if(error){S.offline=true;S.loaded=true;render();return}
-  const m={clients:{},jobs:{},docs:{},services:{}};
+  const m={clients:{},jobs:{},docs:{},services:{},helpers:{},expenses:{}};
   for(const r of data){ if(r.coll==='settings'){S.settings={...clone(DEFAULT_SETTINGS),...r.data};if(!S.settings.phone)S.settings.phone=DEFAULT_SETTINGS.phone} else if(m[r.coll]) m[r.coll][r.id]=r.data; }
-  if(!S.edit){Object.assign(S,m)} else {S.clients=m.clients;S.jobs=m.jobs;S.services=m.services}
+  if(!S.edit){Object.assign(S,m)} else {S.clients=m.clients;S.jobs=m.jobs;S.services=m.services;S.helpers=m.helpers;S.expenses=m.expenses}
   S.offline=false;S.loaded=true;S.lastSync=Date.now();
   if(!document.querySelector('.modal-bg')) render();
 }
@@ -374,6 +377,8 @@ async function initDb(){
 
 /* ============ NAVEGAÇÃO ============ */
 const ICONS={
+ relatorio:'<path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm2 14h2v-6H7zm4 0h2V7h-2zm4 0h2v-4h-2z"/>',
+ equipe:'<path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-3 0-8 1.5-8 4.5V21h16v-2.5c0-3-5-4.5-8-4.5zm7-6h2v2h2v2h-2v2h-2v-2h-2v-2h2z"/>',
  painel:'<path d="M3 13h8V3H3zm0 8h8v-6H3zm10 0h8V11h-8zm0-18v6h8V3z"/>',
  avulso:'<path d="M18 2H6a1 1 0 0 0-1 1v19l3-2 2 2 2-2 2 2 2-2 3 2V3a1 1 0 0 0-1-1zm-3 13H9v-2h6zm0-4H9V9h6zm0-4H9V5h6z"/>',
  leads:'<path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/>',
@@ -383,7 +388,7 @@ const ICONS={
  servicos:'<path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>',
  config:'<path d="M19.4 13a7.8 7.8 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.3 7.3 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.3 7.3 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.8 7.8 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.3 7.3 0 0 0 1.7 1L11 21h4l.4-2.9a7.3 7.3 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 3.5-3.5 3.5 3.5 0 0 1-3.5 3.5z"/>'
 };
-const VIEWS={painel:'Painel',leads:'Leads',clientes:'Clientes',agenda:'Agenda',documentos:'Documentos',avulso:'Avulso',servicos:'Serviços',config:'Config.'};
+const VIEWS={painel:'Painel',leads:'Leads',clientes:'Clientes',agenda:'Agenda',documentos:'Documentos',avulso:'Avulso',servicos:'Serviços',equipe:'Equipe',relatorio:'Relatório',config:'Config.'};
 function go(v){S.view=v;S.edit=null;S.docId=null;S.clientId=null;try{history.replaceState(null,'','#'+v)}catch(e){location.hash=v} render();window.scrollTo(0,0)}
 function renderNav(){
   const nl=newLeads().length;
@@ -405,6 +410,8 @@ function render(){
   else if(S.view==='documentos') h+= S.edit? vEditor(): S.docId? vDocView(): vDocs();
   else if(S.view==='servicos') h+=vServicos();
   else if(S.view==='config') h+=vConfig();
+  else if(S.view==='equipe') h+=vEquipe();
+  else if(S.view==='relatorio') h+=vRelatorio();
   m.innerHTML=h;
   if(S.view==='documentos'&&S.edit) updTotals();
 }
@@ -644,6 +651,7 @@ function vClient(){
      <tr><td class="muted" style="width:110px">Telefone</td><td>${esc(c.phone||'—')}</td></tr>
      <tr><td class="muted">E-mail</td><td>${esc(c.email||'—')}</td></tr>
      <tr><td class="muted">Endereço</td><td>${esc([c.address,c.city,c.state,c.zip].filter(Boolean).join(', ')||'—')}</td></tr>
+     <tr><td class="muted">Valor da limpeza</td><td>${c.price?'<b>'+money(c.price)+'</b>':'—'}</td></tr>
      <tr><td class="muted">Frequência</td><td>${esc(freqPt(c.frequency)||'—')}</td></tr>
      <tr><td class="muted">Origem</td><td>${esc(c.source||'—')}</td></tr>
      <tr><td class="muted">Saldo devedor</td><td><b style="color:${bal>0?'var(--bad)':''}">${money(bal)}</b></td></tr>
@@ -699,7 +707,7 @@ function schSave(c,cf){
   old.forEach(j=>del('jobs',j.id));
   const fl={daily:'diária',weekly:'semanal',biweekly:'quinzenal',monthly:'mensal'}[freq];
   const addr=[c.address,c.city,c.state,c.zip].filter(Boolean).join(', ');
-  dates.forEach((d,k)=>put('jobs',{id:uid(),type:'service',clientId:c.id,clientRecur:c.id,title:`Limpeza ${fl} – ${c.name}`,date:d,time:c.schedTime||'09:00',address:addr,notes:'',status:'scheduled'}));
+  dates.forEach((d,k)=>put('jobs',{id:uid(),type:'service',clientId:c.id,clientRecur:c.id,title:`Limpeza ${fl} – ${c.name}`,date:d,time:c.schedTime||'09:00',address:addr,notes:'',status:'scheduled',price:+c.price||0}));
   return dates.length;
 }
 
@@ -711,9 +719,142 @@ function shareCleaning(clientId,jobId){
   if(j&&j.date){when=`${WDAYS[new Date(j.date+'T12:00').getDay()]} ${j.date.slice(8,10)}/${j.date.slice(5,7)}${j.time?' às '+j.time:''}`}
   else{const nx=Object.values(S.jobs).filter(x=>x.clientId===c.id&&x.date>=today()&&x.status!=='done').sort((a,b)=>a.date.localeCompare(b.date))[0];
     if(nx)when=`${WDAYS[new Date(nx.date+'T12:00').getDay()]} ${nx.date.slice(8,10)}/${nx.date.slice(5,7)}${nx.time?' às '+nx.time:''}`}
-  const text=[`🧹 Limpeza – ${c.name||'Cliente'}`,when?`📅 ${when}`:'',`📍 ${addr||'(sem endereço)'}`,addr?'https://maps.google.com/?q='+encodeURIComponent(addr):''].filter(Boolean).join('\n');
+  let pay='';if(j&&j.mode==='repasse'){const h=S.helpers[j.helperId];const p=jobPrice(j);if(p)pay=`💵 Você recebe: ${money(p*helperPct(h)/100)}`}
+  const text=[`🧹 Limpeza – ${c.name||'Cliente'}`,when?`📅 ${when}`:'',`📍 ${addr||'(sem endereço)'}`,pay,addr?'https://maps.google.com/?q='+encodeURIComponent(addr):''].filter(Boolean).join('\n');
   if(navigator.share){navigator.share({text}).catch(()=>{})}
   else{location.href='sms:?&body='+encodeURIComponent(text)}
+}
+
+/* ============ EQUIPE (ajudantes e repasse) ============ */
+function helperList(){return Object.values(S.helpers||{}).sort((a,b)=>(a.name||'').localeCompare(b.name||''))}
+function jobPrice(j){return +j.price||+(S.clients[j.clientId]||{}).price||0}
+function helperPct(h){return h&&h.pct!==''&&h.pct!=null&&!isNaN(+h.pct)?+h.pct:(+S.settings.repassePct||70)}
+function dayRate(n){const r=S.settings.dayRates||{};if(!n)return 0;if(r[n]!=null&&r[n]!=='')return +r[n];
+  const ks=Object.keys(r).map(Number).filter(k=>r[k]!==''&&r[k]!=null).sort((a,b)=>a-b);if(!ks.length)return 0;const k=ks.filter(x=>x<=n).pop()||ks[0];return Math.round(+r[k]/k*n)}
+function helpDayJobs(hid,date,exclude){return Object.values(S.jobs).filter(x=>x.mode==='ajuda'&&x.helperId===hid&&x.date===date&&x.id!==exclude)}
+function jobBadge(j){
+  if(!j.mode||j.mode==='eva')return '';const h=S.helpers[j.helperId];const n=h?esc(h.name):'(sem ajudante)';
+  if(j.mode==='repasse'){const p=jobPrice(j);return `<div style="margin-top:6px"><span class="tag t-partial">🤝 Repasse · ${n}${p?' · recebe '+money(p*helperPct(h)/100):''}</span></div>`}
+  return `<div style="margin-top:6px"><span class="tag t-sent">👭 Ajudante · ${n}</span></div>`;
+}
+function jobCalc(form){
+  const mode=(form.querySelector('[name=mode]:checked')||{}).value||'eva';
+  const box=$('#jHelpBox'),out=$('#jCalc');if(!box)return;box.style.display=mode==='eva'?'none':'';
+  const h=S.helpers[form.helperId.value];const p=+form.price.value||0;
+  let msg='';
+  if(mode==='repasse'){const pct=helperPct(h);msg=p?`💵 <b>${h?esc(h.name):'A ajudante'} recebe ${money(p*pct/100)}</b> (${pct}% de ${money(p)}) · Eva fica com ${money(p-p*pct/100)}`:'Coloque o valor da limpeza para calcular o repasse.'}
+  else if(mode==='ajuda'){if(h){const n=helpDayJobs(h.id,form.date.value,form.dataset.jid).length+1;msg=`👭 Neste dia ${esc(h.name)} ajuda em <b>${n} casa${n>1?'s':''}</b> → recebe <b>${money(dayRate(n))}</b> pelo dia`}else msg='Escolha a ajudante.'}
+  out.style.display=msg?'':'none';out.innerHTML=msg;
+}
+function editHelper(id){
+  const h=id?clone(S.helpers[id]):{id:uid(),name:'',phone:'',day:true,repasse:true,pct:''};
+  modal(`<h2>${id?'Editar ajudante':'Nova ajudante'}</h2><form id="hf">
+   <div class="fg"><div class="f"><label>Nome *</label><input name="name" required value="${esc(h.name)}" ${id?'':'autofocus'}></div><div class="f"><label>Telefone</label><input name="phone" type="tel" value="${esc(h.phone||'')}"></div></div>
+   <div class="f"><label>Como ela trabalha?</label><div class="chips"><input type="checkbox" name="day" id="hk-d" ${h.day?'checked':''}><label for="hk-d">Ajuda no dia</label><input type="checkbox" name="repasse" id="hk-r" ${h.repasse?'checked':''}><label for="hk-r">Repasse</label></div></div>
+   <div class="f"><label>% do repasse para ela</label><input name="pct" type="number" inputmode="decimal" placeholder="${+S.settings.repassePct||70} (padrão)" value="${esc(h.pct??'')}"></div>
+   <div class="f"><label>Observações</label><textarea name="notes">${esc(h.notes||'')}</textarea></div>
+   <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="confirmDel('helpers','${id}','esta ajudante')">Excluir</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Salvar</button></div></div></form>`);
+  $('#hf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);h.name=(f.get('name')||'').trim();h.phone=(f.get('phone')||'').trim();h.day=!!f.get('day');h.repasse=!!f.get('repasse');h.pct=(f.get('pct')||'').trim();h.notes=(f.get('notes')||'').trim();put('helpers',h);closeModal();toast('Ajudante salva')};
+}
+function payPeriod(){
+  const t=today(),dow=new Date(t+'T12:00').getDay(),mon=addDays(t,-((dow+6)%7));
+  const p=S.payP||'week';
+  if(p==='today')return[t,t,'Hoje'];
+  if(p==='lastmonth'){const d=new Date(t+'T12:00'),s=new Date(d.getFullYear(),d.getMonth()-1,1),e=new Date(d.getFullYear(),d.getMonth(),0);const fm=x=>x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');return[fm(s),fm(e),'Mês passado']}
+  if(p==='week')return[mon,addDays(mon,6),'Esta semana'];
+  if(p==='last')return[addDays(mon,-7),addDays(mon,-1),'Semana passada'];
+  if(p==='month'){const d=new Date(t+'T12:00'),e=new Date(d.getFullYear(),d.getMonth()+1,0);return[t.slice(0,8)+'01',t.slice(0,8)+String(e.getDate()).padStart(2,'0'),'Este mês']}
+  return[S.payFrom||mon,S.payTo||addDays(mon,6),'Período'];
+}
+function helperPay(h,from,to){
+  const js=Object.values(S.jobs).filter(j=>j.helperId===h.id&&j.date>=from&&j.date<=to&&j.status!=='cancelled').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const rep=js.filter(j=>j.mode==='repasse').map(j=>{const p=jobPrice(j);return{date:j.date,name:clientName(j.clientId),price:p,pay:p*helperPct(h)/100}});
+  const days={};js.filter(j=>j.mode==='ajuda').forEach(j=>(days[j.date]=days[j.date]||[]).push(clientName(j.clientId)));
+  const day=Object.entries(days).map(([date,names])=>({date,names,pay:dayRate(names.length)}));
+  return{rep,day,total:rep.reduce((s,x)=>s+x.pay,0)+day.reduce((s,x)=>s+x.pay,0)};
+}
+const dShort=d=>`${WDAYS[new Date(d+'T12:00').getDay()]} ${d.slice(8,10)}/${d.slice(5,7)}`;
+function shareHelperPay(id){
+  const h=S.helpers[id];const[from,to]=payPeriod();const r=helperPay(h,from,to);
+  const lines=[`Olá ${h.name}! Resumo de ${dShort(from)} a ${dShort(to)}:`];
+  r.day.forEach(d=>lines.push(`👭 ${dShort(d.date)} – ${d.names.length} casa${d.names.length>1?'s':''}: ${money(d.pay)}`));
+  r.rep.forEach(x=>lines.push(`🤝 ${dShort(x.date)} – repasse ${x.name}: ${money(x.pay)}`));
+  lines.push(`💵 Total: ${money(r.total)}`);
+  const text=lines.join('\n');if(navigator.share)navigator.share({text}).catch(()=>{});else location.href='sms:'+(h.phone||'')+'?&body='+encodeURIComponent(text);
+}
+function vEquipe(){
+  const hs=helperList();const[from,to,label]=payPeriod();const st=S.settings;const rates=st.dayRates||{};
+  return `<div class="row spread"><div><h1>Equipe</h1><p class="sub">Ajudantes do dia e repasse · quanto pagar para cada uma</p></div><button class="btn a" onclick="editHelper()">+ Nova ajudante</button></div>
+  ${hs.length?`<div class="card">${hs.map(h=>`<div class="row spread" style="padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer" onclick="editHelper('${h.id}')"><div><b>${esc(h.name)}</b><div class="small muted">${esc(h.phone||'')}</div></div><div>${h.day?'<span class="tag t-sent">Ajuda no dia</span> ':''}${h.repasse?`<span class="tag t-partial">Repasse ${helperPct(h)}%</span>`:''}</div></div>`).join('')}</div>`:'<div class="card empty">Nenhuma ajudante ainda. Toque em <b>+ Nova ajudante</b>.</div>'}
+  <div class="card" style="margin-top:14px"><b>💵 Quanto pagar</b>
+   ${periodTabs()}
+   ${hs.map(h=>{const r=helperPay(h,from,to);if(!r.rep.length&&!r.day.length)return '';return `<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px"><div class="row spread"><b>${esc(h.name)}</b><b style="font-size:18px">${money(r.total)}</b></div>
+     ${r.day.map(d=>`<div class="small" style="margin-top:4px">👭 ${dShort(d.date)} · ${d.names.length} casa${d.names.length>1?'s':''} (${esc(d.names.join(', '))}) → <b>${money(d.pay)}</b></div>`).join('')}
+     ${r.rep.map(x=>`<div class="small" style="margin-top:4px">🤝 ${dShort(x.date)} · repasse ${esc(x.name)} · ${money(x.price)} × ${helperPct(h)}% → <b>${money(x.pay)}</b></div>`).join('')}
+     <button class="btn sm" style="margin-top:8px" onclick="shareHelperPay('${h.id}')">📤 Mandar resumo para ela</button></div>`}).join('')||'<div class="empty">Nenhum trabalho de ajudante nesse período. No agendamento da limpeza, escolha <b>Eva + ajudante</b> ou <b>Repasse</b>.</div>'}
+  </div>
+  <div class="card" style="margin-top:14px"><b>⚙️ Valores</b>
+   <div class="f" style="margin-top:8px"><label>Repasse: % que a ajudante recebe (padrão)</label><input type="number" inputmode="decimal" value="${esc(st.repassePct??70)}" onchange="S.settings.repassePct=+this.value||70;putSettings()"></div>
+   <label>Ajuda no dia: quanto ela recebe pelo número de casas</label>
+   <div class="fg">${[1,2,3,4,5,6].map(n=>`<div class="f"><label>${n} casa${n>1?'s':''}</label><input type="number" inputmode="decimal" placeholder="—" value="${esc(rates[n]??'')}" onchange="S.settings.dayRates={...(S.settings.dayRates||{}),'${n}':this.value===''?'':+this.value};putSettings()"></div>`).join('')}</div>
+  </div>`;
+}
+
+function periodTabs(){const[from,to]=payPeriod();
+  return `<div class="tabs" style="margin-top:8px;overflow-x:auto;flex-wrap:nowrap">${[['today','Hoje'],['week','Esta semana'],['last','Semana passada'],['month','Este mês'],['lastmonth','Mês passado'],['custom','Escolher datas']].map(([k,v])=>`<button style="white-space:nowrap" class="${(S.payP||'week')===k?'on':''}" onclick="S.payP='${k}';render()">${v}</button>`).join('')}</div>
+   ${(S.payP==='custom')?`<div class="fg"><div class="f"><label>De</label><input type="date" value="${from}" onchange="S.payFrom=this.value;render()"></div><div class="f"><label>Até</label><input type="date" value="${to}" onchange="S.payTo=this.value;render()"></div></div>`:`<div class="small muted">${from===to?dShort(from):dShort(from)+' a '+dShort(to)}</div>`}`}
+
+/* ============ RELATÓRIO: ganhos, ajudantes, despesas e lucro ============ */
+const EXCATS=['Gasolina','Produtos','Material','Ajudante (outro)','Outros'];
+function report(from,to){
+  const jobs=Object.values(S.jobs).filter(j=>j.type==='service'&&j.date>=from&&j.date<=to&&j.status!=='cancelled').sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')));
+  const rev=jobs.reduce((s,j)=>s+jobPrice(j),0),done=jobs.filter(j=>j.status==='done');
+  const helpers=helperList().map(h=>({h,...helperPay(h,from,to)})).filter(x=>x.total);
+  const team=helpers.reduce((s,x)=>s+x.total,0);
+  const exps=Object.values(S.expenses||{}).filter(e=>e.date>=from&&e.date<=to).sort((a,b)=>a.date.localeCompare(b.date));
+  const exp=exps.reduce((s,e)=>s+(+e.amount||0),0);
+  const days={};jobs.forEach(j=>{const d=days[j.date]=days[j.date]||{n:0,rev:0};d.n++;d.rev+=jobPrice(j)});
+  helpers.forEach(x=>{x.rep.forEach(r=>{(days[r.date]=days[r.date]||{n:0,rev:0}).team=(days[r.date].team||0)+r.pay});x.day.forEach(d=>{(days[d.date]=days[d.date]||{n:0,rev:0}).team=(days[d.date].team||0)+d.pay})});
+  exps.forEach(e=>{(days[e.date]=days[e.date]||{n:0,rev:0}).exp=(days[e.date].exp||0)+(+e.amount||0)});
+  const noPrice=jobs.filter(j=>!jobPrice(j)).length;
+  return{jobs,done,rev,helpers,team,exps,exp,profit:rev-team-exp,days,noPrice};
+}
+function kpi(label,val,color){return `<div class="card" style="padding:12px;margin:0"><div class="small muted">${label}</div><div style="font-size:20px;font-weight:700;${color?'color:'+color:''}">${val}</div></div>`}
+function vRelatorio(){
+  const[from,to,label]=payPeriod();const r=report(from,to);
+  const dayRows=Object.entries(r.days).sort().map(([d,x])=>`<tr><td>${dShort(d)}</td><td class="num">${x.n||''}</td><td class="num">${money(x.rev)}</td><td class="num">${x.team?money(x.team):'—'}</td><td class="num hide-m">${x.exp?money(x.exp):'—'}</td><td class="num"><b>${money(x.rev-(x.team||0)-(x.exp||0))}</b></td></tr>`).join('');
+  return `<div class="row spread noprint"><div><h1>Relatório</h1><p class="sub">Quanto entrou, quanto foi para as ajudantes, despesas e lucro</p></div><div class="row"><button class="btn" onclick="shareReport()">📤 Compartilhar</button><button class="btn" onclick="window.print()">🖨️ PDF / Imprimir</button></div></div>
+  <div class="printonly"><h2 style="margin:0">Eva's Expert Cleaning Services — Relatório</h2></div>
+  <div class="noprint">${periodTabs()}</div><div class="printonly small">${label}: ${dShort(from)} a ${dShort(to)}</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0">
+   ${kpi(`Limpezas (${r.jobs.length}${r.done.length!==r.jobs.length?', '+r.done.length+' feitas':''})`,money(r.rev))}
+   ${kpi('Pago às ajudantes','− '+money(r.team),'var(--bad)')}
+   ${kpi('Despesas','− '+money(r.exp),'var(--bad)')}
+   ${kpi('Lucro',money(r.profit),r.profit>=0?'var(--ok)':'var(--bad)')}
+  </div>
+  ${r.noPrice?`<div class="banner small">⚠️ ${r.noPrice} limpeza${r.noPrice>1?'s':''} sem valor neste período — coloque o valor no cadastro do cliente ou no agendamento para o relatório ficar certo.</div>`:''}
+  <div class="card"><b>Por dia</b>${dayRows?`<table style="margin-top:8px"><thead><tr><th>Dia</th><th class="num">Casas</th><th class="num">Entrou</th><th class="num">Ajudantes</th><th class="num hide-m">Despesas</th><th class="num">Lucro</th></tr></thead><tbody>${dayRows}</tbody></table>`:'<div class="empty">Nenhuma limpeza na agenda nesse período.</div>'}</div>
+  <div class="card" style="margin-top:14px"><b>Ajudantes</b>${r.helpers.length?r.helpers.map(x=>`<div style="margin-top:10px"><div class="row spread"><b>${esc(x.h.name)}</b><b>${money(x.total)}</b></div>
+    ${x.day.map(d=>`<div class="small">👭 ${dShort(d.date)} · ${d.names.length} casa${d.names.length>1?'s':''} → ${money(d.pay)}</div>`).join('')}${x.rep.map(y=>`<div class="small">🤝 ${dShort(y.date)} · repasse ${esc(y.name)} → ${money(y.pay)}</div>`).join('')}
+    <button class="btn sm noprint" style="margin-top:6px" onclick="shareHelperPay('${x.h.id}')">📤 Mandar para ela</button></div>`).join(''):'<div class="empty">Nenhum pagamento de ajudante nesse período.</div>'}</div>
+  <div class="card" style="margin-top:14px"><div class="row spread"><b>Despesas</b><button class="btn sm a noprint" onclick="editExpense()">+ Despesa</button></div>
+   ${r.exps.length?`<table style="margin-top:8px"><tbody>${r.exps.map(e=>`<tr class="click" onclick="editExpense('${e.id}')"><td>${dShort(e.date)}</td><td>${esc(e.cat||'')}${e.desc?' · '+esc(e.desc):''}</td><td class="num">${money(e.amount)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Nenhuma despesa lançada nesse período.</div>'}</div>
+  <div class="card" style="margin-top:14px"><b>Limpezas</b>${r.jobs.length?`<table style="margin-top:8px"><tbody>${r.jobs.map(j=>`<tr class="click" onclick="editJob('${j.id}')"><td>${dShort(j.date)}</td><td>${esc(clientName(j.clientId))}${j.mode==='repasse'?' <span class="tag t-partial">repasse</span>':j.mode==='ajuda'?' <span class="tag t-sent">c/ ajudante</span>':''}${j.status==='done'?' ✓':''}</td><td class="num">${jobPrice(j)?money(jobPrice(j)):'<span class="muted">sem valor</span>'}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">—</div>'}</div>
+  <p class="small muted">O relatório usa as limpezas da agenda com o valor de cada casa. Marque “Concluído” quando a limpeza for feita.</p>`;
+}
+function shareReport(){
+  const[from,to,label]=payPeriod();const r=report(from,to);
+  const lines=[`📊 Relatório ${label} (${from===to?dShort(from):dShort(from)+' a '+dShort(to)})`,`🧹 Limpezas: ${r.jobs.length} → ${money(r.rev)}`,`👭 Ajudantes: − ${money(r.team)}`,...r.helpers.map(x=>`   • ${x.h.name}: ${money(x.total)}`),`🧾 Despesas: − ${money(r.exp)}`,`💰 Lucro: ${money(r.profit)}`];
+  const text=lines.join('\n');if(navigator.share)navigator.share({text}).catch(()=>{});else{navigator.clipboard&&navigator.clipboard.writeText(text);toast('Copiado')}
+}
+function editExpense(id){
+  const e=id?clone(S.expenses[id]):{id:uid(),date:today(),cat:'Gasolina',desc:'',amount:''};
+  modal(`<h2>${id?'Editar despesa':'Nova despesa'}</h2><form id="xf">
+   <div class="f"><label>Tipo</label><div class="chips">${EXCATS.map((c,k)=>`<input type="radio" name="cat" id="xc-${k}" value="${c}" ${e.cat===c?'checked':''}><label for="xc-${k}">${c}</label>`).join('')}</div></div>
+   <div class="fg"><div class="f"><label>Valor ($) *</label><input name="amount" type="number" inputmode="decimal" step="0.01" required value="${esc(e.amount)}" ${id?'':'autofocus'}></div><div class="f"><label>Data</label><input name="date" type="date" value="${esc(e.date)}"></div></div>
+   <div class="f"><label>Descrição</label><input name="desc" value="${esc(e.desc||'')}" placeholder="Opcional"></div>
+   <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="confirmDel('expenses','${id}','esta despesa')">Excluir</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Salvar</button></div></div></form>`);
+  $('#xf').onsubmit=ev=>{ev.preventDefault();const f=new FormData(ev.target);e.cat=f.get('cat')||'Outros';e.amount=+f.get('amount')||0;e.date=f.get('date')||today();e.desc=(f.get('desc')||'').trim();put('expenses',e);closeModal();toast('Despesa salva')};
 }
 function editClient(id){
   const c=id?clone(S.clients[id]):{id:uid(),type:'Homeowner',state:'FL',city:'Naples'};
@@ -727,6 +868,7 @@ function editClient(id){
    <div class="f"><label>Origem do lead</label><input name="source" placeholder="Nextdoor, Meta Ads, indicação…" value="${esc(c.source||'')}"></div>
   </div>
   <div class="f"><label>Frequência</label><div class="chips">${FREQS.map(([v,l])=>`<input type="radio" name="frequency" id="fq-${v}" value="${v}" ${c.frequency===v?'checked':''} onclick="if(this.dataset.on){this.checked=false;delete this.dataset.on}else{this.form.querySelectorAll('[name=frequency]').forEach(r=>delete r.dataset.on);this.dataset.on=1}"${c.frequency===v?' data-on="1"':''}><label for="fq-${v}">${l}</label>`).join('')}</div></div>
+  <div class="f"><label>Valor da limpeza ($)</label><input name="price" type="number" inputmode="decimal" step="0.01" placeholder="Ex.: 150" value="${esc(c.price||'')}"></div>
   <div id="schedBox" class="card" style="padding:12px;margin:-2px 0 12px;${['daily','weekly','biweekly','monthly'].includes(c.frequency)?'':'display:none'}">
    <div class="f"><label>Dia(s) da limpeza</label><div class="chips">${WDAYS.map((w,k)=>`<input type="checkbox" name="schDay" id="sd-${k}" value="${k}" ${(c.schedDays||[]).includes(k)?'checked':''}><label for="sd-${k}">${w}</label>`).join('')}</div></div>
    <div class="fg"><div class="f"><label>Horário</label><input type="time" name="schTime" value="${esc(c.schedTime||'09:00')}"></div><div class="f"><label>Começa em</label><input type="date" name="schStart" value="${esc(c.schedStart||'')}"></div></div>
@@ -762,7 +904,7 @@ function vAgenda(){
   <div class="card"><div class="row spread" style="margin-bottom:10px"><button class="btn sm" onclick="shiftMonth(-1)">‹</button><b style="text-transform:capitalize">${mName}</b><button class="btn sm" onclick="shiftMonth(1)">›</button></div>
    <div class="cal">${['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].map(x=>`<div class="h">${x}</div>`).join('')}${cells}</div></div>
   <div class="card"><b>${fmtDpt(S.calSel)}</b>
-   ${dayJobs.length?dayJobs.map(j=>`<div class="card" style="margin-top:10px;padding:12px;cursor:pointer" onclick="editJob('${j.id}')"><div class="row spread"><b>${esc(j.time||'Dia todo')}</b><span class="tag ${j.status==='done'?'t-done':j.type==='service'?'t-scheduled':'t-sent'}">${j.status==='done'?'Feito':JTYPES[j.type]}</span></div><div style="margin-top:4px">${esc(j.title||'')}</div><div class="small muted">${esc(clientName(j.clientId))}${j.address?' · '+esc(j.address):''}</div></div>`).join(''):'<div class="empty">Nada neste dia.</div>'}
+   ${dayJobs.length?dayJobs.map(j=>`<div class="card" style="margin-top:10px;padding:12px;cursor:pointer" onclick="editJob('${j.id}')"><div class="row spread"><b>${esc(j.time||'Dia todo')}</b><span class="tag ${j.status==='done'?'t-done':j.type==='service'?'t-scheduled':'t-sent'}">${j.status==='done'?'Feito':JTYPES[j.type]}</span></div><div style="margin-top:4px">${esc(j.title||'')}</div><div class="small muted">${esc(clientName(j.clientId))}${j.address?' · '+esc(j.address):''}</div>${jobBadge(j)}</div>`).join(''):'<div class="empty">Nada neste dia.</div>'}
    <button class="btn" style="margin-top:12px;width:100%" onclick="editJob(null,null,S.calSel)">+ Agendar neste dia</button>
   </div></div>`;
 }
@@ -772,16 +914,22 @@ function editJob(id,clientId,date){
   const j=id?clone(S.jobs[id]):{id:uid(),type:'service',date:date||today(),time:'09:00',clientId:clientId||'',status:'scheduled'};
   if(!id&&j.clientId){const c=S.clients[j.clientId];if(c)j.address=[c.address,c.city].filter(Boolean).join(', ')}
   modal(`<h2>${id?'Editar agendamento':'Novo agendamento'}</h2><form id="jf">
-  <div class="fg"><div class="f"><label>Cliente</label><select name="clientId" onchange="const c=S.clients[this.value];if(c&&!this.form.address.value)this.form.address.value=[c.address,c.city].filter(Boolean).join(', ')">${clientOptions(j.clientId)}</select></div>
+  <div class="fg"><div class="f"><label>Cliente</label><select name="clientId" onchange="const c=S.clients[this.value];if(c&&!this.form.address.value)this.form.address.value=[c.address,c.city].filter(Boolean).join(', ');if(c&&c.price&&!this.form.price.value)this.form.price.value=c.price;jobCalc(this.form)">${clientOptions(j.clientId)}</select></div>
   <div class="f"><label>Tipo</label><select name="type">${Object.entries(JTYPES).map(([k,v])=>`<option value="${k}" ${j.type===k?'selected':''}>${v}</option>`).join('')}</select></div></div>
   <div class="f"><label>Título</label><input name="title" placeholder="Ex.: Limpeza quinzenal – 3 quartos / 2 banheiros" value="${esc(j.title||'')}"></div>
   <div class="fg"><div class="f"><label>Data</label><input type="date" name="date" required value="${esc(j.date)}"></div><div class="f"><label>Hora</label><input type="time" name="time" value="${esc(j.time||'')}"></div><div class="f"><label>Repetir</label><select name="repeat">${[['','Não repete'],['7','Toda semana'],['14','A cada 2 semanas'],['28','A cada 4 semanas'],['m','Todo mês']].map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select></div><div class="f"><label>Quantas visitas</label><input type="number" name="times" min="2" max="52" value="12"></div></div>
   <div class="f"><label>Endereço da limpeza</label><input name="address" value="${esc(j.address||'')}"></div>
+  <div class="f"><label>Valor desta limpeza ($)</label><input name="price" type="number" inputmode="decimal" step="0.01" placeholder="Valor cobrado do cliente" value="${esc(j.price||(S.clients[j.clientId]||{}).price||'')}"></div>
+  <div class="f"><label>Quem vai fazer?</label><div class="chips">${[['eva','Eva'],['ajuda','Eva + ajudante'],['repasse','Repasse']].map(([v,l])=>`<input type="radio" name="mode" id="jm-${v}" value="${v}" ${(j.mode||'eva')===v?'checked':''}><label for="jm-${v}">${l}</label>`).join('')}</div></div>
+  <div class="f" id="jHelpBox" style="${(j.mode||'eva')==='eva'?'display:none':''}"><label>Ajudante</label><select name="helperId"><option value="">— escolha —</option>${helperList().map(h=>`<option value="${h.id}" ${j.helperId===h.id?'selected':''}>${esc(h.name)}</option>`).join('')}</select>
+   ${helperList().length?'':'<div class="small muted" style="margin-top:4px">Cadastre as ajudantes na aba <b>Equipe</b>.</div>'}<div id="jCalc" class="banner small" style="margin:8px 0 0;display:none"></div></div>
   <div class="f"><label>Observações</label><textarea name="notes">${esc(j.notes||'')}</textarea></div>
   <div class="f"><label><input type="checkbox" name="done" style="width:auto" ${j.status==='done'?'checked':''}> Concluído</label></div>
   <div class="row spread"><div class="row">${id?`<button type="button" class="btn d" onclick="confirmDel('jobs','${id}','este agendamento')">Excluir</button><button type="button" class="btn" onclick="shareCleaning(null,'${id}')">📤 Mandar p/ limpadora</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Salvar</button></div></div></form>`);
+  {const jf=$('#jf');jf.addEventListener('input',()=>jobCalc(jf));jf.addEventListener('change',()=>jobCalc(jf));jf.dataset.jid=j.id;jobCalc(jf)}
   $('#jf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);
     for(const k of ['clientId','type','title','date','time','address','notes']) j[k]=(f.get(k)||'').trim();
+    j.price=+f.get('price')||0;j.mode=f.get('mode')||'eva';j.helperId=j.mode==='eva'?'':(f.get('helperId')||'');
     j.status=f.get('done')?'done':'scheduled';
     const extra=[];
     const rep=f.get('repeat'), times=Math.min(52,Math.max(2,+f.get('times')||12));
