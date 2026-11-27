@@ -1591,7 +1591,7 @@ function vConfig(){
   const F=(k,l,type='text',ph='')=>`<div class="f"><label>${l}</label><input type="${type}" ${type==='number'?'step="0.01"':''} data-s="${k}" value="${esc(s[k]??'')}" placeholder="${esc(ph)}"></div>`;
   const T=(k,l,r=3)=>`<div class="f"><label>${l}</label><textarea data-s="${k}" rows="${r}">${esc(s[k]??'')}</textarea></div>`;
   return `<h1>Configurações</h1><p class="sub">Dados da empresa e padrões que aparecem nos documentos</p>
-  <div class="card" style="margin-bottom:14px"><b>🔔 Aviso do fim do dia (19h)</b><div class="small muted" style="margin:4px 0 10px">Todo dia às 19h o celular pergunta se as limpezas do dia foram feitas. Toque abaixo para receber um teste agora neste celular.</div>
+  <div class="card" style="margin-bottom:14px"><b>🔔 Aviso do fim do dia (18h · 19h · 20h)</b><div class="small muted" style="margin:4px 0 10px">Nos dias com limpeza agendada, às 18h o celular pergunta se as limpezas foram feitas. Se ainda faltar responder alguma, avisa de novo às 19h e às 20h. Toque abaixo para receber um teste agora neste celular.</div>
    <div class="row" style="gap:8px">${pushBtn()}<button class="btn a" onclick="testDayPush()">📲 Mandar teste agora</button></div></div>
   <div class="card"><b>Empresa</b><div class="fg" style="margin-top:10px">
    ${F('company','Nome comercial')}${F('legal','Razão social (no contrato)')}${F('phone','Telefone','tel')}${F('email','E-mail','email')}${F('address','Endereço')}${F('website','Site')}${F('license','Licença / registro (opcional)','text','Ex.: Collier County BTR #')}${F('insurance','Seguro (texto no contrato)')}

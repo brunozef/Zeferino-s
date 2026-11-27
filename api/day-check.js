@@ -1,4 +1,6 @@
-// Fim do dia (agendado na Vercel, todo dia às 19h de Fort Myers):
+// Fim do dia (agendado na Vercel às 18h, 19h e 20h de Fort Myers):
+// só avisa em dia que tem limpeza agendada e só enquanto alguma não foi respondida
+// (feita, cancelada ou reagendada). Respondeu tudo → os próximos avisos não saem.
 // se houver limpezas de hoje ainda não marcadas como feitas no app da Eva,
 // manda uma notificação para os celulares do Eva's CRM. Ao tocar, abre a tela
 // para marcar "Foi feita" ou "Reagendar".
@@ -20,6 +22,8 @@ export const POST = handleSchedule(async (meta) => {
   const out = await runDayCheck();
   console.log('day-check', meta && meta.executionId, JSON.stringify(out));
 });
+
+function hourNY() { return +new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', hour12: false }).format(new Date()) % 24; }
 
 export async function runDayCheck(opt = {}) {
   const key = (process.env.SUPABASE_SECRET_KEY || '').trim().replace(/^Bearer\s+/i, '');
@@ -50,8 +54,8 @@ export async function runDayCheck(opt = {}) {
   const subs = s.ok ? await s.json() : [];
   const n = pending.length;
   const payload = JSON.stringify({
-    title: (opt.test ? '[TESTE] ' : '') + `🧹 As limpezas de hoje foram feitas?`,
-    body: !n ? 'Hoje não tem limpeza pendente — este é só um teste do aviso das 19h.' : (names.length ? names.slice(0, 4).join(', ') + (names.length > 4 ? '…' : '') : `${n} limpeza${n > 1 ? 's' : ''}`) + ' — toque para marcar como feita ou reagendar.',
+    title: (opt.test ? '[TESTE] ' : '') + (hourNY() >= 20 ? '⏰ Último lembrete: ' : hourNY() >= 19 ? '🔔 Lembrete: ' : '🧹 ') + `as limpezas de hoje foram feitas?`,
+    body: !n ? 'Hoje não tem limpeza pendente — este é só um teste do aviso do fim do dia.' : (names.length ? names.slice(0, 4).join(', ') + (names.length > 4 ? '…' : '') : `${n} limpeza${n > 1 ? 's' : ''}`) + ' — toque para marcar como feita ou reagendar.',
     url: `/eva-crm/#checkday-${day}`,
     tag: 'checkday-' + day
   });

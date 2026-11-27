@@ -85,7 +85,7 @@
   },
   "schedules": {
     "eva-day-check": {
-      "schedule": "0 19 * * *",
+      "schedule": "0 18-20 * * *",
       "timezone": "America/New_York",
       "function": "api/day-check"
     }
