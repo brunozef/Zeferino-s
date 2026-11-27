@@ -2,6 +2,7 @@
   "name": "zeferinos-site",
   "private": true,
   "dependencies": {
-    "web-push": "^3.6.7"
+    "web-push": "^3.6.7",
+    "@vercel/schedules": "^0.0.3"
   }
 }

@@ -366,7 +366,7 @@ function showLogin(msg){
 function askLogout(){modal(`<h2>Sair da conta?</h2><p class="muted">Você vai precisar do usuário e da senha para entrar de novo.</p><div class="row" style="justify-content:flex-end"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn p" onclick="logout()">Sair</button></div>`)}
 async function logout(){await sb.auth.signOut();location.reload()}
 async function startApp(user){
-  USER=user; await loadAll(); if(!(await smsFromNotification()))importLeads(false); syncPush(false).catch(()=>{});
+  USER=user; await loadAll(); if(!(await smsFromNotification()))importLeads(false); checkdayFromHash(); syncPush(false).catch(()=>{});
   setInterval(()=>{if(document.visibilityState==='visible'){loadAll();importLeads(false)}},60000);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-(S.lastSync||0)>15000){loadAll();importLeads(false)}});
 }
@@ -857,6 +857,32 @@ function editExpense(id){
    <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="confirmDel('expenses','${id}','esta despesa')">Excluir</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Salvar</button></div></div></form>`);
   $('#xf').onsubmit=ev=>{ev.preventDefault();const f=new FormData(ev.target);e.cat=f.get('cat')||'Outros';e.amount=+f.get('amount')||0;e.date=f.get('date')||today();e.desc=(f.get('desc')||'').trim();put('expenses',e);closeModal();toast('Despesa salva')};
 }
+
+/* ============ FIM DO DIA: limpezas foram feitas? (aviso das 19h no celular) ============ */
+function checkdayFromHash(){const m=(location.hash||'').match(/^#checkday(?:-(\d{4}-\d{2}-\d{2}))?$/);if(!m)return false;
+  try{history.replaceState(null,'','#agenda')}catch(e){}S.view='agenda';S.calSel=m[1]||today();S.calMonth=S.calSel.slice(0,7);render();dayCheck(S.calSel);return true}
+function dayCheck(date){
+  const js=Object.values(S.jobs).filter(j=>j.type==='service'&&j.date===date&&j.status!=='cancelled').sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+  const moved=Object.values(S.jobs).filter(j=>j.movedFrom===date&&j.type==='service');
+  const row=j=>{const done=j.status==='done';return `<div class="card" style="padding:12px;margin:0 0 10px">
+    <div class="row spread"><div><b>${esc(clientName(j.clientId))}</b><div class="small muted">${esc(j.time||'')}${j.address?' · '+esc(j.address):''}</div></div>${done?'<span class="tag t-done">✅ Feita</span>':''}</div>
+    ${done?`<button class="btn sm" style="margin-top:8px" onclick="dcSet('${j.id}','scheduled','${date}')">Desfazer</button>`:`<div class="row" style="margin-top:10px;gap:8px">
+      <button class="btn a" onclick="dcSet('${j.id}','done','${date}')">✅ Foi feita</button>
+      <button class="btn" onclick="this.parentNode.nextElementSibling.style.display='';this.parentNode.style.display='none'">📅 Reagendar</button>
+      <button class="btn d" onclick="dcSet('${j.id}','cancelled','${date}')">✖ Cancelada</button></div>
+     <div style="display:none;margin-top:10px"><div class="fg"><div class="f"><label>Nova data</label><input type="date" id="rd-${j.id}" value="${addDays(date,1)<today()?today():addDays(date,1)}"></div><div class="f"><label>Hora</label><input type="time" id="rt-${j.id}" value="${esc(j.time||'09:00')}"></div></div>
+      <button class="btn p" onclick="dcMove('${j.id}','${date}')">Salvar nova data</button></div>`}</div>`};
+  const pend=js.filter(j=>j.status!=='done').length;
+  modal(`<h2>🧹 Limpezas de ${fmtDpt(date)}</h2>
+   <p class="small muted" style="margin-top:0">${js.length?(pend?`Marque se cada limpeza foi feita. Se não deu, toque em <b>Reagendar</b>.`:'Pronto! O dia está fechado. 🎉'):'Nenhuma limpeza na agenda nesse dia.'}</p>
+   ${js.map(row).join('')}
+   ${moved.length?`<div class="small muted">Reagendadas: ${moved.map(j=>esc(clientName(j.clientId))+' → '+dShort(j.date)).join(', ')}</div>`:''}
+   <div class="row" style="justify-content:flex-end;margin-top:10px">${pend>1?`<button class="btn a" onclick="dcAllDone('${date}')">✅ Todas foram feitas</button>`:''}<button class="btn" onclick="closeModal()">Fechar</button></div>`);
+}
+function dcSet(id,st,date){const j=clone(S.jobs[id]);j.status=st;put('jobs',j);dayCheck(date);if(st==='done')toast('✅ Marcada como feita')}
+function dcAllDone(date){Object.values(S.jobs).filter(j=>j.type==='service'&&j.date===date&&j.status!=='cancelled'&&j.status!=='done').forEach(j=>{const x=clone(j);x.status='done';put('jobs',x)});dayCheck(date);toast('✅ Dia fechado')}
+function dcMove(id,date){const d=$('#rd-'+id).value,tm=$('#rt-'+id).value;if(!d){toast('Escolha a nova data');return}
+  const j=clone(S.jobs[id]);j.movedFrom=j.movedFrom||j.date;j.date=d;j.time=tm;j.status='scheduled';put('jobs',j);dayCheck(date);toast('📅 Reagendada para '+dShort(d)+(tm?' às '+tm:''))}
 function editClient(id){
   const c=id?clone(S.clients[id]):{id:uid(),type:'Homeowner',state:'FL',city:'Naples'};
   modal(`<h2>${id?'Editar cliente':'Novo cliente'}</h2>
@@ -904,7 +930,7 @@ function vAgenda(){
   <div class="grid two" style="grid-template-columns:2fr 1fr">
   <div class="card"><div class="row spread" style="margin-bottom:10px"><button class="btn sm" onclick="shiftMonth(-1)">‹</button><b style="text-transform:capitalize">${mName}</b><button class="btn sm" onclick="shiftMonth(1)">›</button></div>
    <div class="cal">${['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].map(x=>`<div class="h">${x}</div>`).join('')}${cells}</div></div>
-  <div class="card"><b>${fmtDpt(S.calSel)}</b>
+  <div class="card"><div class="row spread"><b>${fmtDpt(S.calSel)}</b>${dayJobs.some(j=>j.type==='service'&&j.status!=='cancelled')&&S.calSel<=today()?`<button class="btn sm a" onclick="dayCheck('${S.calSel}')">✅ Fechar o dia</button>`:''}</div>
    ${dayJobs.length?dayJobs.map(j=>`<div class="card" style="margin-top:10px;padding:12px;cursor:pointer" onclick="editJob('${j.id}')"><div class="row spread"><b>${esc(j.time||'Dia todo')}</b><span class="tag ${j.status==='done'?'t-done':j.type==='service'?'t-scheduled':'t-sent'}">${j.status==='done'?'Feito':JTYPES[j.type]}</span></div><div style="margin-top:4px">${esc(j.title||'')}</div><div class="small muted">${esc(clientName(j.clientId))}${j.address?' · '+esc(j.address):''}</div>${jobBadge(j)}</div>`).join(''):'<div class="empty">Nada neste dia.</div>'}
    <button class="btn" style="margin-top:12px;width:100%" onclick="editJob(null,null,S.calSel)">+ Agendar neste dia</button>
   </div></div>`;
@@ -1418,7 +1444,7 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('/eva-crm/sw.js
 /* ---------- Início ---------- */
 $('#lw').src=LOGO_EVA;
 const h0=(location.hash||'').slice(1); if(VIEWS[h0]) S.view=h0;
-window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(VIEWS[h]&&h!==S.view)go(h)});
+window.addEventListener('hashchange',()=>{if(checkdayFromHash())return;const h=location.hash.slice(1);if(VIEWS[h]&&h!==S.view)go(h)});
 render();
 initDb();
 </script>

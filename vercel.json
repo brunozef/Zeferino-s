@@ -73,5 +73,21 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/day-check.js": {
+      "experimentalTriggers": [
+        {
+          "type": "schedule/v1beta"
+        }
+      ]
+    }
+  },
+  "schedules": {
+    "eva-day-check": {
+      "schedule": "0 19 * * *",
+      "timezone": "America/New_York",
+      "function": "api/day-check"
+    }
+  }
 }
