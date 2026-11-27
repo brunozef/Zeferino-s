@@ -854,7 +854,7 @@ function vEquipe(){
 
 function periodTabs(){const[from,to]=payPeriod();
   return `<div class="tabs" style="margin-top:8px;overflow-x:auto;flex-wrap:nowrap">${[['today','Hoje'],['week','Esta semana'],['last','Semana passada'],['month','Este mês'],['lastmonth','Mês passado'],['custom','Escolher datas']].map(([k,v])=>`<button style="white-space:nowrap" class="${(S.payP||'week')===k?'on':''}" onclick="S.payP='${k}';render()">${v}</button>`).join('')}</div>
-   ${(S.payP==='custom')?`<div class="fg"><div class="f"><label>De</label><input type="date" value="${from}" onchange="S.payFrom=this.value;render()"></div><div class="f"><label>Até</label><input type="date" value="${to}" onchange="S.payTo=this.value;render()"></div></div>`:`<div class="small muted">${from===to?dShort(from):dShort(from)+' a '+dShort(to)}</div>`}`}
+   <div class="fg" style="margin-top:8px"><div class="f"><label>Do dia</label><input type="date" value="${from}" onchange="S.payP='custom';S.payFrom=this.value;S.payTo='${to}'>=this.value?'${to}':this.value;render()"></div><div class="f"><label>Até o dia</label><input type="date" value="${to}" onchange="S.payP='custom';S.payFrom='${from}';S.payTo=this.value;render()"></div></div>`}
 
 /* ============ RELATÓRIO: ganhos, ajudantes, despesas e lucro ============ */
 const EXCATS=['Gasolina','Produtos','Material','Outros'];
@@ -1018,7 +1018,7 @@ function helperReport(id){
   const tabs=[['today','Hoje'],['week','Esta semana'],['last','Semana passada'],['month','Este mês'],['lastmonth','Mês passado'],['custom','Escolher']];
   modal(`<h2 style="margin-bottom:4px">📊 ${esc(h.name)}</h2>
    <div class="tabs" style="overflow-x:auto;flex-wrap:nowrap">${tabs.map(([k,v])=>`<button style="white-space:nowrap" class="${(S.payP||'week')===k?'on':''}" onclick="S.payP='${k}';helperReport('${id}')">${v}</button>`).join('')}</div>
-   ${S.payP==='custom'?`<div class="fg"><div class="f"><label>De</label><input type="date" value="${from}" onchange="S.payFrom=this.value;helperReport('${id}')"></div><div class="f"><label>Até</label><input type="date" value="${to}" onchange="S.payTo=this.value;helperReport('${id}')"></div></div>`:`<div class="small muted">${from===to?dShort(from):dShort(from)+' a '+dShort(to)}</div>`}
+   <div class="fg" style="margin-top:8px"><div class="f"><label>Do dia</label><input type="date" value="${from}" onchange="S.payP='custom';S.payFrom=this.value;S.payTo='${to}'>=this.value?'${to}':this.value;helperReport('${id}')"></div><div class="f"><label>Até o dia</label><input type="date" value="${to}" onchange="S.payP='custom';S.payFrom='${from}';S.payTo=this.value;helperReport('${id}')"></div></div>
    ${payBox(h,from,to,r)}
    ${r.rep.length?`<b>🤝 Repasse (${helperPct(h)}%)</b>${r.rep.map(x=>`<div class="row spread small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>${dShort(x.date)} · ${esc(x.name)}<br><span class="muted">limpeza ${money(x.price)} × ${helperPct(h)}%</span></span><b>${money(x.pay)}</b></div>`).join('')}`:''}
    ${r.day.length?`<div style="margin-top:10px"><b>👭 Dias de ajuda</b>${r.day.map(d=>`<div class="row spread small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>${dShort(d.date)} · ${d.names.length} casa${d.names.length>1?'s':''}<br><span class="muted">${esc(d.names.join(', '))}</span></span><b>${money(d.pay)}</b></div>`).join('')}</div>`:''}
