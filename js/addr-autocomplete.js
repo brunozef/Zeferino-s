@@ -69,20 +69,24 @@
     const q=el.value.trim();
     if(q.length<4){close();return}
     if(ctrl)ctrl.abort();ctrl=new AbortController();
-    const url=`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=8&lang=en&lat=${CENTER.lat}&lon=${CENTER.lon}&bbox=${BBOX}`;
     try{
-      const r=await fetch(url,{signal:ctrl.signal});const j=await r.json();
-      const seen=new Set(),list=[];
-      for(const f of j.features||[]){const x=parse(f,q);if(!x)continue;const k=x.full.toLowerCase();if(seen.has(k))continue;seen.add(k);list.push(x)}
+      let list=null;
+      try{const r=await fetch('/api/geo?q='+encodeURIComponent(q),{signal:ctrl.signal});if(r.ok)list=await r.json()}catch(e){if(e.name==='AbortError')throw e}
+      if(!Array.isArray(list)){ // reserva: direto no Photon
+        const url=`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=8&lang=en&lat=${CENTER.lat}&lon=${CENTER.lon}&bbox=${BBOX}`;
+        const j=await (await fetch(url,{signal:ctrl.signal})).json();
+        const seen=new Set();list=[];
+        for(const f of j.features||[]){const x=parse(f,q);if(!x)continue;const k=x.full.toLowerCase();if(seen.has(k))continue;seen.add(k);list.push(x)}
+      }
       if(document.activeElement!==el)return;
-      list.length?show(el,list.slice(0,6)):show(el,[],'Nenhum endereço encontrado — continue digitando');
+      list.length?show(el,list.slice(0,6)):show(el,[],'Nenhum endereço encontrado — digite o número, a rua e a cidade');
     }catch(e){if(e.name!=='AbortError')close()}
   }
 
   document.addEventListener('input',e=>{
     const el=e.target;if(!el.matches||!el.matches(SEL)||!e.isTrusted)return;
     el.setAttribute('autocomplete','off');
-    clearTimeout(timer);timer=setTimeout(()=>search(el),300);
+    clearTimeout(timer);timer=setTimeout(()=>search(el),400);
   });
   document.addEventListener('keydown',e=>{
     if(!dd||e.target!==cur||!items.length)return;
