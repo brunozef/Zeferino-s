@@ -623,9 +623,9 @@ async function doDelLeads(){const ids=window._delIds||[];closeModal();for(const 
 /* ---------- Clientes ---------- */
 function vClientes(){
   const q=S.cliQ.toLowerCase();
-  const list=Object.values(S.clients).filter(c=>!q||[c.name,c.company,c.phone,c.email,c.address,c.city].join(' ').toLowerCase().includes(q)).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
-  return `<div class="row spread"><div><h1>Clientes</h1><p class="sub">Casas, Airbnb, property managers e empresas</p></div><button class="btn a" onclick="editClient()">+ Novo cliente</button></div>
-  <div class="card"><input placeholder="Buscar por nome, telefone, e-mail, cidade…" value="${esc(S.cliQ)}" oninput="S.cliQ=this.value;clearTimeout(window._cq);window._cq=setTimeout(()=>{render();const i=document.querySelector('.card input');i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)" style="margin-bottom:12px">
+  const list=Object.values(S.clients).filter(c=>!q||(window.__qsMatch?__qsMatch(c,S.cliQ):[c.name,c.company,c.phone,c.email,c.address,c.city].join(' ').toLowerCase().includes(q))).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  return `<div class="row spread"><div><h1>Clientes</h1><p class="sub">Casas, Airbnb, property managers e empresas</p></div><div class="row"><button class="btn" onclick="importContacts()">📥 Importar contatos</button><button class="btn a" onclick="editClient()">+ Novo cliente</button></div></div>
+  <div class="card"><input placeholder="🔎 Buscar cliente: nome, telefone, rua, cidade…" style="font-size:16px;padding:12px" value="${esc(S.cliQ)}" oninput="S.cliQ=this.value;clearTimeout(window._cq);window._cq=setTimeout(()=>{render();const i=document.querySelector('.card input');i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)" style="margin-bottom:12px">
   ${list.length?`<table><thead><tr><th>Nome</th><th class="hide-m">Tipo</th><th>Contato</th><th class="hide-m">Endereço</th><th class="num hide-m">Faturado</th></tr></thead><tbody>
   ${list.map(c=>{const inv=Object.values(S.docs).filter(d=>d.clientId===c.id&&d.kind==='invoice');return `<tr class="click" onclick="S.clientId='${c.id}';render()"><td><b>${esc(c.name)}</b>${c.lead&&c.leadStatus==='new'?' <span class="tag t-overdue">Lead novo</span>':''}${c.company?`<div class="small muted">${esc(c.company)}</div>`:''}</td><td class="hide-m"><span class="tag">${esc(c.type||'')}</span></td><td>${esc(c.phone||'')}<div class="small muted">${esc(c.email||'')}</div></td><td class="hide-m">${esc([c.address,c.city].filter(Boolean).join(', '))}</td><td class="num hide-m">${money(inv.reduce((s,d)=>s+totals(d).total,0))}</td></tr>`}).join('')}
   </tbody></table>`:`<div class="empty">${q?'Nenhum cliente encontrado.':'Nenhum cliente cadastrado ainda.'}</div>`}</div>`;
@@ -1274,6 +1274,7 @@ render();
 initDb();
 </script>
 <script src="/js/addr-autocomplete.js?v=2"></script>
-<script src="/js/client-search.js?v=1"></script>
+<script src="/js/client-search.js?v=2"></script>
+<script src="/js/contacts-import.js?v=1"></script>
 </body>
 </html>

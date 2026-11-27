@@ -23,8 +23,7 @@
 #qsBox .r small{display:block;color:#777;margin-top:2px}.qs-filter{margin-bottom:6px}`;
   document.head.appendChild(css);
 
-  const btn=document.createElement('button');btn.id='qsBtn';btn.title='Buscar cliente';btn.textContent='🔎';
-  btn.onclick=open;document.body.appendChild(btn);
+  window.__qsMatch=match;window.openClientSearch=open;
 
   function open(){
     const box=document.createElement('div');box.id='qsBox';
