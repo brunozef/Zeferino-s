@@ -776,10 +776,11 @@ function helperPay(h,from,to){
 const dShort=d=>`${WDAYS[new Date(d+'T12:00').getDay()]} ${d.slice(8,10)}/${d.slice(5,7)}`;
 function shareHelperPay(id){
   const h=S.helpers[id];const[from,to]=payPeriod();const r=helperPay(h,from,to);
-  const lines=[`Olá ${h.name}! Resumo de ${dShort(from)} a ${dShort(to)}:`];
-  r.day.forEach(d=>lines.push(`👭 ${dShort(d.date)} – ${d.names.length} casa${d.names.length>1?'s':''}: ${money(d.pay)}`));
-  r.rep.forEach(x=>lines.push(`🤝 ${dShort(x.date)} – repasse ${x.name}: ${money(x.pay)}`));
-  lines.push(`💵 Total: ${money(r.total)}`);
+  const lines=[`Olá ${h.name}! Resumo ${from===to?'de '+dShort(from):'de '+dShort(from)+' a '+dShort(to)} – Eva's Expert Cleaning`,''];
+  if(r.day.length){lines.push('👭 Dias de ajuda:');r.day.forEach(d=>{lines.push(`• ${dShort(d.date)} – ${d.names.length} casa${d.names.length>1?'s':''}: ${money(d.pay)}`);d.names.forEach(n=>lines.push(`   – ${n}`))});lines.push('')}
+  if(r.rep.length){lines.push(`🤝 Repasse (${helperPct(h)}%):`);r.rep.forEach(x=>lines.push(`• ${dShort(x.date)} – ${x.name}: limpeza ${money(x.price)} × ${helperPct(h)}% = ${money(x.pay)}`));lines.push('')}
+  if(!r.day.length&&!r.rep.length)lines.push('Nenhum trabalho nesse período.');
+  lines.push(`💵 Total a receber: ${money(r.total)}`);
   const text=lines.join('\n');if(navigator.share)navigator.share({text}).catch(()=>{});else location.href='sms:'+(h.phone||'')+'?&body='+encodeURIComponent(text);
 }
 function vEquipe(){
