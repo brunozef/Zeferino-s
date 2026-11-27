@@ -913,7 +913,74 @@ function helperReport(id){
    ${r.day.length?`<div style="margin-top:10px"><b>👭 Dias de ajuda</b>${r.day.map(d=>`<div class="row spread small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>${dShort(d.date)} · ${d.names.length} casa${d.names.length>1?'s':''}<br><span class="muted">${esc(d.names.join(', '))}</span></span><b>${money(d.pay)}</b></div>`).join('')}</div>`:''}
    ${!r.rep.length&&!r.day.length?'<div class="empty">Nenhum trabalho dela nesse período.</div>':''}
    ${r.rep.some(x=>!x.price)?'<div class="banner small" style="margin-top:8px">⚠️ Tem limpeza sem valor — coloque o valor no cliente ou no agendamento.</div>':''}
-   <div class="row spread" style="margin-top:14px"><button class="btn" onclick="closeModal()">Fechar</button>${r.rep.length||r.day.length?`<button class="btn p" onclick="shareHelperPay('${id}')">📤 Mandar para ${esc(h.name.split(' ')[0])}</button>`:''}</div>`);
+   ${r.rep.length||r.day.length?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+     <button class="btn a" style="grid-column:1/-1" onclick="helperPdfView('${id}')">👁 Ver PDF</button>
+     <button class="btn p" onclick="helperPdf('${id}','share')">📤 Enviar PDF (WhatsApp)</button><button class="btn" onclick="helperPdf('${id}','download')">⬇️ Baixar PDF</button>
+     <button class="btn" onclick="shareHelperPay('${id}')">💬 Mandar como texto</button><button class="btn" onclick="closeModal()">Fechar</button></div>`:`<div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="closeModal()">Fechar</button></div>`}`);
+}
+
+/* ---------- PDF do relatório da ajudante (diária não mostra o valor das casas) ---------- */
+function helperPdfBuild(id){
+  const h=S.helpers[id];const[from,to]=payPeriod();const r=helperPay(h,from,to);const pct=helperPct(h);
+  const {jsPDF}=window.jspdf;const pdf=new jsPDF({unit:'pt',format:'letter'});const M=40,W=pdf.internal.pageSize.getWidth();
+  try{pdf.addImage(LOGO_EVA,'PNG',M,20,50*LOGO_EVA_SIZE[0]/LOGO_EVA_SIZE[1],50)}catch(e){}
+  pdf.setFont('helvetica','bold');pdf.setFontSize(16);pdf.setTextColor(43,32,38);pdf.text('Relatório de pagamento',W-M,38,{align:'right'});
+  pdf.setFont('helvetica','normal');pdf.setFontSize(10);pdf.setTextColor(110);pdf.text(S.settings.company||"Eva's Expert Cleaning Services",W-M,54,{align:'right'});
+  let y=96;pdf.setTextColor(30);pdf.setFontSize(12);pdf.setFont('helvetica','bold');pdf.text(h.name,M,y);
+  pdf.setFont('helvetica','normal');pdf.setFontSize(10);pdf.text(`Período: ${from===to?dShort(from):dShort(from)+' a '+dShort(to)}`,M,y+15);
+  y+=32;
+  if(r.day.length){
+    pdf.setFont('helvetica','bold');pdf.setFontSize(11);pdf.text('Dias de ajuda',M,y);y+=6;
+    pdf.autoTable({startY:y,margin:{left:M,right:M},head:[['Dia','Casas','Clientes','Valor']],
+      body:r.day.map(d=>[dShort(d.date),String(d.names.length),d.names.join(', '),money(d.pay)]),
+      styles:{fontSize:9,cellPadding:5,lineColor:[240,219,228]},headStyles:{fillColor:[217,79,140],textColor:255},
+      columnStyles:{0:{cellWidth:70},1:{cellWidth:44,halign:'center'},3:{cellWidth:72,halign:'right'}},alternateRowStyles:{fillColor:[253,241,245]}});
+    y=pdf.lastAutoTable.finalY+16;
+  }
+  if(r.rep.length){
+    pdf.setFont('helvetica','bold');pdf.setFontSize(11);pdf.text(`Repasse (${pct}%)`,M,y);y+=6;
+    pdf.autoTable({startY:y,margin:{left:M,right:M},head:[['Dia','Cliente','Valor da limpeza',`${pct}%`]],
+      body:r.rep.map(x=>[dShort(x.date),x.name,money(x.price),money(x.pay)]),
+      styles:{fontSize:9,cellPadding:5,lineColor:[240,219,228]},headStyles:{fillColor:[217,79,140],textColor:255},
+      columnStyles:{0:{cellWidth:70},2:{cellWidth:100,halign:'right'},3:{cellWidth:72,halign:'right'}},alternateRowStyles:{fillColor:[253,241,245]}});
+    y=pdf.lastAutoTable.finalY+16;
+  }
+  pdf.setDrawColor(217,79,140);pdf.setLineWidth(1);pdf.line(W-M-220,y,W-M,y);y+=20;
+  pdf.setFont('helvetica','bold');pdf.setFontSize(14);pdf.text('Total a receber:',W-M-220,y);pdf.text(money(r.total),W-M,y,{align:'right'});
+  pdf.setFont('helvetica','normal');pdf.setFontSize(8);pdf.setTextColor(140);pdf.text('Gerado em '+new Date().toLocaleDateString('pt-BR'),M,pdf.internal.pageSize.getHeight()-24);
+  const name=`Pagamento ${h.name} ${from}${from===to?'':' a '+to}.pdf`.replace(/[\\/:*?"<>|]/g,'');
+  return {pdf,name};
+}
+async function helperPdf(id,how){
+  if(!window.jspdf){toast('Gerador de PDF não carregou. Recarregue a página.');return}
+  try{
+    const {pdf,name}=helperPdfBuild(id);const blob=pdf.output('blob');
+    if(how==='share'){
+      const file=new File([blob],name,{type:'application/pdf'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:name});return}catch(e){if(e&&e.name==='AbortError')return}}
+      toast('Este aparelho não envia arquivo direto — o PDF foi baixado, mande pelo WhatsApp');
+    }
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);
+    if(how!=='share')toast('PDF salvo');
+  }catch(e){toast('Não foi possível gerar o PDF: '+(e.message||e))}
+}
+
+async function helperPdfView(id){
+  if(!window.jspdf){toast('Gerador de PDF não carregou. Recarregue a página.');return}
+  const h=S.helpers[id];
+  modal(`<h2>PDF – ${esc(h.name)}</h2>
+   <div id="pv" style="background:#f4e4eb;border-radius:10px;padding:10px;max-height:65vh;overflow:auto;text-align:center"><div class="empty">Gerando…</div></div>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+    <button class="btn p" onclick="helperPdf('${id}','share')">📤 Enviar (WhatsApp)</button><button class="btn" onclick="helperPdf('${id}','download')">⬇️ Baixar</button>
+    <button class="btn" style="grid-column:1/-1" onclick="helperReport('${id}')">← Voltar</button></div>`,true);
+  try{
+    const bytes=helperPdfBuild(id).pdf.output('arraybuffer');const lib=await getPdfjs();
+    const doc=await lib.getDocument({data:new Uint8Array(bytes)}).promise;const box=document.getElementById('pv');if(!box)return;box.innerHTML='';
+    const w=Math.min(box.clientWidth-20,820);
+    for(let i=1;i<=doc.numPages;i++){const pg=await doc.getPage(i);const v1=pg.getViewport({scale:1});const dpr=Math.min(window.devicePixelRatio||1,2);const vp=pg.getViewport({scale:w/v1.width*dpr});
+      const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;c.style.cssText=`width:${w}px;height:${vp.height/dpr}px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18);margin:0 auto 12px;display:block`;
+      box.appendChild(c);await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise}
+  }catch(e){const box=document.getElementById('pv');if(box)box.innerHTML='<div class="empty">Não deu para mostrar aqui. Use “Baixar” para abrir o PDF.</div>'}
 }
 function editClient(id){
   const c=id?clone(S.clients[id]):{id:uid(),type:'Homeowner',state:'FL',city:'Naples'};
