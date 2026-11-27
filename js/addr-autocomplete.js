@@ -10,7 +10,7 @@
   const css=document.createElement('style');
   css.textContent=`.addr-dd{position:absolute;left:0;right:0;top:100%;z-index:200;background:#fff;border:1px solid #d6d9e0;border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.18);margin-top:4px;max-height:280px;overflow:auto}
 .addr-dd div{padding:11px 12px;cursor:pointer;border-bottom:1px solid #f0f1f4;font-size:14px;line-height:1.3}
-.addr-dd div:last-child{border-bottom:0}.addr-dd div.on,.addr-dd div:hover{background:#f6f1e3}
+.addr-dd div:last-child{border-bottom:0}.addr-dd div.on,.addr-dd div:hover{background:#f3f0ea}
 .addr-dd small{display:block;color:#6b7280;font-size:12px;margin-top:2px}.addr-dd .addr-msg{color:#6b7280;cursor:default;font-size:13px}`;
   document.head.appendChild(css);
 
