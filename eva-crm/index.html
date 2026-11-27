@@ -747,15 +747,59 @@ function jobCalc(form){
   else if(mode==='ajuda'){if(h){const n=helpDayJobs(h.id,form.date.value,form.dataset.jid).length+1;msg=`👭 Neste dia ${esc(h.name)} ajuda em <b>${n} casa${n>1?'s':''}</b> → recebe <b>${money(dayRate(n))}</b> pelo dia`}else msg='Escolha a ajudante.'}
   out.style.display=msg?'':'none';out.innerHTML=msg;
 }
+
+/* ---------- Documentos das ajudantes (cofre privado) ---------- */
+const DOCTYPES=['W-9','Documento com foto (ID)','Contrato de subcontratada','Seguro (COI)','Licença / registro','Outro'];
+function docsList(h){const ds=(S.helpers[h.id]||h).docs||[];
+  return ds.length?ds.map(d=>`<div class="row spread small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>📄 <b>${esc(d.type)}</b><br><span class="muted">${esc(d.name)} · ${d.at?new Date(d.at).toLocaleDateString('pt-BR'):''}</span></span><span class="row" style="gap:6px"><button type="button" class="btn sm" onclick="openDoc('${esc(d.path)}')">Ver</button><button type="button" class="btn sm d" onclick="delDoc('${h.id}','${esc(d.path)}')">✕</button></span></div>`).join(''):'<div class="small muted">Nenhum documento ainda. Comece pelo <b>W-9</b>.</div>'}
+async function docApi(body){const {data}=await sb.auth.getSession();const tok=data&&data.session&&data.session.access_token;
+  const r=await fetch('/api/helper-docs',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(tok||'')},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error==='too_big'?'Arquivo muito grande (máx. 3 MB)':j.error==='login'?'Entre de novo no app':'Falhou ('+(j.error||r.status)+')');return j}
+function shrinkImage(file){return new Promise((ok,bad)=>{const img=new Image();img.onload=()=>{const m=1800,s=Math.min(1,m/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=img.width*s;c.height=img.height*s;c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(b=>b?ok(b):bad(new Error('img')),'image/jpeg',.82)};img.onerror=()=>bad(new Error('Não consegui abrir a imagem'));img.src=URL.createObjectURL(file)})}
+const b64=blob=>new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.readAsDataURL(blob)});
+function pickDoc(hid){
+  const form=$('#hf');const name=form&&form.name.value.trim();if(!name){toast('Coloque o nome da ajudante primeiro');return}
+  let inp=document.getElementById('docInp');if(!inp){inp=document.createElement('input');inp.type='file';inp.id='docInp';inp.accept='image/*,application/pdf';inp.style.cssText='position:fixed;left:-9999px';document.body.appendChild(inp)}
+  inp.onchange=async()=>{const file=inp.files&&inp.files[0];inp.value='';if(!file)return;
+    const type=(form.querySelector('[name=docType]:checked')||{}).value||'Outro';
+    try{toast('Enviando…');let blob=file,ct=file.type||'application/pdf',fname=file.name||'documento';
+      if(/^image\//.test(ct)&&!/pdf/.test(ct)){blob=await shrinkImage(file);ct='image/jpeg';fname=fname.replace(/\.[^.]+$/,'')+'.jpg'}
+      const j=await docApi({action:'upload',helperId:hid,name:type+'-'+fname,type:ct,data:await b64(blob)});
+      const h=clone(S.helpers[hid]||{id:hid,name,day:true,repasse:true,pct:''});if(!h.name)h.name=name;
+      h.docs=[...(h.docs||[]),{type,name:fname,path:j.path,at:new Date().toISOString()}];if(type==='W-9'&&!h.w9Date)h.w9Date=today();
+      await put('helpers',h);const box=$('#hDocs');if(box)box.innerHTML=docsList(h);if(type==='W-9'&&form.w9Date&&!form.w9Date.value)form.w9Date.value=today();toast('📎 Documento arquivado')
+    }catch(e){toast(e.message||'Não foi possível enviar')}};
+  inp.click();
+}
+async function openDoc(path){const w=window.open('','_blank');try{const j=await docApi({action:'url',path});if(w)w.location=j.url;else location.href=j.url}catch(e){if(w)w.close();toast(e.message)}}
+async function delDoc(hid,path){if(!confirm('Apagar este documento?'))return;try{await docApi({action:'delete',path});const h=clone(S.helpers[hid]);h.docs=(h.docs||[]).filter(d=>d.path!==path);await put('helpers',h);const box=$('#hDocs');if(box)box.innerHTML=docsList(h);toast('Documento apagado')}catch(e){toast(e.message)}}
+function yearPaid(h,y){return Object.values(S.hpays||{}).filter(p=>p.helperId===h.id&&(p.date||'').startsWith(String(y))).reduce((s,p)=>s+(+p.amount||0),0)}
+function need1099(y){return +y>=2026?2000:600}
 function editHelper(id){
   const h=id?clone(S.helpers[id]):{id:uid(),name:'',phone:'',day:true,repasse:true,pct:''};
   modal(`<h2>${id?'Editar ajudante':'Nova ajudante'}</h2><form id="hf">
    <div class="fg"><div class="f"><label>Nome *</label><input name="name" required value="${esc(h.name)}" ${id?'':'autofocus'}></div><div class="f"><label>Telefone</label><input name="phone" type="tel" value="${esc(h.phone||'')}"></div></div>
    <div class="f"><label>Como ela trabalha?</label><div class="chips"><input type="checkbox" name="day" id="hk-d" ${h.day?'checked':''}><label for="hk-d">Ajuda no dia</label><input type="checkbox" name="repasse" id="hk-r" ${h.repasse?'checked':''}><label for="hk-r">Repasse</label></div></div>
    <div class="f"><label>% do repasse para ela</label><input name="pct" type="number" inputmode="decimal" placeholder="${+S.settings.repassePct||70} (padrão)" value="${esc(h.pct??'')}"></div>
+   <div class="card" style="padding:12px;margin:0 0 12px"><b>📋 Dados para o IRS (W-9 / 1099)</b>
+    <div class="small muted" style="margin:2px 0 8px">Ela é subcontratada (1099), não funcionária. Esses dados vêm do formulário W-9 que ela preenche.</div>
+    <div class="fg"><div class="f"><label>Nome legal (como no imposto)</label><input name="legalName" value="${esc(h.legalName||'')}"></div><div class="f"><label>Empresa / DBA (se tiver)</label><input name="biz" value="${esc(h.biz||'')}"></div></div>
+    <div class="f"><label>Classificação</label><div class="chips">${['Pessoa física / Sole proprietor','LLC','Corporation','Outro'].map((v,k)=>`<input type="radio" name="taxClass" id="tc-${k}" value="${v}" ${h.taxClass===v?'checked':''}><label for="tc-${k}">${v}</label>`).join('')}</div></div>
+    <div class="f"><label>Endereço</label><input name="address" value="${esc(h.address||'')}"></div>
+    <div class="fg"><div class="f"><label>Cidade</label><input name="city" value="${esc(h.city||'')}"></div><div class="f"><label>Estado</label><input name="state" value="${esc(h.state||'FL')}"></div><div class="f"><label>ZIP</label><input name="zip" value="${esc(h.zip||'')}"></div></div>
+    <div class="fg"><div class="f"><label>Tipo de TIN</label><select name="tinType">${['','SSN','ITIN','EIN'].map(v=>`<option ${h.tinType===v?'selected':''} value="${v}">${v||'—'}</option>`).join('')}</select></div><div class="f"><label>Últimos 4 dígitos</label><input name="tinLast4" inputmode="numeric" maxlength="4" value="${esc(h.tinLast4||'')}" placeholder="0000"></div></div>
+    <div class="small muted" style="margin:-4px 0 8px">🔒 Por segurança o app guarda só os 4 últimos números. O número completo fica no W-9 arquivado abaixo.</div>
+    <div class="fg"><div class="f"><label>E-mail</label><input name="email" type="email" value="${esc(h.email||'')}"></div><div class="f"><label>W-9 recebido em</label><input name="w9Date" type="date" value="${esc(h.w9Date||'')}"></div></div>
+   </div>
+   <div class="card" style="padding:12px;margin:0 0 12px"><b>📎 Documentos arquivados</b>
+    <div id="hDocs" style="margin-top:6px">${docsList(h)}</div>
+    <div class="f" style="margin:10px 0 6px"><label>Tipo do documento</label><div class="chips">${DOCTYPES.map((v,k)=>`<input type="radio" name="docType" id="dt-${k}" value="${v}" ${k===0?'checked':''}><label for="dt-${k}">${v}</label>`).join('')}</div></div>
+    <button type="button" class="btn a" onclick="pickDoc('${h.id}')">📷 Adicionar foto ou PDF</button>
+    <div class="small muted" style="margin-top:6px">Arquivos ficam num cofre privado — só abre por dentro do app.</div>
+   </div>
    <div class="f"><label>Observações</label><textarea name="notes">${esc(h.notes||'')}</textarea></div>
    <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="confirmDel('helpers','${id}','esta ajudante')">Excluir</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Salvar</button></div></div></form>`);
-  $('#hf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);h.name=(f.get('name')||'').trim();h.phone=(f.get('phone')||'').trim();h.day=!!f.get('day');h.repasse=!!f.get('repasse');h.pct=(f.get('pct')||'').trim();h.notes=(f.get('notes')||'').trim();put('helpers',h);closeModal();toast('Ajudante salva')};
+  $('#hf').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);h.name=(f.get('name')||'').trim();h.phone=(f.get('phone')||'').trim();h.day=!!f.get('day');h.repasse=!!f.get('repasse');h.pct=(f.get('pct')||'').trim();h.notes=(f.get('notes')||'').trim();for(const k of ['legalName','biz','taxClass','address','city','state','zip','tinType','tinLast4','email','w9Date'])h[k]=(f.get(k)||'').trim();h.tinLast4=h.tinLast4.replace(/\D/g,'').slice(-4);h.docs=(S.helpers[h.id]||h).docs||h.docs||[];put('helpers',h);closeModal();toast('Ajudante salva')};
 }
 function payPeriod(){
   const t=today(),dow=new Date(t+'T12:00').getDay(),mon=addDays(t,-((dow+6)%7));
@@ -789,7 +833,11 @@ function vEquipe(){
   const hs=helperList();const[from,to,label]=payPeriod();const st=S.settings;const rates=st.dayRates||{};
   return `<div class="row spread"><div><h1>Equipe</h1><p class="sub">Ajudantes do dia e repasse · quanto pagar para cada uma</p></div><button class="btn a" onclick="editHelper()">+ Nova ajudante</button></div>
   ${hs.length?`<div class="card">${hs.map(h=>`<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div class="row spread"><div><b>${esc(h.name)}</b><div class="small muted">${esc(h.phone||'')}</div></div><div>${h.day?'<span class="tag t-sent">Ajuda no dia</span> ':''}${h.repasse?`<span class="tag t-partial">Repasse ${helperPct(h)}%</span>`:''}</div></div>
+   <div class="small" style="margin-top:6px">${(h.docs||[]).some(d=>d.type==='W-9')||h.w9Date?'<span class="tag t-done">W-9 ✅</span>':'<span class="tag t-overdue">⚠️ Falta W-9</span>'} <span class="muted">· ${(h.docs||[]).length} documento${(h.docs||[]).length===1?'':'s'} · pago em ${new Date().getFullYear()}: <b>${money(yearPaid(h,new Date().getFullYear()))}</b>${yearPaid(h,new Date().getFullYear())>=need1099(new Date().getFullYear())?' · <b style="color:var(--bad)">vai precisar de 1099-NEC</b>':''}</span></div>
    <div class="row" style="margin-top:8px;gap:8px"><button class="btn a sm" onclick="helperReport('${h.id}')">📊 Relatório / pagamento</button><button class="btn sm" onclick="editHelper('${h.id}')">Editar</button></div></div>`).join('')}</div>`:'<div class="card empty">Nenhuma ajudante ainda. Toque em <b>+ Nova ajudante</b>.</div>'}
+  ${hs.length?(()=>{const y=S.y1099||new Date().getFullYear(),lim=need1099(y);return `<div class="card" style="margin-top:14px"><div class="row spread"><b>🧾 1099-NEC — ano ${y}</b><span class="row" style="gap:6px"><button class="btn sm" onclick="S.y1099=${y-1};render()">‹</button><button class="btn sm" onclick="S.y1099=${y+1};render()">›</button></span></div>
+   <div class="small muted" style="margin:4px 0 8px">Para cada subcontratada que receber <b>${money(lim)} ou mais</b> no ano, é preciso enviar o 1099-NEC (para ela e para o IRS) até o fim de janeiro do ano seguinte. Valor = soma dos pagamentos lançados em “Dar baixa”.</div>
+   <table><tbody>${hs.map(h=>{const p=yearPaid(h,y);const w9=(h.docs||[]).some(d=>d.type==='W-9')||h.w9Date;return `<tr><td><b>${esc(h.name)}</b><div class="small muted">${esc(h.legalName||'')}${h.tinType?' · '+h.tinType+' •••'+esc(h.tinLast4||''):''}</div></td><td>${w9?'<span class="tag t-done">W-9 ✅</span>':'<span class="tag t-overdue">Falta W-9</span>'}</td><td class="num"><b>${money(p)}</b><div class="small">${p>=lim?'<span style="color:var(--bad)">precisa 1099</span>':'<span class="muted">abaixo do limite</span>'}</div></td></tr>`}).join('')}</tbody></table></div>`})():''}
   <div class="card" style="margin-top:14px"><b>💵 Quanto pagar</b>
    ${periodTabs()}
    ${hs.map(h=>{const r=helperPay(h,from,to);if(!r.rep.length&&!r.day.length)return '';return `<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px"><div class="row spread"><b>${esc(h.name)}</b><b style="font-size:18px">${money(r.total)}</b></div>
