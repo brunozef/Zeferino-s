@@ -127,6 +127,7 @@ tr.click:hover td{background:#fafbfc}
 .doc-head{background:#fff;border-bottom:3px solid #d94f8c;margin:-24px -24px 18px;padding:16px 24px;border-radius:10px 10px 0 0;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .doc-head img{height:56px}
 .doc-head .k{color:#d94f8c;font-family:var(--serif);font-size:22px;letter-spacing:2px}
+.cpb{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin-left:4px;vertical-align:middle;border-radius:50%;border:1px solid #f0c3d7;background:#fbe6ef;color:#b8376f;cursor:pointer;padding:0}.cpb:active{transform:scale(.92)}
 .lead{border-left:3px solid var(--amber);padding:12px;background:#fff;border-radius:8px;margin-top:10px}
 .clause{margin:10px 0}
 .clause b{color:var(--navy)}
@@ -556,16 +557,19 @@ function leadInfo(c){
   return o;
 }
 function fmtPhone(p){const d=String(p||'').replace(/\D/g,'').replace(/^1(?=\d{10}$)/,'');return d.length===10?`(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`:String(p||'')}
+const CPICO='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+function cpBtn(v,what){return `<button type="button" class="cpb" aria-label="Copiar ${what}" onclick="event.stopPropagation();copyTxt(decodeURIComponent('${encodeURIComponent(v).replace(/'/g,'%27')}'),'${what}')">${CPICO}</button>`}
+async function copyTxt(v,what){try{await navigator.clipboard.writeText(v)}catch(e){const t=document.createElement('textarea');t.value=v;t.style.cssText='position:fixed;opacity:0';document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch(x){}t.remove()}toast((what.charAt(0).toUpperCase()+what.slice(1))+' copiado')}
 function leadCard(c){
   const tel=(c.phone||'').replace(/[^0-9+]/g,'');const L=leadInfo(c);
   const loc=[c.address,c.city].filter(Boolean).join(', ');
   const box=(l,v)=>`<div style="background:#fbe6ef;border-radius:8px;padding:8px 10px"><div class="small" style="color:#b8376f">${l}</div><div style="font-size:22px;font-weight:700;color:#8a2453">${esc(v||'—')}</div></div>`;
   const ln=(ic,h)=>`<div style="display:flex;gap:8px;align-items:center;padding:3px 0;font-size:14px"><span style="width:20px;text-align:center">${ic}</span><span style="min-width:0;overflow-wrap:anywhere">${h}</span></div>`;
   return `<div class="lead">
-  <div class="row spread" style="align-items:flex-start;flex-wrap:nowrap;gap:8px"><div style="min-width:0">${S.view==='leads'?`<input type="checkbox" style="width:auto;margin:0 6px 0 0;vertical-align:middle" ${S.leadSel.has(c.id)?'checked':''} onchange="toggleLeadSel('${c.id}',this.checked)">`:''}<b style="font-size:17px">${esc(c.name)}</b></div><span class="tag ${LCLS[c.leadStatus]||''}">${LSTAT[c.leadStatus]||''}</span></div>
+  <div class="row spread" style="align-items:flex-start;flex-wrap:nowrap;gap:8px"><div style="min-width:0">${S.view==='leads'?`<input type="checkbox" style="width:auto;margin:0 6px 0 0;vertical-align:middle" ${S.leadSel.has(c.id)?'checked':''} onchange="toggleLeadSel('${c.id}',this.checked)">`:''}<b style="font-size:17px">${esc(c.name)}</b> ${cpBtn(c.name||'','nome')}</div><span class="tag ${LCLS[c.leadStatus]||''}">${LSTAT[c.leadStatus]||''}</span></div>
   <div class="small muted" style="margin:2px 0 8px">${c.leadDate?new Date(c.leadDate).toLocaleString('pt-BR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):''} · ${esc(c.source||'')}</div>
   <div style="border-top:1px solid var(--line);padding-top:6px">
-   ${c.phone?ln('📞',`<a href="tel:${esc(tel)}">${esc(fmtPhone(c.phone))}</a>`):''}
+   ${c.phone?ln('📞',`<a href="tel:${esc(tel)}">${esc(fmtPhone(c.phone))}</a> ${cpBtn(fmtPhone(c.phone),'telefone')}`):''}
    ${c.email?ln('✉️',`<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>`):''}
    ${loc?ln('📍',esc(loc)):''}
   </div>
