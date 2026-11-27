@@ -73,11 +73,13 @@
     modal(`<h2>📥 Importar clientes dos contatos</h2>
       ${can?`<button class="btn a" style="width:100%;padding:14px;margin-bottom:10px" onclick="closeModal();__ciPick()">Escolher contatos do celular</button>`:''}
       <button class="btn${can?'':' a'}" style="width:100%;padding:14px" onclick="closeModal();__ciFile()">Abrir arquivo de contatos (.vcf)</button>
-      <div class="small muted" style="margin-top:14px;line-height:1.5"><b>Como pegar vários de uma vez no iPhone:</b><br>
-      1. Abra o app <b>Contatos</b> → toque em <b>Listas</b> (canto de cima) → <b>Adicionar lista</b> → nome “Clientes”.<br>
-      2. Entre na lista e adicione os clientes.<br>
-      3. Volte em Listas, <b>segure o dedo</b> na lista “Clientes” → <b>Exportar</b> → <b>Salvar em Arquivos</b>.<br>
-      4. Aqui, toque em <b>Abrir arquivo de contatos</b> e escolha o arquivo salvo.</div>
+      <div class="small" style="margin-top:14px;line-height:1.6;background:#faf6f8;border-radius:10px;padding:12px"><b>📱 Como importar os clientes do iPhone:</b><br>
+      1. Abra o app <b>Contatos</b> do iPhone → toque em <b>Listas</b> (no canto de cima) → <b>Adicionar lista</b> → dê o nome <b>“Clientes”</b>.<br>
+      2. Entre na lista e adicione <b>só os clientes</b>.<br>
+      3. Volte em Listas, <b>segure o dedo</b> na lista “Clientes” → <b>Exportar</b> → <b>Salvar em Arquivos</b> → escolha <b>No meu iPhone</b> → Salvar.<br>
+      4. Volte aqui e toque em <b>Abrir arquivo de contatos (.vcf)</b> → escolha o arquivo salvo.<br>
+      5. Confira a lista, desmarque quem não for cliente e toque em <b>Importar marcados</b>.<br>
+      <span class="muted">Não aparece “Listas” no app Contatos? Atualize o iPhone em Ajustes → Geral → Atualização de Software (precisa do iOS 16 ou mais novo).</span></div>
       <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeModal()">Fechar</button></div>`);
   };
   window.__ciPick=pick;window.__ciFile=file;window.__parseVcf=parseVcf;
