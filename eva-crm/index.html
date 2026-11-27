@@ -465,6 +465,7 @@ function vPainel(){
   const recent=docs.sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0,6);
   return `<div class="row spread"><div><h1>Painel</h1><p class="sub">${esc(S.settings.company)} · ${fmtDpt(t)}</p></div>
   <div class="row"><button class="btn" onclick="editClient()">+ Cliente</button><button class="btn" onclick="editJob()">+ Agendar</button><button class="btn a" onclick="newDoc('estimate')">+ Novo Orçamento</button></div></div>
+  ${workDays()}
   ${pushState()!=='on'&&pushState()!=='denied'?`<div class="card row spread" style="margin-bottom:14px"><div><b>Receba um aviso quando chegar lead</b><div class="small muted">Ative as notificações neste aparelho.</div></div>${pushBtn()}</div>`:''}
   ${newLeads().length?`<div class="card" style="margin-bottom:14px;border-color:var(--amber)"><div class="row spread"><b style="font-family:var(--serif);font-size:17px">🔔 ${newLeads().length} lead(s) novo(s) do site</b><button class="btn sm ghost" onclick="go('leads')">Ver todos →</button></div>${newLeads().sort((a,b)=>(b.leadDate||'').localeCompare(a.leadDate||'')).slice(0,3).map(leadCard).join('')}</div>`:''}
   <div class="grid kpis">
@@ -883,6 +884,21 @@ function dcSet(id,st,date){const j=clone(S.jobs[id]);j.status=st;put('jobs',j);d
 function dcAllDone(date){Object.values(S.jobs).filter(j=>j.type==='service'&&j.date===date&&j.status!=='cancelled'&&j.status!=='done').forEach(j=>{const x=clone(j);x.status='done';put('jobs',x)});dayCheck(date);toast('✅ Dia fechado')}
 function dcMove(id,date){const d=$('#rd-'+id).value,tm=$('#rt-'+id).value;if(!d){toast('Escolha a nova data');return}
   const j=clone(S.jobs[id]);j.movedFrom=j.movedFrom||j.date;j.date=d;j.time=tm;j.status='scheduled';put('jobs',j);dayCheck(date);toast('📅 Reagendada para '+dShort(d)+(tm?' às '+tm:''))}
+
+/* ---------- Painel: onde trabalhar hoje e amanhã ---------- */
+function workDays(){
+  const t=today(),tm=addDays(t,1);
+  const list=d=>Object.values(S.jobs).filter(j=>j.date===d&&j.type==='service'&&j.status!=='cancelled').sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+  const item=j=>{const c=S.clients[j.clientId]||{};const addr=j.address||[c.address,c.city].filter(Boolean).join(', ');const h=S.helpers&&S.helpers[j.helperId];
+    return `<div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)">
+     <div style="min-width:52px;font-weight:700">${esc(j.time||'—')}</div>
+     <div style="flex:1;min-width:0;cursor:pointer" onclick="editJob('${j.id}')"><b>${esc(c.name||'Cliente')}</b>${j.status==='done'?' <span class="tag t-done">✅ Feita</span>':''}${j.mode==='repasse'?` <span class="tag t-partial">🤝 ${h?esc(h.name):'Repasse'}</span>`:j.mode==='ajuda'?` <span class="tag t-sent">👭 ${h?esc(h.name):'Ajudante'}</span>`:''}
+      <div class="small muted" style="margin-top:2px">${esc(addr||'(sem endereço)')}</div></div>
+     ${addr?`<a class="btn sm" style="text-decoration:none" href="https://maps.google.com/?q=${encodeURIComponent(addr)}" target="_blank" rel="noopener">📍 Mapa</a>`:''}</div>`};
+  const box=(title,d)=>{const js=list(d);return `<div class="card" style="margin:0"><div class="row spread"><b style="font-size:16px">${title}</b><span class="small muted">${dShort(d)} · ${js.length} casa${js.length===1?'':'s'}</span></div>
+    ${js.length?js.map(item).join(''):'<div class="small muted" style="padding:10px 0">Nenhuma limpeza agendada.</div>'}</div>`};
+  return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:14px">${box('🧹 Hoje',t)}${box('➡️ Amanhã',tm)}</div>`;
+}
 function editClient(id){
   const c=id?clone(S.clients[id]):{id:uid(),type:'Homeowner',state:'FL',city:'Naples'};
   modal(`<h2>${id?'Editar cliente':'Novo cliente'}</h2>
