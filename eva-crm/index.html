@@ -268,7 +268,7 @@ const DEFAULT_SETTINGS = {
 };
 
 /* ============ ESTADO ============ */
-const S = {clients:{},jobs:{},docs:{},services:{},helpers:{},expenses:{},settings:JSON.parse(JSON.stringify(DEFAULT_SETTINGS)),
+const S = {clients:{},jobs:{},docs:{},services:{},helpers:{},expenses:{},hpays:{},settings:JSON.parse(JSON.stringify(DEFAULT_SETTINGS)),
   view:'painel',docTab:'estimate',edit:null,docId:null,clientId:null,calMonth:null,calSel:null,catQ:'',catC:'',cliQ:'',loaded:false,offline:false};
 let db=null, dl=true;
 const KINDS = {estimate:{pt:'Orçamento',pre:'QT',en:'QUOTE'},contract:{pt:'Contrato',pre:'SA',en:'SERVICE AGREEMENT'},invoice:{pt:'Invoice',pre:'INV',en:'INVOICE'}};
@@ -341,9 +341,9 @@ async function nextNumber(kind){
 async function loadAll(){
   const {data,error}=await sb.from('eva_records').select('coll,id,data');
   if(error){S.offline=true;S.loaded=true;render();return}
-  const m={clients:{},jobs:{},docs:{},services:{},helpers:{},expenses:{}};
+  const m={clients:{},jobs:{},docs:{},services:{},helpers:{},expenses:{},hpays:{}};
   for(const r of data){ if(r.coll==='settings'){S.settings={...clone(DEFAULT_SETTINGS),...r.data};if(!S.settings.phone)S.settings.phone=DEFAULT_SETTINGS.phone} else if(m[r.coll]) m[r.coll][r.id]=r.data; }
-  if(!S.edit){Object.assign(S,m)} else {S.clients=m.clients;S.jobs=m.jobs;S.services=m.services;S.helpers=m.helpers;S.expenses=m.expenses}
+  if(!S.edit){Object.assign(S,m)} else {S.clients=m.clients;S.jobs=m.jobs;S.services=m.services;S.helpers=m.helpers;S.expenses=m.expenses;S.hpays=m.hpays}
   S.offline=false;S.loaded=true;S.lastSync=Date.now();
   if(!document.querySelector('.modal-bg')) render();
 }
@@ -781,7 +781,8 @@ function shareHelperPay(id){
   if(r.day.length){lines.push('👭 Dias de ajuda:');r.day.forEach(d=>{lines.push(`• ${dShort(d.date)} – ${d.names.length} casa${d.names.length>1?'s':''}: ${money(d.pay)}`);d.names.forEach(n=>lines.push(`   – ${n}`))});lines.push('')}
   if(r.rep.length){lines.push(`🤝 Repasse (${helperPct(h)}%):`);r.rep.forEach(x=>lines.push(`• ${dShort(x.date)} – ${x.name}: limpeza ${money(x.price)} × ${helperPct(h)}% = ${money(x.pay)}`));lines.push('')}
   if(!r.day.length&&!r.rep.length)lines.push('Nenhum trabalho nesse período.');
-  lines.push(`💵 Total a receber: ${money(r.total)}`);
+  lines.push(`💵 Total do trabalho: ${money(r.total)}`);
+  {const s=payStatus(h,from,to,r);s.ps.forEach(p=>lines.push(`✅ Pago ${dShort(p.date)}${p.method?' ('+p.method+')':''}: ${money(p.amount)}${+p.tip?' — inclui tip de '+money(p.tip)+' 🎁':''}`));if(s.ps.length&&!s.ok)lines.push(`Falta: ${money(s.left)}`)}
   const text=lines.join('\n');if(navigator.share)navigator.share({text}).catch(()=>{});else location.href='sms:'+(h.phone||'')+'?&body='+encodeURIComponent(text);
 }
 function vEquipe(){
@@ -808,23 +809,34 @@ function periodTabs(){const[from,to]=payPeriod();
    ${(S.payP==='custom')?`<div class="fg"><div class="f"><label>De</label><input type="date" value="${from}" onchange="S.payFrom=this.value;render()"></div><div class="f"><label>Até</label><input type="date" value="${to}" onchange="S.payTo=this.value;render()"></div></div>`:`<div class="small muted">${from===to?dShort(from):dShort(from)+' a '+dShort(to)}</div>`}`}
 
 /* ============ RELATÓRIO: ganhos, ajudantes, despesas e lucro ============ */
-const EXCATS=['Ajudante','Gasolina','Produtos','Material','Outros'];
+const EXCATS=['Gasolina','Produtos','Material','Outros'];
 function report(from,to,onlyDone){
   const allJobs=Object.values(S.jobs).filter(j=>j.type==='service'&&j.date>=from&&j.date<=to&&j.status!=='cancelled');
   const revAll=allJobs.reduce((s,j)=>s+jobPrice(j),0),revDone=allJobs.filter(j=>j.status==='done').reduce((s,j)=>s+jobPrice(j),0);
   const jobs=allJobs.filter(j=>!onlyDone||j.status==='done').sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')));
   const rev=jobs.reduce((s,j)=>s+jobPrice(j),0),done=jobs.filter(j=>j.status==='done');
   const helpers=helperList().map(h=>({h,...helperPay(h,from,to,onlyDone)})).filter(x=>x.total);
-  const team=helpers.reduce((s,x)=>s+x.total,0);
-  const exps=Object.values(S.expenses||{}).filter(e=>e.date>=from&&e.date<=to).sort((a,b)=>a.date.localeCompare(b.date));
+  helpers.forEach(x=>x.pay=payStatus(x.h,from,to,x));
+  const tips=helpers.reduce((s,x)=>s+x.pay.tip,0);
+  const team=helpers.reduce((s,x)=>s+x.total,0)+tips;
+  const exps=Object.values(S.expenses||{}).filter(e=>e.date>=from&&e.date<=to&&e.cat!=='Ajudante').sort((a,b)=>a.date.localeCompare(b.date));
+  const legacy=Object.values(S.expenses||{}).filter(e=>e.cat==='Ajudante');
   const exp=exps.reduce((s,e)=>s+(+e.amount||0),0);
   const days={};jobs.forEach(j=>{const d=days[j.date]=days[j.date]||{n:0,rev:0};d.n++;d.rev+=jobPrice(j)});
   helpers.forEach(x=>{x.rep.forEach(r=>{(days[r.date]=days[r.date]||{n:0,rev:0}).team=(days[r.date].team||0)+r.pay});x.day.forEach(d=>{(days[d.date]=days[d.date]||{n:0,rev:0}).team=(days[d.date].team||0)+d.pay})});
   exps.forEach(e=>{(days[e.date]=days[e.date]||{n:0,rev:0}).exp=(days[e.date].exp||0)+(+e.amount||0)});
   const noPrice=jobs.filter(j=>!jobPrice(j)).length;
-  return{jobs,allJobs,done,rev,revAll,revDone,helpers,team,exps,exp,profit:rev-team-exp,days,noPrice};
+  return{legacy,teamWork:helpers.reduce((s,x)=>s+x.total,0),tips,jobs,allJobs,done,rev,revAll,revDone,helpers,team,exps,exp,profit:rev-team-exp,days,noPrice};
 }
 function kpi(label,val,color){return `<div class="card" style="padding:12px;margin:0"><div class="small muted">${label}</div><div style="font-size:20px;font-weight:700;${color?'color:'+color:''}">${val}</div></div>`}
+
+function convertHelperExp(){
+  const ls=Object.values(S.expenses||{}).filter(e=>e.cat==='Ajudante');let n=0;
+  ls.forEach(e=>{if(e.helperId&&S.helpers[e.helperId]){const dow=new Date(e.date+'T12:00').getDay(),mon=addDays(e.date,-((dow+6)%7));
+    put('hpays',{id:uid(),helperId:e.helperId,amount:+e.amount||0,tip:0,date:e.date,from:mon,to:addDays(mon,6),method:e.desc||'lançado em despesas'});n++}
+   del('expenses',e.id)});
+  toast(n?`${n} pagamento${n>1?'s':''} passado${n>1?'s':''} para as ajudantes`:'Lançamentos removidos das despesas');
+}
 function vRelatorio(){
   const[from,to,label]=payPeriod();const od=(S.repMode||'done')==='done';const r=report(from,to,od);
   const dayRows=Object.entries(r.days).sort().map(([d,x])=>`<tr><td>${dShort(d)}</td><td class="num">${x.n||''}</td><td class="num">${money(x.rev)}</td><td class="num">${x.team?money(x.team):'—'}</td><td class="num hide-m">${x.exp?money(x.exp):'—'}</td><td class="num"><b>${money(x.rev-(x.team||0)-(x.exp||0))}</b></td></tr>`).join('');
@@ -836,15 +848,22 @@ function vRelatorio(){
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0">
    ${kpi(`✅ Feitas (${r.allJobs.filter(j=>j.status==='done').length})`,money(r.revDone),'var(--ok)')}
    ${kpi(`📋 Total de todas (${r.allJobs.length})`,money(r.revAll))}
-   ${kpi('Pago às ajudantes','− '+money(r.team),'var(--bad)')}
-   ${kpi('Despesas','− '+money(r.exp),'var(--bad)')}
-   ${kpi(od?'Lucro (das feitas)':'Lucro (de todas)',money(r.profit),r.profit>=0?'var(--ok)':'var(--bad)')}
   </div>
+  ${r.legacy.length?`<div class="banner small">⚠️ Tem ${r.legacy.length} pagamento${r.legacy.length>1?'s':''} de ajudante lançado${r.legacy.length>1?'s':''} em Despesas (${money(r.legacy.reduce((s,e)=>s+(+e.amount||0),0))}). Eles <b>não</b> entram mais no lucro, porque o app já calcula o que cada ajudante ganha. <button class="btn sm a" onclick="convertHelperExp()">Passar para os pagamentos das ajudantes</button></div>`:''}
+  <div class="card" style="max-width:520px"><b>🧮 Conta do lucro</b>
+   <table style="margin-top:8px"><tbody>
+    <tr><td>Entrou (${od?'limpezas feitas':'todas as limpezas'})</td><td class="num"><b>${money(r.rev)}</b></td></tr>
+    <tr><td>− Ajudantes (trabalho: diária + repasse)</td><td class="num" style="color:var(--bad)">− ${money(r.teamWork)}</td></tr>
+    ${r.tips?`<tr><td>− Tips para ajudantes</td><td class="num" style="color:var(--bad)">− ${money(r.tips)}</td></tr>`:''}
+    <tr><td>− Despesas (gasolina, produtos…)</td><td class="num" style="color:var(--bad)">− ${money(r.exp)}</td></tr>
+    <tr style="font-size:17px"><td><b>= Lucro</b></td><td class="num"><b style="color:${r.profit>=0?'var(--ok)':'var(--bad)'}">${money(r.profit)}</b></td></tr>
+   </tbody></table></div>
   ${r.noPrice?`<div class="banner small">⚠️ ${r.noPrice} limpeza${r.noPrice>1?'s':''} sem valor neste período — coloque o valor no cadastro do cliente ou no agendamento para o relatório ficar certo.</div>`:''}
-  <div class="card"><b>Por dia</b>${dayRows?`<table style="margin-top:8px"><thead><tr><th>Dia</th><th class="num">Casas</th><th class="num">Entrou</th><th class="num">Ajudantes</th><th class="num hide-m">Despesas</th><th class="num">Lucro</th></tr></thead><tbody>${dayRows}</tbody></table>`:'<div class="empty">Nenhuma limpeza na agenda nesse período.</div>'}</div>
-  <div class="card" style="margin-top:14px"><b>Ajudantes — relatório de cada uma</b>${r.helpers.length?r.helpers.map(x=>`<div style="margin-top:10px"><div class="row spread"><b>${esc(x.h.name)}</b><b>${money(x.total)}</b></div>
+  <div class="card"><b>Por dia</b>${dayRows?`<table style="margin-top:8px"><thead><tr><th>Dia</th><th class="num">Casas</th><th class="num">Entrou</th><th class="num">Ajudantes</th><th class="num hide-m">Despesas</th><th class="num">Lucro</th></tr></thead><tbody>${dayRows}</tbody></table>${r.tips?`<div class="small muted" style="margin-top:6px">Os tips (${money(r.tips)}) não estão no quadro por dia — só na conta do lucro.</div>`:''}`:'<div class="empty">Nenhuma limpeza na agenda nesse período.</div>'}</div>
+  <div class="card" style="margin-top:14px"><b>Ajudantes — relatório de cada uma</b>${r.helpers.length?r.helpers.map(x=>`<div style="margin-top:10px"><div class="row spread"><b>${esc(x.h.name)} ${x.pay.ok?'<span class="tag t-done">✅ Pago</span>':x.pay.paid?`<span class="tag t-partial">Falta ${money(x.pay.left)}</span>`:'<span class="tag t-overdue">A pagar</span>'}</b><b>${money(x.total)}</b></div>
+    ${x.pay.ps.map(p=>`<div class="small" style="color:var(--ok)">💵 Pago ${dShort(p.date)}${p.method?' · '+esc(p.method):''}: ${money(p.amount)}${+p.tip?` (tip ${money(p.tip)})`:''}</div>`).join('')}
     ${x.day.map(d=>`<div class="small">👭 ${dShort(d.date)} · ${d.names.length} casa${d.names.length>1?'s':''} → ${money(d.pay)}</div>`).join('')}${x.rep.map(y=>`<div class="small">🤝 ${dShort(y.date)} · repasse ${esc(y.name)} → ${money(y.pay)}</div>`).join('')}
-    <div class="row noprint" style="margin-top:8px;gap:6px;flex-wrap:wrap"><button class="btn sm a" onclick="helperPdfView('${x.h.id}')">👁 Ver PDF</button><button class="btn sm p" onclick="helperPdf('${x.h.id}','share')">📤 Enviar PDF</button><button class="btn sm" onclick="helperPdf('${x.h.id}','download')">⬇️ Baixar</button><button class="btn sm" onclick="shareHelperPay('${x.h.id}')">💬 Texto</button></div></div>`).join(''):'<div class="empty">Nenhum pagamento de ajudante nesse período.</div>'}</div>
+    <div class="row noprint" style="margin-top:8px;gap:6px;flex-wrap:wrap">${x.pay.ok?'':`<button class="btn sm p" onclick="helperReport('${x.h.id}');payHelper('${x.h.id}')">💵 Dar baixa</button>`}<button class="btn sm a" onclick="helperPdfView('${x.h.id}')">👁 Ver PDF</button><button class="btn sm p" onclick="helperPdf('${x.h.id}','share')">📤 Enviar PDF</button><button class="btn sm" onclick="helperPdf('${x.h.id}','download')">⬇️ Baixar</button><button class="btn sm" onclick="shareHelperPay('${x.h.id}')">💬 Texto</button></div></div>`).join(''):'<div class="empty">Nenhum pagamento de ajudante nesse período.</div>'}</div>
   <div class="card" style="margin-top:14px"><div class="row spread"><b>Despesas</b><button class="btn sm a noprint" onclick="editExpense()">+ Despesa</button></div>
    ${r.exps.length?`<table style="margin-top:8px"><tbody>${r.exps.map(e=>`<tr class="click" onclick="editExpense('${e.id}')"><td>${dShort(e.date)}</td><td>${esc(e.cat||'')}${e.helperId&&S.helpers[e.helperId]?' · <b>'+esc(S.helpers[e.helperId].name)+'</b>':''}${e.desc?' · '+esc(e.desc):''}</td><td class="num">${money(e.amount)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Nenhuma despesa lançada nesse período.</div>'}</div>
   <div class="card" style="margin-top:14px"><b>Limpezas</b>${r.jobs.length?`<table style="margin-top:8px"><tbody>${r.jobs.map(j=>`<tr class="click" onclick="editJob('${j.id}')"><td>${dShort(j.date)}</td><td>${esc(clientName(j.clientId))}${j.mode==='repasse'?' <span class="tag t-partial">repasse</span>':j.mode==='ajuda'?' <span class="tag t-sent">c/ ajudante</span>':''}${j.status==='done'?' ✓':''}</td><td class="num">${jobPrice(j)?money(jobPrice(j)):'<span class="muted">sem valor</span>'}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">—</div>'}</div>
@@ -852,19 +871,18 @@ function vRelatorio(){
 }
 function shareReport(){
   const[from,to,label]=payPeriod();const od=(S.repMode||'done')==='done';const r=report(from,to,od);
-  const lines=[`📊 Relatório ${label} (${from===to?dShort(from):dShort(from)+' a '+dShort(to)})`,`✅ Feitas: ${r.allJobs.filter(j=>j.status==='done').length} → ${money(r.revDone)}`,`📋 Total de todas: ${r.allJobs.length} → ${money(r.revAll)}`,`(${od?'contas abaixo só com as feitas':'contas abaixo com todas'})`,`👭 Ajudantes: − ${money(r.team)}`,...r.helpers.map(x=>`   • ${x.h.name}: ${money(x.total)}`),`🧾 Despesas: − ${money(r.exp)}`,`💰 Lucro: ${money(r.profit)}`];
+  const lines=[`📊 Relatório ${label} (${from===to?dShort(from):dShort(from)+' a '+dShort(to)})`,`✅ Feitas: ${r.allJobs.filter(j=>j.status==='done').length} → ${money(r.revDone)}`,`📋 Total de todas: ${r.allJobs.length} → ${money(r.revAll)}`,`(${od?'contas abaixo só com as feitas':'contas abaixo com todas'})`,`👭 Ajudantes (trabalho): − ${money(r.teamWork)}`,...(r.tips?[`🎁 Tips: − ${money(r.tips)}`]:[]),...r.helpers.map(x=>`   • ${x.h.name}: ${money(x.total)}`),`🧾 Despesas (sem ajudantes): − ${money(r.exp)}`,`💰 Lucro: ${money(r.profit)}`];
   const text=lines.join('\n');if(navigator.share)navigator.share({text}).catch(()=>{});else{navigator.clipboard&&navigator.clipboard.writeText(text);toast('Copiado')}
 }
 function editExpense(id){
-  const e=id?clone(S.expenses[id]):{id:uid(),date:today(),cat:'Ajudante',desc:'',amount:'',helperId:''};
+  const e=id?clone(S.expenses[id]):{id:uid(),date:today(),cat:'Gasolina',desc:'',amount:''};
   modal(`<h2>${id?'Editar despesa':'Nova despesa'}</h2><form id="xf">
    <div class="f"><label>Tipo</label><div class="chips">${EXCATS.map((c,k)=>`<input type="radio" name="cat" id="xc-${k}" value="${c}" ${e.cat===c?'checked':''}><label for="xc-${k}">${c}</label>`).join('')}</div></div>
-   <div class="f" id="xHelp" style="${e.cat==='Ajudante'?'':'display:none'}"><label>Qual ajudante?</label>${helperList().length?`<div class="chips">${helperList().map(h=>`<input type="radio" name="helperId" id="xh-${h.id}" value="${h.id}" ${e.helperId===h.id?'checked':''}><label for="xh-${h.id}">${esc(h.name)}</label>`).join('')}</div>`:'<div class="small muted">Cadastre as ajudantes na aba <b>Equipe</b>.</div>'}</div>
+   <div class="small muted" style="margin:-4px 0 10px">Pagamento das ajudantes não entra aqui — use <b>💵 Dar baixa</b> no relatório da ajudante.</div>
    <div class="fg"><div class="f"><label>Valor ($) *</label><input name="amount" type="number" inputmode="decimal" step="0.01" required value="${esc(e.amount)}" ${id?'':'autofocus'}></div><div class="f"><label>Data</label><input name="date" type="date" value="${esc(e.date)}"></div></div>
    <div class="f"><label>Descrição</label><input name="desc" value="${esc(e.desc||'')}" placeholder="Opcional"></div>
    <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="confirmDel('expenses','${id}','esta despesa')">Excluir</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Salvar</button></div></div></form>`);
-  $('#xf').addEventListener('change',ev=>{if(ev.target.name==='cat')$('#xHelp').style.display=ev.target.value==='Ajudante'?'':'none'});
-  $('#xf').onsubmit=ev=>{ev.preventDefault();const f=new FormData(ev.target);e.cat=f.get('cat')||'Outros';e.helperId=e.cat==='Ajudante'?(f.get('helperId')||''):'';if(e.cat==='Ajudante'&&!e.helperId&&helperList().length){toast('Escolha a ajudante');return}e.amount=+f.get('amount')||0;e.date=f.get('date')||today();e.desc=(f.get('desc')||'').trim();put('expenses',e);closeModal();toast('Despesa salva')};
+  $('#xf').onsubmit=ev=>{ev.preventDefault();const f=new FormData(ev.target);e.cat=f.get('cat')||'Outros';e.amount=+f.get('amount')||0;e.date=f.get('date')||today();e.desc=(f.get('desc')||'').trim();put('expenses',e);closeModal();toast('Despesa salva')};
 }
 
 /* ============ FIM DO DIA: limpezas foram feitas? (aviso das 19h no celular) ============ */
@@ -909,13 +927,51 @@ function workDays(){
 }
 
 /* ---------- Relatório de uma ajudante (o que fez e quanto recebe) ---------- */
+/* ---------- Pagamentos às ajudantes (dar baixa + tip) ---------- */
+function helperPaid(h,from,to){
+  const ps=Object.values(S.hpays||{}).filter(p=>p.helperId===h.id&&p.from<=to&&p.to>=from).sort((a,b)=>a.date.localeCompare(b.date));
+  const paid=ps.reduce((s,p)=>s+(+p.amount||0),0),tip=ps.reduce((s,p)=>s+(+p.tip||0),0);
+  return{ps,paid,tip};
+}
+function payStatus(h,from,to,r){r=r||helperPay(h,from,to);const p=helperPaid(h,from,to);const left=Math.max(0,r.total-(p.paid-p.tip));return{...p,due:r.total,left,ok:r.total>0&&left<0.005}}
+function payBox(h,from,to,r){
+  const s=payStatus(h,from,to,r);
+  return `<div class="card" style="margin:12px 0;padding:14px">
+   <div style="text-align:center"><div class="small muted">Total do trabalho</div><div style="font-size:28px;font-weight:700">${money(s.due)}</div>
+   ${s.ok?`<span class="tag t-done" style="font-size:13px">✅ Pago</span>`:s.paid?`<span class="tag t-partial" style="font-size:13px">Falta ${money(s.left)}</span>`:(s.due?`<span class="tag t-overdue" style="font-size:13px">A pagar</span>`:'')}</div>
+   ${s.ps.map(p=>`<div class="row spread small" style="padding:6px 0;border-top:1px solid var(--line);margin-top:6px"><span>💵 Pago ${dShort(p.date)}${p.method?' · '+esc(p.method):''}${+p.tip?` · <b>tip ${money(p.tip)}</b>`:''}</span><span><b>${money(p.amount)}</b> <a href="#" onclick="event.preventDefault();delHelperPay('${p.id}','${h.id}')" class="muted" style="margin-left:6px">✕</a></span></div>`).join('')}
+   ${s.due&&!s.ok?`<button class="btn p" style="width:100%;margin-top:10px" onclick="payHelper('${h.id}')">💵 Paguei — dar baixa</button>`:''}
+   ${s.ok?`<button class="btn sm" style="width:100%;margin-top:8px" onclick="payHelper('${h.id}')">+ Outro pagamento / tip</button>`:''}</div>`;
+}
+function payHelper(id){
+  const h=S.helpers[id];const[from,to]=payPeriod();const s=payStatus(h,from,to);
+  modal(`<h2>💵 Pagamento – ${esc(h.name)}</h2>
+   <p class="small muted" style="margin-top:0">${from===to?dShort(from):dShort(from)+' a '+dShort(to)} · trabalho ${money(s.due)}${s.paid?` · já pago ${money(s.paid)}`:''}</p>
+   <div class="f"><label>Quanto você pagou ($)</label><input id="hpAmt" type="number" inputmode="decimal" step="0.01" value="${s.left?s.left.toFixed(2):''}" oninput="hpCalc(${s.left})" style="font-size:20px"></div>
+   <div id="hpMsg" class="banner small" style="margin:0 0 12px"></div>
+   <div class="fg"><div class="f"><label>Data</label><input id="hpDate" type="date" value="${today()}"></div></div>
+   <div class="f"><label>Forma</label><div class="chips">${['Zelle','Dinheiro','Cheque','Outro'].map((m,k)=>`<input type="radio" name="hpm" id="hpm-${k}" value="${m}" ${k===0?'checked':''}><label for="hpm-${k}">${m}</label>`).join('')}</div></div>
+   <div class="row spread"><button class="btn" onclick="helperReport('${id}')">Cancelar</button><button class="btn p" onclick="savePay('${id}',${s.left})">Salvar pagamento</button></div>`);
+  hpCalc(s.left);
+}
+function hpCalc(left){const v=+$('#hpAmt').value||0,m=$('#hpMsg');
+  if(v>left+0.004)m.innerHTML=`✅ Quita o valor (${money(left)}) e <b>${money(v-left)} entra como tip</b> 🎁`;
+  else if(v>0&&v<left-0.004)m.innerHTML=`Pagamento parcial — ainda vai faltar <b>${money(left-v)}</b>`;
+  else m.innerHTML=v?'✅ Quita o valor certinho':'Digite o valor pago';}
+function savePay(id,left){
+  const v=+$('#hpAmt').value||0;if(!v){toast('Digite o valor pago');return}
+  const[from,to]=payPeriod();const tip=Math.max(0,+(v-left).toFixed(2));
+  put('hpays',{id:uid(),helperId:id,amount:v,tip,date:$('#hpDate').value||today(),from,to,method:(document.querySelector('[name=hpm]:checked')||{}).value||''});
+  toast(tip?`💵 Pago · ${money(tip)} de tip`:'💵 Pagamento registrado');helperReport(id);
+}
+function delHelperPay(pid,hid){if(!confirm('Apagar este pagamento?'))return;del('hpays',pid);helperReport(hid)}
 function helperReport(id){
   const h=S.helpers[id];if(!h)return;const[from,to,label]=payPeriod();const r=helperPay(h,from,to);
   const tabs=[['today','Hoje'],['week','Esta semana'],['last','Semana passada'],['month','Este mês'],['lastmonth','Mês passado'],['custom','Escolher']];
   modal(`<h2 style="margin-bottom:4px">📊 ${esc(h.name)}</h2>
    <div class="tabs" style="overflow-x:auto;flex-wrap:nowrap">${tabs.map(([k,v])=>`<button style="white-space:nowrap" class="${(S.payP||'week')===k?'on':''}" onclick="S.payP='${k}';helperReport('${id}')">${v}</button>`).join('')}</div>
    ${S.payP==='custom'?`<div class="fg"><div class="f"><label>De</label><input type="date" value="${from}" onchange="S.payFrom=this.value;helperReport('${id}')"></div><div class="f"><label>Até</label><input type="date" value="${to}" onchange="S.payTo=this.value;helperReport('${id}')"></div></div>`:`<div class="small muted">${from===to?dShort(from):dShort(from)+' a '+dShort(to)}</div>`}
-   <div class="card" style="margin:12px 0;padding:14px;text-align:center"><div class="small muted">Total a pagar</div><div style="font-size:28px;font-weight:700">${money(r.total)}</div></div>
+   ${payBox(h,from,to,r)}
    ${r.rep.length?`<b>🤝 Repasse (${helperPct(h)}%)</b>${r.rep.map(x=>`<div class="row spread small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>${dShort(x.date)} · ${esc(x.name)}<br><span class="muted">limpeza ${money(x.price)} × ${helperPct(h)}%</span></span><b>${money(x.pay)}</b></div>`).join('')}`:''}
    ${r.day.length?`<div style="margin-top:10px"><b>👭 Dias de ajuda</b>${r.day.map(d=>`<div class="row spread small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>${dShort(d.date)} · ${d.names.length} casa${d.names.length>1?'s':''}<br><span class="muted">${esc(d.names.join(', '))}</span></span><b>${money(d.pay)}</b></div>`).join('')}</div>`:''}
    ${!r.rep.length&&!r.day.length?'<div class="empty">Nenhum trabalho dela nesse período.</div>':''}
@@ -953,7 +1009,11 @@ function helperPdfBuild(id){
     y=pdf.lastAutoTable.finalY+16;
   }
   pdf.setDrawColor(217,79,140);pdf.setLineWidth(1);pdf.line(W-M-220,y,W-M,y);y+=20;
-  pdf.setFont('helvetica','bold');pdf.setFontSize(14);pdf.text('Total a receber:',W-M-220,y);pdf.text(money(r.total),W-M,y,{align:'right'});
+  pdf.setFont('helvetica','bold');pdf.setFontSize(14);pdf.text('Total do trabalho:',W-M-220,y);pdf.text(money(r.total),W-M,y,{align:'right'});
+  {const s=payStatus(h,from,to,r);pdf.setFontSize(10);
+   s.ps.forEach(p=>{y+=16;pdf.setFont('helvetica','normal');pdf.setTextColor(31,138,76);pdf.text(`Pago ${dShort(p.date)}${p.method?' ('+p.method+')':''}`,W-M-220,y);pdf.text(money(p.amount),W-M,y,{align:'right'});
+     if(+p.tip){y+=13;pdf.setFontSize(9);pdf.text('   inclui tip de '+money(p.tip),W-M-220,y);pdf.setFontSize(10)}});
+   if(s.ps.length){y+=18;pdf.setFont('helvetica','bold');pdf.setFontSize(12);pdf.setTextColor(30);pdf.text(s.ok?'PAGO':'Falta pagar:',W-M-220,y);if(!s.ok)pdf.text(money(s.left),W-M,y,{align:'right'})}}
   pdf.setFont('helvetica','normal');pdf.setFontSize(8);pdf.setTextColor(140);pdf.text('Gerado em '+new Date().toLocaleDateString('pt-BR'),M,pdf.internal.pageSize.getHeight()-24);
   const name=`Pagamento ${h.name} ${from}${from===to?'':' a '+to}.pdf`.replace(/[\\/:*?"<>|]/g,'');
   return {pdf,name};
