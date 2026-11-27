@@ -812,7 +812,7 @@ function payPeriod(){
   return[S.payFrom||mon,S.payTo||addDays(mon,6),'Período'];
 }
 function helperPay(h,from,to,onlyDone){
-  const js=Object.values(S.jobs).filter(j=>j.helperId===h.id&&j.date>=from&&j.date<=to&&j.status!=='cancelled'&&(!onlyDone||j.status==='done')).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const js=Object.values(S.jobs).filter(j=>j.helperId===h.id&&j.date>=from&&j.date<=to&&j.status!=='cancelled'&&j.status==='done').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
   const rep=js.filter(j=>j.mode==='repasse').map(j=>{const p=jobPrice(j);return{date:j.date,name:clientName(j.clientId),price:p,pay:p*helperPct(h)/100}});
   const days={};js.filter(j=>j.mode==='ajuda').forEach(j=>(days[j.date]=days[j.date]||[]).push(clientName(j.clientId)));
   const day=Object.entries(days).map(([date,names])=>({date,names,pay:dayRate(names.length)}));
@@ -886,16 +886,15 @@ function convertHelperExp(){
   toast(n?`${n} pagamento${n>1?'s':''} passado${n>1?'s':''} para as ajudantes`:'Lançamentos removidos das despesas');
 }
 function vRelatorio(){
-  const[from,to,label]=payPeriod();const od=(S.repMode||'done')==='done';const r=report(from,to,od);
+  const[from,to,label]=payPeriod();const od=true;const r=report(from,to,true);
   const dayRows=Object.entries(r.days).sort().map(([d,x])=>`<tr><td>${dShort(d)}</td><td class="num">${x.n||''}</td><td class="num">${money(x.rev)}</td><td class="num">${x.team?money(x.team):'—'}</td><td class="num hide-m">${x.exp?money(x.exp):'—'}</td><td class="num"><b>${money(x.rev-(x.team||0)-(x.exp||0))}</b></td></tr>`).join('');
   return `<div class="row spread noprint"><div><h1>Relatório</h1><p class="sub">Quanto entrou, quanto foi para as ajudantes, despesas e lucro</p></div><div class="row"><button class="btn" onclick="shareReport()">📤 Compartilhar</button><button class="btn" onclick="window.print()">🖨️ PDF / Imprimir</button></div></div>
   <div class="printonly"><h2 style="margin:0">Eva's Expert Cleaning Services — Relatório</h2></div>
   <div class="noprint">${periodTabs()}
-   <div class="chips" style="margin-top:10px"><input type="radio" name="rm" id="rm-d" ${od?'checked':''} onchange="S.repMode='done';render()"><label for="rm-d">✅ Só as feitas</label><input type="radio" name="rm" id="rm-a" ${od?'':'checked'} onchange="S.repMode='all';render()"><label for="rm-a">📋 Todas (feitas + a fazer)</label></div></div>
-  <div class="printonly small">${od?'Somente limpezas feitas':'Todas as limpezas (feitas e a fazer)'}</div><div class="printonly small">${label}: ${dShort(from)} a ${dShort(to)}</div>
+</div>
+  <div class="printonly small">Somente limpezas feitas</div><div class="printonly small">${label}: ${dShort(from)} a ${dShort(to)}</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0">
    ${kpi(`✅ Feitas (${r.allJobs.filter(j=>j.status==='done').length})`,money(r.revDone),'var(--ok)')}
-   ${kpi(`📋 Total de todas (${r.allJobs.length})`,money(r.revAll))}
   </div>
   ${r.legacy.length?`<div class="banner small">⚠️ Tem ${r.legacy.length} pagamento${r.legacy.length>1?'s':''} de ajudante lançado${r.legacy.length>1?'s':''} em Despesas (${money(r.legacy.reduce((s,e)=>s+(+e.amount||0),0))}). Eles <b>não</b> entram mais no lucro, porque o app já calcula o que cada ajudante ganha. <button class="btn sm a" onclick="convertHelperExp()">Passar para os pagamentos das ajudantes</button></div>`:''}
   <div class="card" style="max-width:520px"><b>🧮 Conta do lucro</b>
@@ -915,11 +914,11 @@ function vRelatorio(){
   <div class="card" style="margin-top:14px"><div class="row spread"><b>Despesas</b><button class="btn sm a noprint" onclick="editExpense()">+ Despesa</button></div>
    ${r.exps.length?`<table style="margin-top:8px"><tbody>${r.exps.map(e=>`<tr class="click" onclick="editExpense('${e.id}')"><td>${dShort(e.date)}</td><td>${esc(e.cat||'')}${e.helperId&&S.helpers[e.helperId]?' · <b>'+esc(S.helpers[e.helperId].name)+'</b>':''}${e.desc?' · '+esc(e.desc):''}</td><td class="num">${money(e.amount)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Nenhuma despesa lançada nesse período.</div>'}</div>
   <div class="card" style="margin-top:14px"><b>Limpezas</b>${r.jobs.length?`<table style="margin-top:8px"><tbody>${r.jobs.map(j=>`<tr class="click" onclick="editJob('${j.id}')"><td>${dShort(j.date)}</td><td>${esc(clientName(j.clientId))}${j.mode==='repasse'?' <span class="tag t-partial">repasse</span>':j.mode==='ajuda'?' <span class="tag t-sent">c/ ajudante</span>':''}${j.status==='done'?' ✓':''}</td><td class="num">${jobPrice(j)?money(jobPrice(j)):'<span class="muted">sem valor</span>'}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">—</div>'}</div>
-  <p class="small muted">O relatório usa as limpezas da agenda com o valor de cada casa. Marque “Concluído” quando a limpeza for feita.</p>`;
+  <p class="small muted">O relatório mostra só as limpezas marcadas como <b>feitas</b> (✅ no fim do dia ou “Concluído” no agendamento).</p>`;
 }
 function shareReport(){
-  const[from,to,label]=payPeriod();const od=(S.repMode||'done')==='done';const r=report(from,to,od);
-  const lines=[`📊 Relatório ${label} (${from===to?dShort(from):dShort(from)+' a '+dShort(to)})`,`✅ Feitas: ${r.allJobs.filter(j=>j.status==='done').length} → ${money(r.revDone)}`,`📋 Total de todas: ${r.allJobs.length} → ${money(r.revAll)}`,`(${od?'contas abaixo só com as feitas':'contas abaixo com todas'})`,`👭 Ajudantes (trabalho): − ${money(r.teamWork)}`,...(r.tips?[`🎁 Tips: − ${money(r.tips)}`]:[]),...r.helpers.map(x=>`   • ${x.h.name}: ${money(x.total)}`),`🧾 Despesas (sem ajudantes): − ${money(r.exp)}`,`💰 Lucro: ${money(r.profit)}`];
+  const[from,to,label]=payPeriod();const od=true;const r=report(from,to,true);
+  const lines=[`📊 Relatório ${label} (${from===to?dShort(from):dShort(from)+' a '+dShort(to)})`,`✅ Feitas: ${r.allJobs.filter(j=>j.status==='done').length} → ${money(r.revDone)}`,`👭 Ajudantes (trabalho): − ${money(r.teamWork)}`,...(r.tips?[`🎁 Tips: − ${money(r.tips)}`]:[]),...r.helpers.map(x=>`   • ${x.h.name}: ${money(x.total)}`),`🧾 Despesas (sem ajudantes): − ${money(r.exp)}`,`💰 Lucro: ${money(r.profit)}`];
   const text=lines.join('\n');if(navigator.share)navigator.share({text}).catch(()=>{});else{navigator.clipboard&&navigator.clipboard.writeText(text);toast('Copiado')}
 }
 function editExpense(id){
