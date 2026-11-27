@@ -62,17 +62,22 @@
     catch(e){toast('Não deu para abrir os contatos')}
   }
   function file(){
-    const inp=document.createElement('input');inp.type='file';inp.accept='.vcf,text/vcard,text/x-vcard';
-    inp.onchange=async()=>{const f=inp.files[0];if(!f)return;const list=parseVcf(await f.text());
-      list.length?review(list):toast('Nenhum contato encontrado no arquivo')};
-    inp.click();
+    // iPhone: o campo precisa estar na página para o Safari avisar quando o arquivo é escolhido
+    let inp=document.getElementById('ciFileInp');
+    if(!inp){inp=document.createElement('input');inp.type='file';inp.id='ciFileInp';inp.accept='.vcf,.vcard,text/vcard,text/x-vcard,text/directory';
+      inp.style.cssText='position:fixed;left:-9999px;top:0;opacity:0';document.body.appendChild(inp);
+      const go=async()=>{const f=inp.files&&inp.files[0];if(!f)return;
+        try{toast('Lendo contatos…');const list=parseVcf(await f.text());inp.value='';
+          list.length?review(list):toast('Nenhum contato encontrado nesse arquivo')}
+        catch(e){inp.value='';toast('Não consegui ler o arquivo')}};
+      inp.addEventListener('change',go);}
+    inp.value='';inp.click();
   }
-
   window.importContacts=function(){
     const can='contacts' in navigator&&'select' in navigator.contacts;
     modal(`<h2>📥 Importar clientes dos contatos</h2>
       ${can?`<button class="btn a" style="width:100%;padding:14px;margin-bottom:10px" onclick="closeModal();__ciPick()">Escolher contatos do celular</button>`:''}
-      <button class="btn${can?'':' a'}" style="width:100%;padding:14px" onclick="closeModal();__ciFile()">Abrir arquivo de contatos (.vcf)</button>
+      <button class="btn${can?'':' a'}" style="width:100%;padding:14px" onclick="__ciFile()">Abrir arquivo de contatos (.vcf)</button>
       <div class="small" style="margin-top:14px;line-height:1.6;background:#faf6f8;border-radius:10px;padding:12px"><b>📱 Como importar os clientes do iPhone:</b><br>
       1. Abra o app <b>Contatos</b> do iPhone → toque em <b>Listas</b> (no canto de cima) → <b>Adicionar lista</b> → dê o nome <b>“Clientes”</b>.<br>
       2. Entre na lista e adicione <b>só os clientes</b>.<br>
