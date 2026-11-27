@@ -787,7 +787,8 @@ function shareHelperPay(id){
 function vEquipe(){
   const hs=helperList();const[from,to,label]=payPeriod();const st=S.settings;const rates=st.dayRates||{};
   return `<div class="row spread"><div><h1>Equipe</h1><p class="sub">Ajudantes do dia e repasse · quanto pagar para cada uma</p></div><button class="btn a" onclick="editHelper()">+ Nova ajudante</button></div>
-  ${hs.length?`<div class="card">${hs.map(h=>`<div class="row spread" style="padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer" onclick="editHelper('${h.id}')"><div><b>${esc(h.name)}</b><div class="small muted">${esc(h.phone||'')}</div></div><div>${h.day?'<span class="tag t-sent">Ajuda no dia</span> ':''}${h.repasse?`<span class="tag t-partial">Repasse ${helperPct(h)}%</span>`:''}</div></div>`).join('')}</div>`:'<div class="card empty">Nenhuma ajudante ainda. Toque em <b>+ Nova ajudante</b>.</div>'}
+  ${hs.length?`<div class="card">${hs.map(h=>`<div style="padding:12px 0;border-bottom:1px solid var(--line)"><div class="row spread"><div><b>${esc(h.name)}</b><div class="small muted">${esc(h.phone||'')}</div></div><div>${h.day?'<span class="tag t-sent">Ajuda no dia</span> ':''}${h.repasse?`<span class="tag t-partial">Repasse ${helperPct(h)}%</span>`:''}</div></div>
+   <div class="row" style="margin-top:8px;gap:8px"><button class="btn a sm" onclick="helperReport('${h.id}')">📊 Relatório / pagamento</button><button class="btn sm" onclick="editHelper('${h.id}')">Editar</button></div></div>`).join('')}</div>`:'<div class="card empty">Nenhuma ajudante ainda. Toque em <b>+ Nova ajudante</b>.</div>'}
   <div class="card" style="margin-top:14px"><b>💵 Quanto pagar</b>
    ${periodTabs()}
    ${hs.map(h=>{const r=helperPay(h,from,to);if(!r.rep.length&&!r.day.length)return '';return `<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px"><div class="row spread"><b>${esc(h.name)}</b><b style="font-size:18px">${money(r.total)}</b></div>
@@ -898,6 +899,21 @@ function workDays(){
   const box=(title,d)=>{const js=list(d);return `<div class="card" style="margin:0"><div class="row spread"><b style="font-size:16px">${title}</b><span class="small muted">${dShort(d)} · ${js.length} casa${js.length===1?'':'s'}</span></div>
     ${js.length?js.map(item).join(''):'<div class="small muted" style="padding:10px 0">Nenhuma limpeza agendada.</div>'}</div>`};
   return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:14px">${box('🧹 Hoje',t)}${box('➡️ Amanhã',tm)}</div>`;
+}
+
+/* ---------- Relatório de uma ajudante (o que fez e quanto recebe) ---------- */
+function helperReport(id){
+  const h=S.helpers[id];if(!h)return;const[from,to,label]=payPeriod();const r=helperPay(h,from,to);
+  const tabs=[['today','Hoje'],['week','Esta semana'],['last','Semana passada'],['month','Este mês'],['lastmonth','Mês passado'],['custom','Escolher']];
+  modal(`<h2 style="margin-bottom:4px">📊 ${esc(h.name)}</h2>
+   <div class="tabs" style="overflow-x:auto;flex-wrap:nowrap">${tabs.map(([k,v])=>`<button style="white-space:nowrap" class="${(S.payP||'week')===k?'on':''}" onclick="S.payP='${k}';helperReport('${id}')">${v}</button>`).join('')}</div>
+   ${S.payP==='custom'?`<div class="fg"><div class="f"><label>De</label><input type="date" value="${from}" onchange="S.payFrom=this.value;helperReport('${id}')"></div><div class="f"><label>Até</label><input type="date" value="${to}" onchange="S.payTo=this.value;helperReport('${id}')"></div></div>`:`<div class="small muted">${from===to?dShort(from):dShort(from)+' a '+dShort(to)}</div>`}
+   <div class="card" style="margin:12px 0;padding:14px;text-align:center"><div class="small muted">Total a pagar</div><div style="font-size:28px;font-weight:700">${money(r.total)}</div></div>
+   ${r.rep.length?`<b>🤝 Repasse (${helperPct(h)}%)</b>${r.rep.map(x=>`<div class="row spread small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>${dShort(x.date)} · ${esc(x.name)}<br><span class="muted">limpeza ${money(x.price)} × ${helperPct(h)}%</span></span><b>${money(x.pay)}</b></div>`).join('')}`:''}
+   ${r.day.length?`<div style="margin-top:10px"><b>👭 Dias de ajuda</b>${r.day.map(d=>`<div class="row spread small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>${dShort(d.date)} · ${d.names.length} casa${d.names.length>1?'s':''}<br><span class="muted">${esc(d.names.join(', '))}</span></span><b>${money(d.pay)}</b></div>`).join('')}</div>`:''}
+   ${!r.rep.length&&!r.day.length?'<div class="empty">Nenhum trabalho dela nesse período.</div>':''}
+   ${r.rep.some(x=>!x.price)?'<div class="banner small" style="margin-top:8px">⚠️ Tem limpeza sem valor — coloque o valor no cliente ou no agendamento.</div>':''}
+   <div class="row spread" style="margin-top:14px"><button class="btn" onclick="closeModal()">Fechar</button>${r.rep.length||r.day.length?`<button class="btn p" onclick="shareHelperPay('${id}')">📤 Mandar para ${esc(h.name.split(' ')[0])}</button>`:''}</div>`);
 }
 function editClient(id){
   const c=id?clone(S.clients[id]):{id:uid(),type:'Homeowner',state:'FL',city:'Naples'};
