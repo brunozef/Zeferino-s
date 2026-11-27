@@ -937,22 +937,26 @@ function checkdayFromHash(){const m=(location.hash||'').match(/^#checkday(?:-(\d
   try{history.replaceState(null,'','#agenda')}catch(e){}S.view='agenda';S.calSel=m[1]||today();S.calMonth=S.calSel.slice(0,7);render();dayCheck(S.calSel);return true}
 function dayCheck(date){
   const js=Object.values(S.jobs).filter(j=>j.type==='service'&&j.date===date&&j.status!=='cancelled').sort((a,b)=>(a.time||'').localeCompare(b.time||''));
-  const moved=Object.values(S.jobs).filter(j=>j.movedFrom===date&&j.type==='service');
-  const row=j=>{const done=j.status==='done';return `<div class="card" style="padding:12px;margin:0 0 10px">
-    <div class="row spread"><div><b>${esc(clientName(j.clientId))}</b><div class="small muted">${esc(j.time||'')}${j.address?' · '+esc(j.address):''}</div></div>${done?'<span class="tag t-done">✅ Feita</span>':''}</div>
-    ${done?`<button class="btn sm" style="margin-top:8px" onclick="dcSet('${j.id}','scheduled','${date}')">Desfazer</button>`:`<div class="row" style="margin-top:10px;gap:8px">
-      <button class="btn a" onclick="dcSet('${j.id}','done','${date}')">✅ Foi feita</button>
-      <button class="btn" onclick="this.parentNode.nextElementSibling.style.display='';this.parentNode.style.display='none'">📅 Reagendar</button>
-      <button class="btn d" onclick="dcSet('${j.id}','cancelled','${date}')">✖ Cancelada</button></div>
-     <div style="display:none;margin-top:10px"><div class="fg"><div class="f"><label>Nova data</label><input type="date" id="rd-${j.id}" value="${addDays(date,1)<today()?today():addDays(date,1)}"></div><div class="f"><label>Hora</label><input type="time" id="rt-${j.id}" value="${esc(j.time||'09:00')}"></div></div>
-      <button class="btn p" onclick="dcMove('${j.id}','${date}')">Salvar nova data</button></div>`}</div>`};
-  const pend=js.filter(j=>j.status!=='done').length;
-  modal(`<h2>🧹 Limpezas de ${fmtDpt(date)}</h2>
-   <p class="small muted" style="margin-top:0">${js.length?(pend?`Marque se cada limpeza foi feita. Se não deu, toque em <b>Reagendar</b>.`:'Pronto! O dia está fechado. 🎉'):'Nenhuma limpeza na agenda nesse dia.'}</p>
+  const moved=Object.values(S.jobs).filter(j=>j.movedFrom===date&&j.type==='service'&&j.date!==date);
+  const pend=js.filter(j=>j.status!=='done');
+  const names=js.map(j=>clientName(j.clientId));
+  const q=names.length?('Foi feita a casa d'+(names.length>1?'e ':'e ')+names.slice(0,-1).join(', ')+(names.length>1?' e de ':'')+names[names.length-1]+'?'):'';
+  const row=j=>{const done=j.status==='done';const nd=addDays(date,1)<today()?today():addDays(date,1);
+   return `<div style="padding:14px 0;border-top:1px solid var(--line)">
+    <div style="font-size:17px;font-weight:700">🏠 Casa de ${esc(clientName(j.clientId))}</div>
+    ${done?`<div class="row spread" style="margin-top:8px"><span class="tag t-done" style="font-size:14px">✅ Feito</span><button class="btn sm" onclick="dcSet('${j.id}','scheduled','${date}')">Desfazer</button></div>`:`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px" id="dcb-${j.id}">
+     <button class="btn a" style="padding:14px;font-size:16px" onclick="dcSet('${j.id}','done','${date}')">✅ Feito</button>
+     <button class="btn" style="padding:14px;font-size:16px" onclick="dcResched('${j.id}')">📅 Reagendar</button></div>
+    <div id="dcr-${j.id}" style="display:none;margin-top:10px"><div class="fg"><div class="f"><label>Nova data</label><input type="date" id="rd-${j.id}" value="${nd}" min="${today()}"></div><div class="f"><label>Hora</label><input type="time" id="rt-${j.id}" value="${esc(j.time||'09:00')}"></div></div>
+     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><button class="btn" onclick="$('#dcr-${j.id}').style.display='none';$('#dcb-${j.id}').style.display='grid'">Voltar</button><button class="btn p" onclick="dcMove('${j.id}','${date}')">Confirmar</button></div></div>`}</div>`};
+  modal(`<h2 style="margin-bottom:6px">🧹 ${js.length?(pend.length?esc(q):'Pronto! Todas as casas foram feitas 🎉'):'Nenhuma limpeza nesse dia'}</h2>
+   <div class="small muted" style="margin-bottom:4px">${fmtDpt(date)}</div>
    ${js.map(row).join('')}
-   ${moved.length?`<div class="small muted">Reagendadas: ${moved.map(j=>esc(clientName(j.clientId))+' → '+dShort(j.date)).join(', ')}</div>`:''}
-   <div class="row" style="justify-content:flex-end;margin-top:10px">${pend>1?`<button class="btn a" onclick="dcAllDone('${date}')">✅ Todas foram feitas</button>`:''}<button class="btn" onclick="closeModal()">Fechar</button></div>`);
+   ${moved.length?`<div class="small muted" style="margin-top:10px">📅 Reagendadas: ${moved.map(j=>esc(clientName(j.clientId))+' → '+dShort(j.date)+(j.time?' '+j.time:'')).join(', ')}</div>`:''}
+   <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="closeModal()">Fechar</button></div>`);
 }
+function dcResched(id){$('#dcb-'+id).style.display='none';const b=$('#dcr-'+id);b.style.display='';const i=$('#rd-'+id);try{i.focus();i.showPicker&&i.showPicker()}catch(e){}}
 function dcSet(id,st,date){const j=clone(S.jobs[id]);j.status=st;put('jobs',j);dayCheck(date);if(st==='done')toast('✅ Marcada como feita')}
 function dcAllDone(date){Object.values(S.jobs).filter(j=>j.type==='service'&&j.date===date&&j.status!=='cancelled'&&j.status!=='done').forEach(j=>{const x=clone(j);x.status='done';put('jobs',x)});dayCheck(date);toast('✅ Dia fechado')}
 function dcMove(id,date){const d=$('#rd-'+id).value,tm=$('#rt-'+id).value;if(!d){toast('Escolha a nova data');return}

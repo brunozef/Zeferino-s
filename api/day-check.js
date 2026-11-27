@@ -55,7 +55,7 @@ export async function runDayCheck(opt = {}) {
   const n = pending.length;
   const payload = JSON.stringify({
     title: (opt.test ? '[TESTE] ' : '') + (hourNY() >= 20 ? '⏰ Último lembrete: ' : hourNY() >= 19 ? '🔔 Lembrete: ' : '🧹 ') + `as limpezas de hoje foram feitas?`,
-    body: !n ? 'Hoje não tem limpeza pendente — este é só um teste do aviso do fim do dia.' : (names.length ? names.slice(0, 4).join(', ') + (names.length > 4 ? '…' : '') : `${n} limpeza${n > 1 ? 's' : ''}`) + ' — toque para marcar como feita ou reagendar.',
+    body: !n ? 'Hoje não tem limpeza pendente — este é só um teste do aviso do fim do dia.' : (names.length ? 'Foi feita a casa de ' + names.slice(0, 5).join(', de ').replace(/, de ([^,]*)$/, ' e de $1') + (names.length > 5 ? '…' : '') + '?' : `${n} casa${n > 1 ? 's' : ''} para confirmar.`) + ' Toque para responder: Feito ou Reagendar.',
     url: `/eva-crm/#checkday-${day}`,
     tag: 'checkday-' + day
   });
