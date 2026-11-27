@@ -808,7 +808,7 @@ function periodTabs(){const[from,to]=payPeriod();
    ${(S.payP==='custom')?`<div class="fg"><div class="f"><label>De</label><input type="date" value="${from}" onchange="S.payFrom=this.value;render()"></div><div class="f"><label>Até</label><input type="date" value="${to}" onchange="S.payTo=this.value;render()"></div></div>`:`<div class="small muted">${from===to?dShort(from):dShort(from)+' a '+dShort(to)}</div>`}`}
 
 /* ============ RELATÓRIO: ganhos, ajudantes, despesas e lucro ============ */
-const EXCATS=['Gasolina','Produtos','Material','Ajudante (outro)','Outros'];
+const EXCATS=['Ajudante','Gasolina','Produtos','Material','Outros'];
 function report(from,to,onlyDone){
   const allJobs=Object.values(S.jobs).filter(j=>j.type==='service'&&j.date>=from&&j.date<=to&&j.status!=='cancelled');
   const revAll=allJobs.reduce((s,j)=>s+jobPrice(j),0),revDone=allJobs.filter(j=>j.status==='done').reduce((s,j)=>s+jobPrice(j),0);
@@ -846,7 +846,7 @@ function vRelatorio(){
     ${x.day.map(d=>`<div class="small">👭 ${dShort(d.date)} · ${d.names.length} casa${d.names.length>1?'s':''} → ${money(d.pay)}</div>`).join('')}${x.rep.map(y=>`<div class="small">🤝 ${dShort(y.date)} · repasse ${esc(y.name)} → ${money(y.pay)}</div>`).join('')}
     <div class="row noprint" style="margin-top:8px;gap:6px;flex-wrap:wrap"><button class="btn sm a" onclick="helperPdfView('${x.h.id}')">👁 Ver PDF</button><button class="btn sm p" onclick="helperPdf('${x.h.id}','share')">📤 Enviar PDF</button><button class="btn sm" onclick="helperPdf('${x.h.id}','download')">⬇️ Baixar</button><button class="btn sm" onclick="shareHelperPay('${x.h.id}')">💬 Texto</button></div></div>`).join(''):'<div class="empty">Nenhum pagamento de ajudante nesse período.</div>'}</div>
   <div class="card" style="margin-top:14px"><div class="row spread"><b>Despesas</b><button class="btn sm a noprint" onclick="editExpense()">+ Despesa</button></div>
-   ${r.exps.length?`<table style="margin-top:8px"><tbody>${r.exps.map(e=>`<tr class="click" onclick="editExpense('${e.id}')"><td>${dShort(e.date)}</td><td>${esc(e.cat||'')}${e.desc?' · '+esc(e.desc):''}</td><td class="num">${money(e.amount)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Nenhuma despesa lançada nesse período.</div>'}</div>
+   ${r.exps.length?`<table style="margin-top:8px"><tbody>${r.exps.map(e=>`<tr class="click" onclick="editExpense('${e.id}')"><td>${dShort(e.date)}</td><td>${esc(e.cat||'')}${e.helperId&&S.helpers[e.helperId]?' · <b>'+esc(S.helpers[e.helperId].name)+'</b>':''}${e.desc?' · '+esc(e.desc):''}</td><td class="num">${money(e.amount)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Nenhuma despesa lançada nesse período.</div>'}</div>
   <div class="card" style="margin-top:14px"><b>Limpezas</b>${r.jobs.length?`<table style="margin-top:8px"><tbody>${r.jobs.map(j=>`<tr class="click" onclick="editJob('${j.id}')"><td>${dShort(j.date)}</td><td>${esc(clientName(j.clientId))}${j.mode==='repasse'?' <span class="tag t-partial">repasse</span>':j.mode==='ajuda'?' <span class="tag t-sent">c/ ajudante</span>':''}${j.status==='done'?' ✓':''}</td><td class="num">${jobPrice(j)?money(jobPrice(j)):'<span class="muted">sem valor</span>'}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">—</div>'}</div>
   <p class="small muted">O relatório usa as limpezas da agenda com o valor de cada casa. Marque “Concluído” quando a limpeza for feita.</p>`;
 }
@@ -856,13 +856,15 @@ function shareReport(){
   const text=lines.join('\n');if(navigator.share)navigator.share({text}).catch(()=>{});else{navigator.clipboard&&navigator.clipboard.writeText(text);toast('Copiado')}
 }
 function editExpense(id){
-  const e=id?clone(S.expenses[id]):{id:uid(),date:today(),cat:'Gasolina',desc:'',amount:''};
+  const e=id?clone(S.expenses[id]):{id:uid(),date:today(),cat:'Ajudante',desc:'',amount:'',helperId:''};
   modal(`<h2>${id?'Editar despesa':'Nova despesa'}</h2><form id="xf">
    <div class="f"><label>Tipo</label><div class="chips">${EXCATS.map((c,k)=>`<input type="radio" name="cat" id="xc-${k}" value="${c}" ${e.cat===c?'checked':''}><label for="xc-${k}">${c}</label>`).join('')}</div></div>
+   <div class="f" id="xHelp" style="${e.cat==='Ajudante'?'':'display:none'}"><label>Qual ajudante?</label>${helperList().length?`<div class="chips">${helperList().map(h=>`<input type="radio" name="helperId" id="xh-${h.id}" value="${h.id}" ${e.helperId===h.id?'checked':''}><label for="xh-${h.id}">${esc(h.name)}</label>`).join('')}</div>`:'<div class="small muted">Cadastre as ajudantes na aba <b>Equipe</b>.</div>'}</div>
    <div class="fg"><div class="f"><label>Valor ($) *</label><input name="amount" type="number" inputmode="decimal" step="0.01" required value="${esc(e.amount)}" ${id?'':'autofocus'}></div><div class="f"><label>Data</label><input name="date" type="date" value="${esc(e.date)}"></div></div>
    <div class="f"><label>Descrição</label><input name="desc" value="${esc(e.desc||'')}" placeholder="Opcional"></div>
    <div class="row spread"><div>${id?`<button type="button" class="btn d" onclick="confirmDel('expenses','${id}','esta despesa')">Excluir</button>`:''}</div><div class="row"><button type="button" class="btn" onclick="closeModal()">Cancelar</button><button class="btn p">Salvar</button></div></div></form>`);
-  $('#xf').onsubmit=ev=>{ev.preventDefault();const f=new FormData(ev.target);e.cat=f.get('cat')||'Outros';e.amount=+f.get('amount')||0;e.date=f.get('date')||today();e.desc=(f.get('desc')||'').trim();put('expenses',e);closeModal();toast('Despesa salva')};
+  $('#xf').addEventListener('change',ev=>{if(ev.target.name==='cat')$('#xHelp').style.display=ev.target.value==='Ajudante'?'':'none'});
+  $('#xf').onsubmit=ev=>{ev.preventDefault();const f=new FormData(ev.target);e.cat=f.get('cat')||'Outros';e.helperId=e.cat==='Ajudante'?(f.get('helperId')||''):'';if(e.cat==='Ajudante'&&!e.helperId&&helperList().length){toast('Escolha a ajudante');return}e.amount=+f.get('amount')||0;e.date=f.get('date')||today();e.desc=(f.get('desc')||'').trim();put('expenses',e);closeModal();toast('Despesa salva')};
 }
 
 /* ============ FIM DO DIA: limpezas foram feitas? (aviso das 19h no celular) ============ */
