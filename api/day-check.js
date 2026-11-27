@@ -21,7 +21,7 @@ export const POST = handleSchedule(async (meta) => {
   console.log('day-check', meta && meta.executionId, JSON.stringify(out));
 });
 
-export async function runDayCheck() {
+export async function runDayCheck(opt = {}) {
   const key = (process.env.SUPABASE_SECRET_KEY || '').trim().replace(/^Bearer\s+/i, '');
   const vp = (process.env.VAPID_PRIVATE_KEY || '').trim();
   if (!key || !vp) return ({ ok: false, error: 'not_configured' });
@@ -32,7 +32,7 @@ export async function runDayCheck() {
   const r = await fetch(`${SB}/rest/v1/eva_records?select=id,data&coll=eq.jobs&data->>date=eq.${day}`, { headers: h });
   const jobs = (r.ok ? await r.json() : []).map(x => x.data || {}).filter(j => j.type === 'service' && j.status !== 'cancelled');
   const pending = jobs.filter(j => j.status !== 'done');
-  if (!pending.length) return ({ ok: true, day, jobs: jobs.length, pending: 0, sent: 0 });
+  if (!pending.length && !opt.test) return ({ ok: true, day, jobs: jobs.length, pending: 0, sent: 0 });
 
   // nomes dos clientes para a mensagem
   let names = [];
@@ -46,12 +46,12 @@ export async function runDayCheck() {
   } catch (e) { /* sem nomes, tudo bem */ }
 
   webpush.setVapidDetails('mailto:zeferinosprecisionfinish@gmail.com', VAPID_PUBLIC, vp);
-  const s = await fetch(`${SB}/rest/v1/push_subs?select=endpoint,sub&app=eq.eva`, { headers: h });
+  const s = await fetch(`${SB}/rest/v1/push_subs?select=endpoint,sub&app=eq.eva${opt.owner ? '&owner=eq.' + encodeURIComponent(opt.owner) : ''}`, { headers: h });
   const subs = s.ok ? await s.json() : [];
   const n = pending.length;
   const payload = JSON.stringify({
-    title: `🧹 As limpezas de hoje foram feitas?`,
-    body: (names.length ? names.slice(0, 4).join(', ') + (names.length > 4 ? '…' : '') : `${n} limpeza${n > 1 ? 's' : ''}`) + ' — toque para marcar como feita ou reagendar.',
+    title: (opt.test ? '[TESTE] ' : '') + `🧹 As limpezas de hoje foram feitas?`,
+    body: !n ? 'Hoje não tem limpeza pendente — este é só um teste do aviso das 19h.' : (names.length ? names.slice(0, 4).join(', ') + (names.length > 4 ? '…' : '') : `${n} limpeza${n > 1 ? 's' : ''}`) + ' — toque para marcar como feita ou reagendar.',
     url: `/eva-crm/#checkday-${day}`,
     tag: 'checkday-' + day
   });
